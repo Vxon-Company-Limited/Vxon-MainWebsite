@@ -1,0 +1,668 @@
+export type Locale = 'zh' | 'en' | 'zh-Hant' | 'ja' | 'es';
+
+export function t<T extends Record<string, unknown>>(translations: T, locale: string): T[keyof T] {
+  return (translations as Record<string, T[keyof T]>)[locale] ?? (translations as Record<string, T[keyof T]>).zh;
+}
+
+export const langMap: Record<Locale, string> = {
+  zh: 'zh-CN',
+  en: 'en',
+  'zh-Hant': 'zh-TW',
+  ja: 'ja',
+  es: 'es',
+};
+
+export const navbar = {
+  zh: {
+    products: '产品',
+    modelHub: '模型广场',
+    solutions: '解决方案',
+    pricing: '价格',
+    docs: '文档',
+    aboutUs: '关于我们',
+    login: '登录',
+    freeTrial: '免费试用',
+    enter: '进入',
+    comingSoon: '即将上线',
+    productItems: [
+      { subtitle: '大模型聚合平台', desc: '一站式接入主流大模型，对标官网7折起' },
+      { subtitle: '企业级AI私有化部署', desc: '本地部署大模型，数据不出内网' },
+      { subtitle: '企业智能体平台', desc: '替代BI/CRM/OA，实时为业务赋能' },
+      { subtitle: '零信任AI编码安全堡垒机', desc: 'Claude Code零信任管控，等保合规' },
+    ],
+    solutionItems: [
+      { title: '企业AI私有化部署', desc: '安全可控的内网AI能力' },
+      { title: '智能体业务管控', desc: 'AI嵌入业务流程' },
+      { title: '编码安全合规', desc: '零信任研发安全管控' },
+    ],
+    aboutItems: ['关于我们', '加入我们', '联系方式'],
+    langLabel: '语言',
+  },
+  en: {
+    products: 'Products',
+    modelHub: 'Models',
+    solutions: 'Solutions',
+    pricing: 'Pricing',
+    docs: 'Docs',
+    aboutUs: 'About',
+    login: 'Log in',
+    freeTrial: 'Free Trial',
+    enter: 'Enter',
+    comingSoon: 'Coming Soon',
+    productItems: [
+      { subtitle: 'LLM Aggregation Platform', desc: 'Access all major LLMs in one place, starting at 30% off' },
+      { subtitle: 'Enterprise AI Private Deployment', desc: 'Deploy LLMs locally, data stays in your network' },
+      { subtitle: 'Enterprise Agent Platform', desc: 'Replace BI/CRM/OA with real-time AI empowerment' },
+      { subtitle: 'Zero-Trust AI Coding Bastion', desc: 'Zero-trust control for Claude Code, compliance-ready' },
+    ],
+    solutionItems: [
+      { title: 'Enterprise AI Private Deployment', desc: 'Secure and controllable intranet AI' },
+      { title: 'Agent Business Management', desc: 'AI embedded in business processes' },
+      { title: 'Coding Security Compliance', desc: 'Zero-trust R&D security management' },
+    ],
+    aboutItems: ['About Us', 'Careers', 'Contact'],
+    langLabel: 'Language',
+  },
+  'zh-Hant': {
+    products: '產品',
+    modelHub: '模型廣場',
+    solutions: '解決方案',
+    pricing: '價格',
+    docs: '文檔',
+    aboutUs: '關於我們',
+    login: '登入',
+    freeTrial: '免費試用',
+    enter: '進入',
+    comingSoon: '即將上線',
+    productItems: [
+      { subtitle: '大模型聚合平台', desc: '一站式接入主流大模型，對標官網7折起' },
+      { subtitle: '企業級AI私有化部署', desc: '本地部署大模型，資料不出內網' },
+      { subtitle: '企業智能體平台', desc: '替代BI/CRM/OA，即時為業務賦能' },
+      { subtitle: '零信任AI編碼安全堡壘機', desc: 'Claude Code零信任管控，等保合規' },
+    ],
+    solutionItems: [
+      { title: '企業AI私有化部署', desc: '安全可控的內網AI能力' },
+      { title: '智能體業務管控', desc: 'AI嵌入業務流程' },
+      { title: '編碼安全合規', desc: '零信任研發安全管控' },
+    ],
+    aboutItems: ['關於我們', '加入我們', '聯絡方式'],
+    langLabel: '語言',
+  },
+  ja: {
+    products: '製品',
+    modelHub: 'モデル',
+    solutions: 'ソリューション',
+    pricing: '料金',
+    docs: 'ドキュメント',
+    aboutUs: '会社情報',
+    login: 'ログイン',
+    freeTrial: '無料トライアル',
+    enter: '詳細',
+    comingSoon: '近日公開',
+    productItems: [
+      { subtitle: 'LLM統合プラットフォーム', desc: '主要LLMにワンストップでアクセス、公式価格の7割から' },
+      { subtitle: 'エンタープライズAIプライベートデプロイ', desc: 'LLMをローカルにデプロイ、データは社内に留まる' },
+      { subtitle: 'エンタープライズエージェントプラットフォーム', desc: 'BI/CRM/OAを置き換え、リアルタイムでビジネスを強化' },
+      { subtitle: 'ゼロトラストAIコーディング要塞', desc: 'Claude Codeのゼロトラスト管理、コンプライアンス対応' },
+    ],
+    solutionItems: [
+      { title: 'エンタープライズAIプライベートデプロイ', desc: '安全で制御可能なイントラネットAI' },
+      { title: 'エージェントビジネス管理', desc: 'AIをビジネスプロセスに組み込む' },
+      { title: 'コーディングセキュリティコンプライアンス', desc: 'ゼロトラストR&Dセキュリティ管理' },
+    ],
+    aboutItems: ['会社概要', '採用情報', 'お問い合わせ'],
+    langLabel: '言語',
+  },
+  es: {
+    products: 'Productos',
+    modelHub: 'Modelos',
+    solutions: 'Soluciones',
+    pricing: 'Precios',
+    docs: 'Docs',
+    aboutUs: 'Nosotros',
+    login: 'Iniciar sesión',
+    freeTrial: 'Prueba gratis',
+    enter: 'Entrar',
+    comingSoon: 'Próximamente',
+    productItems: [
+      { subtitle: 'Plataforma de agregación LLM', desc: 'Accede a los principales LLM en un solo lugar, desde 30% de descuento' },
+      { subtitle: 'Despliegue privado de IA empresarial', desc: 'Despliega LLMs localmente, los datos no salen de tu red' },
+      { subtitle: 'Plataforma de agentes empresariales', desc: 'Reemplaza BI/CRM/OA con IA en tiempo real' },
+      { subtitle: 'Bastión de codificación IA Zero-Trust', desc: 'Control zero-trust para Claude Code, listo para cumplimiento' },
+    ],
+    solutionItems: [
+      { title: 'Despliegue privado de IA empresarial', desc: 'IA de intranet segura y controlable' },
+      { title: 'Gestión de agentes de negocio', desc: 'IA integrada en procesos de negocio' },
+      { title: 'Cumplimiento de seguridad en codificación', desc: 'Gestión de seguridad R&D zero-trust' },
+    ],
+    aboutItems: ['Sobre nosotros', 'Empleo', 'Contacto'],
+    langLabel: 'Idioma',
+  },
+} as const;
+
+// PLACEHOLDER_HERO
+
+export const hero = {
+  zh: {
+    badge: 'Vxon — 企业级AI基础设施',
+    title1: '企业级 AI 基础设施',
+    title2: '稳定、安全、高性价比',
+    subtitle: '一站式接入 Google Gemini、OpenAI GPT、Claude、DeepSeek 等主流大模型，支持企业私有化部署与零信任安全管控，对标官网 7 折起。',
+    cta1: '立即体验',
+    cta2: '了解产品',
+    scrollLabel: '向下滚动',
+  },
+  en: {
+    badge: 'Vxon — Enterprise AI Infrastructure',
+    title1: 'Enterprise AI Infrastructure',
+    title2: 'Stable, Secure, Cost-Effective',
+    subtitle: 'Access Google Gemini, OpenAI GPT, Claude, DeepSeek and more via a single API. Enterprise private deployment and zero-trust security, starting at 30% off.',
+    cta1: 'Get Started',
+    cta2: 'Learn More',
+    scrollLabel: 'Scroll down',
+  },
+  'zh-Hant': {
+    badge: 'Vxon — 企業級AI基礎設施',
+    title1: '企業級 AI 基礎設施',
+    title2: '穩定、安全、高性價比',
+    subtitle: '一站式接入 Google Gemini、OpenAI GPT、Claude、DeepSeek 等主流大模型，支援企業私有化部署與零信任安全管控，對標官網 7 折起。',
+    cta1: '立即體驗',
+    cta2: '了解產品',
+    scrollLabel: '向下捲動',
+  },
+  ja: {
+    badge: 'Vxon — エンタープライズAIインフラ',
+    title1: 'エンタープライズ AI インフラ',
+    title2: '安定・安全・高コスパ',
+    subtitle: 'Google Gemini、OpenAI GPT、Claude、DeepSeekなど主要LLMにワンストップでアクセス。エンタープライズプライベートデプロイとゼロトラストセキュリティ対応、公式価格の7割から。',
+    cta1: '今すぐ始める',
+    cta2: '詳しく見る',
+    scrollLabel: '下にスクロール',
+  },
+  es: {
+    badge: 'Vxon — Infraestructura IA Empresarial',
+    title1: 'Infraestructura IA Empresarial',
+    title2: 'Estable, Segura, Rentable',
+    subtitle: 'Accede a Google Gemini, OpenAI GPT, Claude, DeepSeek y más con una sola API. Despliegue privado empresarial y seguridad zero-trust, desde 30% de descuento.',
+    cta1: 'Comenzar',
+    cta2: 'Saber más',
+    scrollLabel: 'Desplazar hacia abajo',
+  },
+} as const;
+
+// PLACEHOLDER_PRODUCTS
+
+export const products = {
+  zh: {
+    badge: 'Product Family',
+    title: '为您提供全场景 AI 解决方案',
+    subtitle: '从大模型聚合到私有化部署，从智能体平台到零信任安全管控，覆盖企业 AI 全链路需求。',
+    items: [
+      { subtitle: '大模型聚合平台', description: '一站式接入 Google Gemini、OpenAI GPT、Claude、DeepSeek、Qwen 等主流大模型，灵活切换，量大管饱，对标官网 7 折起。', tags: ['ChatGPT', 'Claude', 'Gemini', 'DeepSeek', 'API 即用', '7折起', '余额实时'] },
+      { subtitle: '企业级AI私有化部署', description: '本地私有化部署大模型，内网安全运行，统一账户管理，深度融合企业办公与研发场景，全面提效。', tags: ['私有化部署', '内网安全', '统一账户', '7×24H', '企业级'] },
+      { subtitle: '企业智能体平台', description: '融合运营、财务、销售、经管业务，替代 BI/CRM/OA，实时为业务赋能，降本增效。', tags: ['智能BI', 'CRM融合', 'OA联动', '业务赋能', '降本增效'] },
+      { subtitle: '零信任AI编码安全堡垒机', description: '将 Claude Code 封装进零信任管控，网络隔离 + API审计 + Copy审批流一键部署，满足等保合规要求。', tags: ['敬请期待', '零信任', '等保合规', '审批流'] },
+    ],
+    comingSoon: '即将上线',
+    enterProduct: '进入产品',
+    learnMore: '了解更多',
+  },
+  en: {
+    badge: 'Product Family',
+    title: 'Full-Scenario AI Solutions',
+    subtitle: 'From LLM aggregation to private deployment, from agent platforms to zero-trust security, covering all enterprise AI needs.',
+    items: [
+      { subtitle: 'LLM Aggregation Platform', description: 'Access Google Gemini, OpenAI GPT, Claude, DeepSeek, Qwen and more. Flexible switching, generous quotas, starting at 30% off.', tags: ['ChatGPT', 'Claude', 'Gemini', 'DeepSeek', 'Ready-to-use API', '30% off', 'Real-time balance'] },
+      { subtitle: 'Enterprise AI Private Deployment', description: 'Deploy LLMs locally with intranet security, unified account management, deeply integrated with enterprise workflows.', tags: ['Private Deploy', 'Intranet Security', 'Unified Accounts', '7×24H', 'Enterprise'] },
+      { subtitle: 'Enterprise Agent Platform', description: 'Integrate operations, finance, sales, and management. Replace BI/CRM/OA with real-time AI empowerment.', tags: ['Smart BI', 'CRM Integration', 'OA Linkage', 'Business Empowerment', 'Cost Reduction'] },
+      { subtitle: 'Zero-Trust AI Coding Bastion', description: 'Wrap Claude Code in zero-trust controls. Network isolation + API audit + copy approval flow, one-click deployment for compliance.', tags: ['Coming Soon', 'Zero-Trust', 'Compliance', 'Approval Flow'] },
+    ],
+    comingSoon: 'Coming Soon',
+    enterProduct: 'Enter Product',
+    learnMore: 'Learn More',
+  },
+  'zh-Hant': {
+    badge: 'Product Family',
+    title: '為您提供全場景 AI 解決方案',
+    subtitle: '從大模型聚合到私有化部署，從智能體平台到零信任安全管控，覆蓋企業 AI 全鏈路需求。',
+    items: [
+      { subtitle: '大模型聚合平台', description: '一站式接入 Google Gemini、OpenAI GPT、Claude、DeepSeek、Qwen 等主流大模型，靈活切換，量大管飽，對標官網 7 折起。', tags: ['ChatGPT', 'Claude', 'Gemini', 'DeepSeek', 'API 即用', '7折起', '餘額即時'] },
+      { subtitle: '企業級AI私有化部署', description: '本地私有化部署大模型，內網安全運行，統一帳戶管理，深度融合企業辦公與研發場景，全面提效。', tags: ['私有化部署', '內網安全', '統一帳戶', '7×24H', '企業級'] },
+      { subtitle: '企業智能體平台', description: '融合運營、財務、銷售、經管業務，替代 BI/CRM/OA，即時為業務賦能，降本增效。', tags: ['智能BI', 'CRM融合', 'OA聯動', '業務賦能', '降本增效'] },
+      { subtitle: '零信任AI編碼安全堡壘機', description: '將 Claude Code 封裝進零信任管控，網路隔離 + API審計 + Copy審批流一鍵部署，滿足等保合規要求。', tags: ['敬請期待', '零信任', '等保合規', '審批流'] },
+    ],
+    comingSoon: '即將上線',
+    enterProduct: '進入產品',
+    learnMore: '了解更多',
+  },
+  ja: {
+    badge: 'Product Family',
+    title: 'フルシナリオAIソリューション',
+    subtitle: 'LLM統合からプライベートデプロイ、エージェントプラットフォームからゼロトラストセキュリティまで、企業AIの全ニーズをカバー。',
+    items: [
+      { subtitle: 'LLM統合プラットフォーム', description: 'Google Gemini、OpenAI GPT、Claude、DeepSeek、Qwenなど主要LLMにワンストップでアクセス。柔軟な切り替え、大容量、公式価格の7割から。', tags: ['ChatGPT', 'Claude', 'Gemini', 'DeepSeek', 'すぐ使えるAPI', '7割から', 'リアルタイム残高'] },
+      { subtitle: 'エンタープライズAIプライベートデプロイ', description: 'LLMをローカルにデプロイ、イントラネットで安全に運用、統一アカウント管理、企業ワークフローと深く統合。', tags: ['プライベートデプロイ', 'イントラネットセキュリティ', '統一アカウント', '7×24H', 'エンタープライズ'] },
+      { subtitle: 'エンタープライズエージェントプラットフォーム', description: '運営、財務、営業、管理業務を統合。BI/CRM/OAを置き換え、リアルタイムでビジネスを強化。', tags: ['スマートBI', 'CRM統合', 'OA連携', 'ビジネス強化', 'コスト削減'] },
+      { subtitle: 'ゼロトラストAIコーディング要塞', description: 'Claude Codeをゼロトラスト管理に組み込み。ネットワーク分離 + API監査 + コピー承認フロー、ワンクリックデプロイでコンプライアンス対応。', tags: ['近日公開', 'ゼロトラスト', 'コンプライアンス', '承認フロー'] },
+    ],
+    comingSoon: '近日公開',
+    enterProduct: '製品を見る',
+    learnMore: '詳しく見る',
+  },
+  es: {
+    badge: 'Product Family',
+    title: 'Soluciones IA para todos los escenarios',
+    subtitle: 'Desde agregación de LLM hasta despliegue privado, desde plataformas de agentes hasta seguridad zero-trust, cubriendo todas las necesidades de IA empresarial.',
+    items: [
+      { subtitle: 'Plataforma de agregación LLM', description: 'Accede a Google Gemini, OpenAI GPT, Claude, DeepSeek, Qwen y más. Cambio flexible, cuotas generosas, desde 30% de descuento.', tags: ['ChatGPT', 'Claude', 'Gemini', 'DeepSeek', 'API lista', '30% desc.', 'Saldo en tiempo real'] },
+      { subtitle: 'Despliegue privado de IA empresarial', description: 'Despliega LLMs localmente con seguridad de intranet, gestión unificada de cuentas, integración profunda con flujos de trabajo empresariales.', tags: ['Despliegue privado', 'Seguridad intranet', 'Cuentas unificadas', '7×24H', 'Empresarial'] },
+      { subtitle: 'Plataforma de agentes empresariales', description: 'Integra operaciones, finanzas, ventas y gestión. Reemplaza BI/CRM/OA con IA en tiempo real.', tags: ['BI inteligente', 'Integración CRM', 'Enlace OA', 'Potenciación', 'Reducción de costos'] },
+      { subtitle: 'Bastión de codificación IA Zero-Trust', description: 'Envuelve Claude Code en controles zero-trust. Aislamiento de red + auditoría API + flujo de aprobación de copia, despliegue con un clic para cumplimiento.', tags: ['Próximamente', 'Zero-Trust', 'Cumplimiento', 'Flujo de aprobación'] },
+    ],
+    comingSoon: 'Próximamente',
+    enterProduct: 'Entrar al producto',
+    learnMore: 'Saber más',
+  },
+} as const;
+
+// PLACEHOLDER_ADVANTAGES
+
+export const advantages = {
+  zh: {
+    badge: 'Core Advantages',
+    title: '为什么选择',
+    subtitle: '专为企业级诉求打造，在性能、价格与安全之间找到最优解。',
+    items: [
+      { title: '性能稳定 · 量大管饱', description: '7×24 小时稳定服务保障，高并发承载能力，接口响应快，不掉线不抽风。企业级 SLA 保障，放心用。', valueSuffix: '%' },
+      { title: '价格优势 · 对标官网7折起', description: '聚合 Google、OpenAI、Anthropic、DeepSeek 等主流模型，绕过中间商，量大从优，用多少付多少，没有套路。', valueSuffix: '折' },
+      { title: '安全合规 · 企业级数据保障', description: '数据权限精细化隔离，统一账户管控，支持私有化部署，满足金融、政务等高安全合规要求。', valueSuffix: '层' },
+      { title: '灵活接入 · 即开即用', description: '兼容 OpenAI 标准 API 格式，现有代码无需改动，5 分钟完成接入和切换，零学习成本。', valueSuffix: '分钟' },
+    ],
+  },
+  en: {
+    badge: 'Core Advantages',
+    title: 'Why Choose',
+    subtitle: 'Built for enterprise needs — the optimal balance of performance, pricing, and security.',
+    items: [
+      { title: 'Stable Performance', description: '24/7 stable service with high concurrency, fast API response, enterprise SLA guarantee.', valueSuffix: '%' },
+      { title: 'Competitive Pricing', description: 'Aggregating Google, OpenAI, Anthropic, DeepSeek models. No middlemen, pay-as-you-go, starting at 30% off.', valueSuffix: '×' },
+      { title: 'Security & Compliance', description: 'Fine-grained data isolation, unified account control, private deployment support for finance and government compliance.', valueSuffix: ' layers' },
+      { title: 'Quick Integration', description: 'Compatible with OpenAI standard API format. No code changes needed, 5-minute setup, zero learning curve.', valueSuffix: ' min' },
+    ],
+  },
+  'zh-Hant': {
+    badge: 'Core Advantages',
+    title: '為什麼選擇',
+    subtitle: '專為企業級訴求打造，在效能、價格與安全之間找到最優解。',
+    items: [
+      { title: '效能穩定 · 量大管飽', description: '7×24 小時穩定服務保障，高併發承載能力，介面回應快，不掉線不抽風。企業級 SLA 保障，放心用。', valueSuffix: '%' },
+      { title: '價格優勢 · 對標官網7折起', description: '聚合 Google、OpenAI、Anthropic、DeepSeek 等主流模型，繞過中間商，量大從優，用多少付多少，沒有套路。', valueSuffix: '折' },
+      { title: '安全合規 · 企業級資料保障', description: '資料權限精細化隔離，統一帳戶管控，支援私有化部署，滿足金融、政務等高安全合規要求。', valueSuffix: '層' },
+      { title: '靈活接入 · 即開即用', description: '相容 OpenAI 標準 API 格式，現有程式碼無需改動，5 分鐘完成接入和切換，零學習成本。', valueSuffix: '分鐘' },
+    ],
+  },
+  ja: {
+    badge: 'Core Advantages',
+    title: 'なぜ選ぶのか',
+    subtitle: 'エンタープライズニーズに特化 — パフォーマンス、価格、セキュリティの最適バランス。',
+    items: [
+      { title: '安定したパフォーマンス', description: '24時間365日の安定サービス、高い同時接続処理能力、高速APIレスポンス、エンタープライズSLA保証。', valueSuffix: '%' },
+      { title: '競争力のある価格', description: 'Google、OpenAI、Anthropic、DeepSeekなど主要モデルを集約。仲介なし、従量課金、公式価格の7割から。', valueSuffix: '×' },
+      { title: 'セキュリティとコンプライアンス', description: 'きめ細かいデータ分離、統一アカウント管理、プライベートデプロイ対応、金融・政府のコンプライアンス要件に対応。', valueSuffix: ' 層' },
+      { title: 'クイック統合', description: 'OpenAI標準APIフォーマット互換。コード変更不要、5分でセットアップ、学習コストゼロ。', valueSuffix: ' 分' },
+    ],
+  },
+  es: {
+    badge: 'Core Advantages',
+    title: 'Por qué elegir',
+    subtitle: 'Diseñado para necesidades empresariales — el equilibrio óptimo entre rendimiento, precio y seguridad.',
+    items: [
+      { title: 'Rendimiento estable', description: 'Servicio estable 24/7 con alta concurrencia, respuesta API rápida, garantía SLA empresarial.', valueSuffix: '%' },
+      { title: 'Precios competitivos', description: 'Agregando modelos de Google, OpenAI, Anthropic, DeepSeek. Sin intermediarios, pago por uso, desde 30% de descuento.', valueSuffix: '×' },
+      { title: 'Seguridad y cumplimiento', description: 'Aislamiento de datos granular, control unificado de cuentas, soporte de despliegue privado para cumplimiento financiero y gubernamental.', valueSuffix: ' capas' },
+      { title: 'Integración rápida', description: 'Compatible con formato API estándar de OpenAI. Sin cambios de código, configuración en 5 minutos, curva de aprendizaje cero.', valueSuffix: ' min' },
+    ],
+  },
+} as const;
+
+// PLACEHOLDER_SCENARIOS
+
+export const scenarios = {
+  zh: {
+    badge: 'Use Cases',
+    title: '深入业务，解决真实痛点',
+    subtitle: '摒弃玩具式的 AI 体验，将智能深入嵌入到企业的核心研发、运营与管理环节中。',
+    items: [
+      { title: '企业研发提效', description: '研发团队通过 VxonAI 私有化部署，在内网环境下安全调用大模型进行代码生成、代码审查、Bug定位。VxonFort ZT 提供零信任管控，代码不可随意拷贝，Copy操作自动触发审批流，满足合规要求。', roles: ['CTO', '研发负责人', '安全合规'] },
+      { title: '运营与数据分析', description: '运营团队通过 VxonClaw 智能体平台，实时对接业务数据，自动生成分析报告，替代传统 BI 系统。告别繁琐的报表制作，数据驱动决策，一键生成。', roles: ['运营总监', '数据分析师', 'BI负责人'] },
+      { title: '业务智能化管控', description: '销售、财务、客服团队通过 VxonClaw 实现客户管理、商机跟进、财务对账的自动化。替代传统 CRM/OA 系统，一个平台搞定所有业务流程，实时为业务赋能。', roles: ['销售总监', '财务负责人', 'CEO'] },
+    ],
+    learnMore: '了解更多',
+  },
+  en: {
+    badge: 'Use Cases',
+    title: 'Solving Real Business Pain Points',
+    subtitle: 'Move beyond toy AI experiences — embed intelligence deeply into core R&D, operations, and management.',
+    items: [
+      { title: 'R&D Efficiency', description: 'R&D teams use VxonAI private deployment to securely call LLMs for code generation, review, and bug detection within the intranet. VxonFort ZT provides zero-trust controls with copy approval workflows for compliance.', roles: ['CTO', 'R&D Lead', 'Security'] },
+      { title: 'Operations & Analytics', description: 'Operations teams use VxonClaw to connect business data in real-time, auto-generate analysis reports, replacing traditional BI systems. Data-driven decisions, one-click generation.', roles: ['Ops Director', 'Data Analyst', 'BI Lead'] },
+      { title: 'Business Intelligence', description: 'Sales, finance, and support teams use VxonClaw for automated customer management, deal tracking, and reconciliation. One platform for all business processes.', roles: ['Sales Director', 'CFO', 'CEO'] },
+    ],
+    learnMore: 'Learn More',
+  },
+  'zh-Hant': {
+    badge: 'Use Cases',
+    title: '深入業務，解決真實痛點',
+    subtitle: '摒棄玩具式的 AI 體驗，將智能深入嵌入到企業的核心研發、運營與管理環節中。',
+    items: [
+      { title: '企業研發提效', description: '研發團隊透過 VxonAI 私有化部署，在內網環境下安全呼叫大模型進行程式碼生成、程式碼審查、Bug定位。VxonFort ZT 提供零信任管控，程式碼不可隨意拷貝，Copy操作自動觸發審批流，滿足合規要求。', roles: ['CTO', '研發負責人', '安全合規'] },
+      { title: '運營與資料分析', description: '運營團隊透過 VxonClaw 智能體平台，即時對接業務資料，自動生成分析報告，替代傳統 BI 系統。告別繁瑣的報表製作，資料驅動決策，一鍵生成。', roles: ['運營總監', '資料分析師', 'BI負責人'] },
+      { title: '業務智能化管控', description: '銷售、財務、客服團隊透過 VxonClaw 實現客戶管理、商機跟進、財務對帳的自動化。替代傳統 CRM/OA 系統，一個平台搞定所有業務流程，即時為業務賦能。', roles: ['銷售總監', '財務負責人', 'CEO'] },
+    ],
+    learnMore: '了解更多',
+  },
+  ja: {
+    badge: 'Use Cases',
+    title: 'ビジネスの真の課題を解決',
+    subtitle: 'おもちゃのようなAI体験を超え、コアR&D、運営、管理にインテリジェンスを深く組み込む。',
+    items: [
+      { title: 'R&D効率化', description: 'R&DチームがVxonAIプライベートデプロイを使用し、イントラネット内でLLMを安全に呼び出してコード生成、レビュー、バグ検出を実行。VxonFort ZTがゼロトラスト管理とコピー承認ワークフローを提供。', roles: ['CTO', 'R&Dリード', 'セキュリティ'] },
+      { title: '運営とデータ分析', description: '運営チームがVxonClawでビジネスデータにリアルタイム接続、分析レポートを自動生成、従来のBIシステムを置き換え。データ駆動の意思決定をワンクリックで。', roles: ['運営ディレクター', 'データアナリスト', 'BIリード'] },
+      { title: 'ビジネスインテリジェンス', description: '営業、財務、サポートチームがVxonClawで顧客管理、商談追跡、照合を自動化。すべてのビジネスプロセスを一つのプラットフォームで。', roles: ['営業ディレクター', 'CFO', 'CEO'] },
+    ],
+    learnMore: '詳しく見る',
+  },
+  es: {
+    badge: 'Use Cases',
+    title: 'Resolviendo problemas reales de negocio',
+    subtitle: 'Más allá de experiencias IA de juguete — integra inteligencia profundamente en I+D, operaciones y gestión.',
+    items: [
+      { title: 'Eficiencia en I+D', description: 'Los equipos de I+D usan VxonAI para llamar LLMs de forma segura en la intranet para generación de código, revisión y detección de bugs. VxonFort ZT proporciona controles zero-trust con flujos de aprobación de copia.', roles: ['CTO', 'Líder I+D', 'Seguridad'] },
+      { title: 'Operaciones y análisis', description: 'Los equipos de operaciones usan VxonClaw para conectar datos de negocio en tiempo real, generar informes automáticamente, reemplazando sistemas BI tradicionales.', roles: ['Dir. Operaciones', 'Analista de datos', 'Líder BI'] },
+      { title: 'Inteligencia de negocio', description: 'Equipos de ventas, finanzas y soporte usan VxonClaw para gestión automatizada de clientes, seguimiento de oportunidades y conciliación. Una plataforma para todos los procesos.', roles: ['Dir. Ventas', 'CFO', 'CEO'] },
+    ],
+    learnMore: 'Saber más',
+  },
+} as const;
+
+// PLACEHOLDER_REST
+
+export const partners = {
+  zh: { header: '已对接以下主流大模型厂商' },
+  en: { header: 'Integrated with Leading LLM Providers' },
+  'zh-Hant': { header: '已對接以下主流大模型廠商' },
+  ja: { header: '主要LLMプロバイダーと統合済み' },
+  es: { header: 'Integrado con los principales proveedores de LLM' },
+} as const;
+
+export const metrics = {
+  zh: {
+    items: [
+      { label: '企业客户信赖', suffix: '+' },
+      { label: 'API Token 调用量', suffix: '亿+' },
+      { label: '主流模型覆盖', suffix: '+' },
+      { label: '服务可用性', suffix: '%' },
+      { label: '行业覆盖', suffix: '+' },
+    ],
+  },
+  en: {
+    items: [
+      { label: 'Enterprise Clients', suffix: '+' },
+      { label: 'API Token Calls', suffix: 'B+' },
+      { label: 'Major Models', suffix: '+' },
+      { label: 'Service Uptime', suffix: '%' },
+      { label: 'Industries Covered', suffix: '+' },
+    ],
+  },
+  'zh-Hant': {
+    items: [
+      { label: '企業客戶信賴', suffix: '+' },
+      { label: 'API Token 呼叫量', suffix: '億+' },
+      { label: '主流模型覆蓋', suffix: '+' },
+      { label: '服務可用性', suffix: '%' },
+      { label: '行業覆蓋', suffix: '+' },
+    ],
+  },
+  ja: {
+    items: [
+      { label: 'エンタープライズクライアント', suffix: '+' },
+      { label: 'APIトークン呼び出し', suffix: '億+' },
+      { label: '主要モデル', suffix: '+' },
+      { label: 'サービス稼働率', suffix: '%' },
+      { label: '対応業界', suffix: '+' },
+    ],
+  },
+  es: {
+    items: [
+      { label: 'Clientes empresariales', suffix: '+' },
+      { label: 'Llamadas API Token', suffix: 'B+' },
+      { label: 'Modelos principales', suffix: '+' },
+      { label: 'Disponibilidad', suffix: '%' },
+      { label: 'Industrias cubiertas', suffix: '+' },
+    ],
+  },
+} as const;
+
+export const cta = {
+  zh: {
+    title: '准备好提升你的 AI 能力了吗？',
+    subtitle: '立即注册，免费试用 100 元额度，体验企业级大模型服务。',
+    primary: '免费试用',
+    secondary: '预约企业演示',
+  },
+  en: {
+    title: 'Ready to Elevate Your AI Capabilities?',
+    subtitle: 'Sign up now and get free trial credits to experience enterprise-grade LLM services.',
+    primary: 'Free Trial',
+    secondary: 'Book Enterprise Demo',
+  },
+  'zh-Hant': {
+    title: '準備好提升你的 AI 能力了嗎？',
+    subtitle: '立即註冊，免費試用 100 元額度，體驗企業級大模型服務。',
+    primary: '免費試用',
+    secondary: '預約企業演示',
+  },
+  ja: {
+    title: 'AI能力を向上させる準備はできましたか？',
+    subtitle: '今すぐ登録して、無料トライアルクレジットでエンタープライズグレードのLLMサービスを体験。',
+    primary: '無料トライアル',
+    secondary: '企業デモを予約',
+  },
+  es: {
+    title: '¿Listo para elevar tus capacidades de IA?',
+    subtitle: 'Regístrate ahora y obtén créditos de prueba gratuitos para experimentar servicios LLM empresariales.',
+    primary: 'Prueba gratis',
+    secondary: 'Reservar demo empresarial',
+  },
+} as const;
+
+export const footer = {
+  zh: {
+    products: '产品',
+    resources: '资源',
+    company: '公司',
+    community: '社区',
+    docs: '文档',
+    models: '模型',
+    aboutUs: '关于我们',
+  },
+  en: {
+    products: 'Products',
+    resources: 'Resources',
+    company: 'Company',
+    community: 'Community',
+    docs: 'Docs',
+    models: 'Models',
+    aboutUs: 'About Us',
+  },
+  'zh-Hant': {
+    products: '產品',
+    resources: '資源',
+    company: '公司',
+    community: '社群',
+    docs: '文檔',
+    models: '模型',
+    aboutUs: '關於我們',
+  },
+  ja: {
+    products: '製品',
+    resources: 'リソース',
+    company: '会社',
+    community: 'コミュニティ',
+    docs: 'ドキュメント',
+    models: 'モデル',
+    aboutUs: '会社概要',
+  },
+  es: {
+    products: 'Productos',
+    resources: 'Recursos',
+    company: 'Empresa',
+    community: 'Comunidad',
+    docs: 'Docs',
+    models: 'Modelos',
+    aboutUs: 'Sobre nosotros',
+  },
+} as const;
+
+// PLACEHOLDER_MODELHUB
+
+export const modelHub = {
+  zh: {
+    title: '模型广场',
+    subtitle: '发现最顶尖的 AI 模型。1个 API，接通全球顶级能力，完全动态的分页与聚合过滤。',
+    searchPlaceholder: '搜索模型或开发者...',
+    modelType: '模型类型',
+    useCases: '应用场景',
+    found: '共找到',
+    models: '个模型',
+    noResults: '未找到符合条件的模型',
+    noResultsDesc: '目前没有模型能够同时满足您选择的所有标签和类型过滤条件。',
+    clearFilters: '清除所有筛选',
+    inputPrice: '输入价格',
+    outputPrice: '输出价格',
+    officialPrice: '官方原价',
+    prevPage: '上一页',
+    nextPage: '下一页',
+    types: { all: '全部', chat: '对话', image: '生图', embedding: '嵌入', rerank: '重排序', audio: '语音', video: '视频' },
+  },
+  en: {
+    title: 'Model Hub',
+    subtitle: 'Discover top AI models. One API, access global capabilities with dynamic pagination and filtering.',
+    searchPlaceholder: 'Search models or developers...',
+    modelType: 'Model Type',
+    useCases: 'Use Cases',
+    found: 'Found',
+    models: 'models',
+    noResults: 'No models found',
+    noResultsDesc: 'No models match all your selected tags and type filters.',
+    clearFilters: 'Clear all filters',
+    inputPrice: 'Input Price',
+    outputPrice: 'Output Price',
+    officialPrice: 'Official Price',
+    prevPage: 'Previous',
+    nextPage: 'Next',
+    types: { all: 'All', chat: 'Chat', image: 'Image Gen', embedding: 'Embedding', rerank: 'Rerank', audio: 'Audio', video: 'Video' },
+  },
+  'zh-Hant': {
+    title: '模型廣場',
+    subtitle: '發現最頂尖的 AI 模型。1個 API，接通全球頂級能力，完全動態的分頁與聚合過濾。',
+    searchPlaceholder: '搜尋模型或開發者...',
+    modelType: '模型類型',
+    useCases: '應用場景',
+    found: '共找到',
+    models: '個模型',
+    noResults: '未找到符合條件的模型',
+    noResultsDesc: '目前沒有模型能夠同時滿足您選擇的所有標籤和類型過濾條件。',
+    clearFilters: '清除所有篩選',
+    inputPrice: '輸入價格',
+    outputPrice: '輸出價格',
+    officialPrice: '官方原價',
+    prevPage: '上一頁',
+    nextPage: '下一頁',
+    types: { all: '全部', chat: '對話', image: '生圖', embedding: '嵌入', rerank: '重排序', audio: '語音', video: '視頻' },
+  },
+  ja: {
+    title: 'モデルハブ',
+    subtitle: 'トップAIモデルを発見。1つのAPIでグローバルな能力にアクセス、動的なページネーションとフィルタリング。',
+    searchPlaceholder: 'モデルまたは開発者を検索...',
+    modelType: 'モデルタイプ',
+    useCases: 'ユースケース',
+    found: '',
+    models: 'モデルが見つかりました',
+    noResults: 'モデルが見つかりません',
+    noResultsDesc: '選択したすべてのタグとタイプフィルターに一致するモデルはありません。',
+    clearFilters: 'すべてのフィルターをクリア',
+    inputPrice: '入力価格',
+    outputPrice: '出力価格',
+    officialPrice: '公式価格',
+    prevPage: '前へ',
+    nextPage: '次へ',
+    types: { all: 'すべて', chat: 'チャット', image: '画像生成', embedding: '埋め込み', rerank: 'リランク', audio: '音声', video: '動画' },
+  },
+  es: {
+    title: 'Hub de Modelos',
+    subtitle: 'Descubre los mejores modelos de IA. Una API, acceso a capacidades globales con paginación y filtrado dinámico.',
+    searchPlaceholder: 'Buscar modelos o desarrolladores...',
+    modelType: 'Tipo de modelo',
+    useCases: 'Casos de uso',
+    found: 'Se encontraron',
+    models: 'modelos',
+    noResults: 'No se encontraron modelos',
+    noResultsDesc: 'Ningún modelo coincide con todos los filtros de etiquetas y tipo seleccionados.',
+    clearFilters: 'Limpiar todos los filtros',
+    inputPrice: 'Precio entrada',
+    outputPrice: 'Precio salida',
+    officialPrice: 'Precio oficial',
+    prevPage: 'Anterior',
+    nextPage: 'Siguiente',
+    types: { all: 'Todos', chat: 'Chat', image: 'Imagen', embedding: 'Embedding', rerank: 'Rerank', audio: 'Audio', video: 'Video' },
+  },
+} as const;
+
+export const metadata = {
+  zh: {
+    home: { title: 'Vxon - 企业级AI基础设施 | 稳定、安全、高性价比', description: '一站式接入全球顶尖大模型，专为企业办公与研发设计的私有化及零信任智能体平台，让业务增长更具确定性。' },
+    models: { title: '模型广场 - Vxon AI Services', description: '探索业界领先的 AI 大模型，包括 DeepSeek, Qwen, GLM 等。支持多种应用场景。' },
+    productApi: { title: 'VxonAPI — 大模型聚合平台 | Vxon', description: '一站式接入主流大模型，对标官网7折起，5分钟快速接入。' },
+    productAi: { title: 'VxonAI — 企业级AI私有化部署 | Vxon', description: '本地私有化部署大模型，数据不出内网，统一账户管理。' },
+    productClaw: { title: 'VxonClaw — 企业智能体平台 | Vxon', description: '融合运营、财务、销售业务，替代BI/CRM/OA，实时为业务赋能。' },
+    productFort: { title: 'VxonFort ZT — 零信任AI编码安全堡垒机 | Vxon', description: '将 Claude Code 封装进零信任管控，满足企业等保合规要求。' },
+    pricing: { title: '定价 — Vxon', description: '简单透明的定价方案，从免费体验到企业定制。' },
+  },
+  en: {
+    home: { title: 'Vxon - Enterprise AI Infrastructure | Stable, Secure, Cost-Effective', description: 'Access top LLMs via a single API. Enterprise private deployment and zero-trust agent platform for business growth.' },
+    models: { title: 'Model Hub - Vxon AI Services', description: 'Explore leading AI models including DeepSeek, Qwen, GLM and more. Multiple use cases supported.' },
+    productApi: { title: 'VxonAPI — LLM Aggregation Platform | Vxon', description: 'Access all major LLMs in one place, starting at 30% off, 5-minute setup.' },
+    productAi: { title: 'VxonAI — Enterprise AI Private Deployment | Vxon', description: 'Deploy LLMs locally, data stays in your network, unified account management.' },
+    productClaw: { title: 'VxonClaw — Enterprise Agent Platform | Vxon', description: 'Integrate operations, finance, and sales. Replace BI/CRM/OA with real-time AI.' },
+    productFort: { title: 'VxonFort ZT — Zero-Trust AI Coding Bastion | Vxon', description: 'Wrap Claude Code in zero-trust controls for enterprise compliance.' },
+    pricing: { title: 'Pricing — Vxon', description: 'Simple, transparent pricing from free trial to enterprise custom plans.' },
+  },
+  'zh-Hant': {
+    home: { title: 'Vxon - 企業級AI基礎設施 | 穩定、安全、高性價比', description: '一站式接入全球頂尖大模型，專為企業辦公與研發設計的私有化及零信任智能體平台。' },
+    models: { title: '模型廣場 - Vxon AI Services', description: '探索業界領先的 AI 大模型，包括 DeepSeek, Qwen, GLM 等。支援多種應用場景。' },
+    productApi: { title: 'VxonAPI — 大模型聚合平台 | Vxon', description: '一站式接入主流大模型，對標官網7折起，5分鐘快速接入。' },
+    productAi: { title: 'VxonAI — 企業級AI私有化部署 | Vxon', description: '本地私有化部署大模型，資料不出內網，統一帳戶管理。' },
+    productClaw: { title: 'VxonClaw — 企業智能體平台 | Vxon', description: '融合運營、財務、銷售業務，替代BI/CRM/OA，即時為業務賦能。' },
+    productFort: { title: 'VxonFort ZT — 零信任AI編碼安全堡壘機 | Vxon', description: '將 Claude Code 封裝進零信任管控，滿足企業等保合規要求。' },
+    pricing: { title: '定價 — Vxon', description: '簡單透明的定價方案，從免費體驗到企業定制。' },
+  },
+  ja: {
+    home: { title: 'Vxon - エンタープライズAIインフラ | 安定・安全・高コスパ', description: '主要LLMにワンストップでアクセス。エンタープライズプライベートデプロイとゼロトラストエージェントプラットフォーム。' },
+    models: { title: 'モデルハブ - Vxon AI Services', description: 'DeepSeek、Qwen、GLMなど業界をリードするAIモデルを探索。複数のユースケースに対応。' },
+    productApi: { title: 'VxonAPI — LLM統合プラットフォーム | Vxon', description: '主要LLMにワンストップでアクセス、公式価格の7割から、5分でセットアップ。' },
+    productAi: { title: 'VxonAI — エンタープライズAIプライベートデプロイ | Vxon', description: 'LLMをローカルにデプロイ、データは社内に留まる、統一アカウント管理。' },
+    productClaw: { title: 'VxonClaw — エンタープライズエージェントプラットフォーム | Vxon', description: '運営、財務、営業を統合。BI/CRM/OAをリアルタイムAIで置き換え。' },
+    productFort: { title: 'VxonFort ZT — ゼロトラストAIコーディング要塞 | Vxon', description: 'Claude Codeをゼロトラスト管理に組み込み、企業コンプライアンス対応。' },
+    pricing: { title: '料金 — Vxon', description: 'シンプルで透明な料金体系。無料体験からエンタープライズカスタムまで。' },
+  },
+  es: {
+    home: { title: 'Vxon - Infraestructura IA Empresarial | Estable, Segura, Rentable', description: 'Accede a los principales LLM con una sola API. Despliegue privado empresarial y plataforma de agentes zero-trust.' },
+    models: { title: 'Hub de Modelos - Vxon AI Services', description: 'Explora modelos de IA líderes incluyendo DeepSeek, Qwen, GLM y más. Múltiples casos de uso.' },
+    productApi: { title: 'VxonAPI — Plataforma de agregación LLM | Vxon', description: 'Accede a los principales LLM en un solo lugar, desde 30% de descuento, configuración en 5 minutos.' },
+    productAi: { title: 'VxonAI — Despliegue privado de IA empresarial | Vxon', description: 'Despliega LLMs localmente, los datos no salen de tu red, gestión unificada de cuentas.' },
+    productClaw: { title: 'VxonClaw — Plataforma de agentes empresariales | Vxon', description: 'Integra operaciones, finanzas y ventas. Reemplaza BI/CRM/OA con IA en tiempo real.' },
+    productFort: { title: 'VxonFort ZT — Bastión de codificación IA Zero-Trust | Vxon', description: 'Envuelve Claude Code en controles zero-trust para cumplimiento empresarial.' },
+    pricing: { title: 'Precios — Vxon', description: 'Precios simples y transparentes, desde prueba gratuita hasta planes empresariales.' },
+  },
+} as const;
