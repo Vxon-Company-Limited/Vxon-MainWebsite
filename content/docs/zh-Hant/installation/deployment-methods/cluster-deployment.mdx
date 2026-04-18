@@ -1,0 +1,257 @@
+---
+title: 叢集部署
+---
+
+本文件提供了 Vxon 叢集部署的詳細配置步驟和最佳實踐，幫助您構建高可用、負載均衡的分散式系統。
+
+## 前置要求
+
+- 多臺伺服器（至少兩臺，一主多從架構）
+- 已安裝 Docker 和 Docker Compose
+- 共享的 MySQL 資料庫（主從節點需訪問同一資料庫）
+- 共享的 Redis 服務（用於節點間資料同步和快取）
+- 可選：負載均衡器（如 Nginx、HAProxy 或雲服務商提供的負載均衡服務）
+
+## 叢集架構概述
+
+Vxon 叢集採用主從架構設計：
+
+1. **主節點**：負責處理所有寫操作和部分讀操作
+2. **從節點**：主要負責處理讀操作，提高系統整體吞吐量
+
+![叢集架構](/assets/cluster-architecture.svg)
+
+## 叢集部署關鍵配置
+
+叢集部署的關鍵在於所有節點必須：
+
+1. **共享相同的資料庫**：所有節點訪問同一 MySQL 資料庫
+2. **共享相同的 Redis**：用於快取和節點間通訊
+3. **使用相同的金鑰**：`SESSION_SECRET` 和 `CRYPTO_SECRET` 必須在所有節點上相同
+4. **正確配置節點型別**：主節點為 `master`，從節點為 `slave`
+
+## 部署步驟
+
+### 步驟一：準備共享資料庫和 Redis
+
+首先，您需要準備共享的 MySQL 資料庫和 Redis 服務。這可以是：
+
+- 單獨部署的高可用 MySQL 和 Redis 服務
+- 雲服務商提供的託管資料庫和快取服務
+- 獨立的伺服器上執行的 MySQL 和 Redis
+
+對於 MySQL 資料庫，您可以選擇以下架構方案：
+
+| 架構型別           | 元件構成                                          | 工作方式                                                           | 應用配置方式                 |
+| ------------------ | ------------------------------------------------- | ------------------------------------------------------------------ | ---------------------------- |
+| **主從複製架構**   | 1個主庫`<br />`N個從庫                            | 主庫處理寫入`<br />`從庫處理讀取`<br />`主從資料自動同步           | 配置主庫地址作為 `SQL_DSN`   |
+| **資料庫叢集架構** | 多個對等節點`<br />`代理層(ProxySQL/MySQL Router) | 所有節點都可讀寫`<br />`透過代理層實現負載均衡`<br />`自動故障轉移 | 配置代理層地址作為 `SQL_DSN` |
+
+<Callout type="warn" title="重要提示">
+  無論選擇哪種架構，應用程式的 `SQL_DSN` 配置都只需要一個統一入口地址。
+</Callout>
+
+確保這些服務能夠被所有節點訪問，並具有足夠的效能和可靠性。
+
+### 步驟二：配置主節點
+
+在主節點伺服器上建立 `docker-compose.yml` 檔案：
+
+```yaml
+services:
+  vxon-master:
+    image: vxon/vxon:latest
+    container_name: vxon-master
+    restart: always
+    ports:
+      - '3000:3000'
+    environment:
+      - SQL_DSN=root:password@tcp(your-db-host:3306)/vxon
+      - REDIS_CONN_STRING=redis://default:password@your-redis-host:6379
+      - SESSION_SECRET=your_unique_session_secret
+      - CRYPTO_SECRET=your_unique_crypto_secret
+      - TZ=Asia/Shanghai
+      # 以下是可選配置
+      - SYNC_FREQUENCY=60 # 同步頻率，單位秒
+      # - FRONTEND_BASE_URL=https://<your-vxon-domain> # 前端基礎 URL，用於郵件通知等功能
+    volumes:
+      - ./data:/data
+      - ./logs:/app/logs
+```
+
+<Callout type="warn" title="安全提示">
+  請使用強密碼和隨機生成的金鑰字串替換上述配置中的示例值。
+</Callout>
+
+啟動主節點：
+
+```bash
+docker compose up -d
+```
+
+### 步驟三：配置從節點
+
+在每個從節點伺服器上建立 `docker-compose.yml` 檔案：
+
+```yaml
+services:
+  vxon-slave:
+    image: vxon/vxon:latest
+    container_name: vxon-slave
+    restart: always
+    ports:
+      - '3000:3000' # 可以與主節點使用相同埠，因為它們在不同伺服器上
+    environment:
+      - SQL_DSN=root:password@tcp(your-db-host:3306)/vxon # 與主節點相同
+      - REDIS_CONN_STRING=redis://default:password@your-redis-host:6379 # 與主節點相同
+      - SESSION_SECRET=your_unique_session_secret # 必須與主節點相同
+      - CRYPTO_SECRET=your_unique_crypto_secret # 必須與主節點相同
+      - NODE_TYPE=slave # 關鍵配置，指定為從節點
+      - SYNC_FREQUENCY=60 # 從節點與主節點同步頻率，單位秒
+      - TZ=Asia/Shanghai
+      # 以下是可選配置
+      # - FRONTEND_BASE_URL=https://<your-vxon-domain> # 需與主節點相同
+    volumes:
+      - ./data:/data
+      - ./logs:/app/logs
+```
+
+啟動從節點：
+
+```bash
+docker compose up -d
+```
+
+對每臺從節點伺服器重複此步驟。
+
+### 步驟四：配置負載均衡
+
+為了實現流量的均衡分配，您需要設定負載均衡器。以下是使用 Nginx 作為負載均衡器的配置示例：
+
+```nginx
+upstream new_api_cluster {
+    server master-node-ip:3000 weight=3;
+    server slave-node1-ip:3000 weight=5;
+    server slave-node2-ip:3000 weight=5;
+    # 可新增更多從節點
+}
+
+server {
+    listen 80;
+    server_name <your-vxon-domain>;
+
+    location / {
+        proxy_pass http://new_api_cluster;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+```
+
+此配置將主節點權重設定為 3，從節點權重設定為 5，這意味著從節點將處理更多的請求。您可以根據實際需求調整這些權重。
+
+## 高階配置選項
+
+### 資料同步設定
+
+叢集節點間的資料同步依賴於以下環境變數：
+
+| 環境變數                | 說明               | 推薦值 |
+| ----------------------- | ------------------ | ------ |
+| `SYNC_FREQUENCY`        | 節點同步頻率（秒） | `60`   |
+| `BATCH_UPDATE_ENABLED`  | 啟用批次更新       | `true` |
+| `BATCH_UPDATE_INTERVAL` | 批次更新間隔（秒） | `5`    |
+
+### Redis 高可用配置
+
+為提高 Redis 的可用性，可以配置 Redis 叢集或哨兵模式：
+
+```yaml
+environment:
+  - REDIS_CONN_STRING=redis://your-redis-host:6379
+  - REDIS_PASSWORD=your_redis_password
+  - REDIS_MASTER_NAME=mymaster # 哨兵模式下的主節點名稱
+  - REDIS_CONN_POOL_SIZE=10 # Redis 連線池大小
+```
+
+### 會話安全配置
+
+確保叢集中所有節點使用相同的會話和加密金鑰：
+
+```yaml
+environment:
+  - SESSION_SECRET=your_unique_session_secret # 所有節點必須相同
+  - CRYPTO_SECRET=your_unique_crypto_secret # 所有節點必須相同
+```
+
+## 監控與維護
+
+### 健康檢查
+
+配置定期健康檢查以監控節點狀態：
+
+```yaml
+healthcheck:
+  test:
+    [
+      'CMD-SHELL',
+      "wget -q -O - http://localhost:3000/api/status | grep -o '\"success\":\\s*true' | awk -F: '{print $$2}'",
+    ]
+  interval: 30s
+  timeout: 10s
+  retries: 3
+```
+
+### 日誌管理
+
+對於大規模叢集，建議使用集中式日誌管理系統：
+
+```yaml
+environment:
+  - LOG_SQL_DSN=root:password@tcp(log-db-host:3306)/new_api_logs # 獨立的日誌資料庫
+```
+
+## 擴容指南
+
+隨著業務增長，您可能需要擴充套件叢集規模。擴容步驟如下：
+
+1. **準備新伺服器**：安裝 Docker 和 Docker Compose
+2. **配置從節點**：按照"步驟三：配置從節點"的說明配置新的從節點
+3. **更新負載均衡器配置**：將新節點新增到負載均衡器配置中
+4. **測試新節點**：確保新節點能正常工作並參與負載均衡
+
+## 最佳實踐
+
+1. **定期備份資料庫**：即使在叢集環境中，也應定期備份資料庫
+2. **監控資源使用情況**：密切關注 CPU、記憶體和磁碟使用情況
+3. **採用滾動更新策略**：更新時，先更新從節點，確認穩定後再更新主節點
+4. **配置告警系統**：監控節點狀態，在問題發生時及時通知管理員
+5. **地理分佈部署**：如果可能，將節點部署在不同地理位置，提高可用性
+
+## 故障排除
+
+### 節點無法同步資料
+
+- 檢查 Redis 連線是否正常
+- 確認 SESSION_SECRET 和 CRYPTO_SECRET 在所有節點上是否相同
+- 驗證資料庫連線配置是否正確
+
+### 負載不均衡
+
+- 檢查負載均衡器配置和權重設定
+- 監控各節點的資源使用情況，確保沒有節點過載
+- 可能需要調整節點權重或增加更多節點
+
+### 會話丟失問題
+
+- 確保所有節點使用相同的 SESSION_SECRET
+- 驗證 Redis 配置正確且可訪問
+- 檢查客戶端是否正確處理 cookie
+
+## 相關文件
+
+- [環境變數配置指南](/zh-Hant/docs/installation/config-maintenance/environment-variables) - 包含多節點部署的所有相關環境變數
+- [系統更新指南](/zh-Hant/docs/installation/config-maintenance/system-update) - 多節點環境下的系統更新策略
+- [Docker Compose 配置說明](/zh-Hant/docs/installation/config-maintenance/docker-compose-yml) - 用於編寫叢集節點配置檔案
