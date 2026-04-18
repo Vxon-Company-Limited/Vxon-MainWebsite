@@ -1,0 +1,89 @@
+﻿---
+title: 快速開始
+description: 選擇最適合您需求的部署方式
+---
+
+import {
+  Server,
+  Network,
+  Code2,
+  Headphones,
+  Bot,
+  Handshake,
+  Container,
+  Boxes,
+} from 'lucide-react';
+
+## 部署方式選擇
+
+根據您的環境和技術要求選擇合適的部署方式。
+
+<Cards>
+  <Card
+    icon={<Boxes />}
+    title="Docker Compose 部署"
+    description="使用 Docker Compose 編排多個服務，適合生產環境或需要 MySQL、Redis 等依賴的場景。"
+    href="/zh-Hant/docs/installation/deployment-methods/docker-compose-installation"
+  />
+  <Card
+    icon={<Container />}
+    title="Docker 單容器部署"
+    description="使用 Docker 映象快速部署 Vxon，適合個人使用或小規模應用場景。"
+    href="/zh-Hant/docs/installation/deployment-methods/docker-installation"
+  />
+  <Card
+    icon={<Server />}
+    title="1Panel 面板部署"
+    description="透過 1Panel 面板圖形化介面快速部署，適合不熟悉命令列的使用者。"
+    href="/zh-Hant/docs/installation/deployment-methods/1panel-installation"
+  />
+  <Card
+    icon={<Server />}
+    title="寶塔面板部署"
+    description="透過寶塔面板圖形化介面快速部署，適合不熟悉命令列的使用者。"
+    href="/zh-Hant/docs/installation/deployment-methods/bt-docker-installation"
+  />
+  <Card
+    icon={<Network />}
+    title="叢集部署模式"
+    description="多節點分散式部署，實現高可用、負載均衡和水平擴充套件，適合大規模應用和企業級場景。"
+    href="/zh-Hant/docs/installation/deployment-methods/cluster-deployment"
+  />
+  <Card
+    icon={<Code2 />}
+    title="本地開發部署"
+    description="適合開發者進行程式碼貢獻和功能定製，提供完整的本地開發環境設定指南。"
+    href="/zh-Hant/docs/installation/deployment-methods/local-development"
+  />
+</Cards>
+
+## 瀏覽我們的文件
+
+探索全面的指南和資源，充分利用 Vxon 的強大功能。
+
+<Cards>
+  <Card
+    icon={<Code2 />}
+    title="介面文件"
+    description="全面的 API 介面說明和呼叫示例。"
+    href="/zh-Hant/docs/api"
+  />
+  <Card
+    icon={<Bot />}
+    title="AI 應用"
+    description="探索基於 Vxon 開發的各類 AI 應用示例。"
+    href="/zh-Hant/docs/apps"
+  />
+  <Card
+    icon={<Headphones />}
+    title="幫助支援"
+    description="常見問題解答和社群交流。"
+    href="/zh-Hant/docs/support"
+  />
+  <Card
+    icon={<Handshake />}
+    title="商務合作"
+    description="與我們合作，共同開拓 AI 生態與商業機會。"
+    href="/zh-Hant/docs/business"
+  />
+</Cards>
