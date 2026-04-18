@@ -1,0 +1,191 @@
+---
+title: 分析工具設定指南
+---
+
+### 概述
+
+Vxon 現在支援與流行的分析平臺整合，幫助你追蹤使用者行為和網站效能：
+
+- **Google Analytics 4 (GA4)**：谷歌分析平臺的最新版本
+- **Umami Analytics**：注重隱私的開源分析工具
+
+兩種分析工具可以同時啟用，互不衝突。
+
+### 功能特點
+
+✅ 零程式碼整合 - 僅透過環境變數配置  
+✅ 自動注入指令碼到 Web 介面  
+✅ 支援 Docker 和獨立部署  
+✅ 注重隱私的實現方式  
+✅ 無需修改前端程式碼
+
+---
+
+### Google Analytics 4 設定
+
+#### 1. 獲取你的測量 ID
+
+1. 訪問 [Google Analytics](https://analytics.google.com/)
+2. 建立新的媒體資源或選擇現有的
+3. 進入 **管理** → **資料流**
+4. 建立或選擇一個網站資料流
+5. 複製你的 **測量 ID**（格式：`G-XXXXXXXXXX`）
+
+#### 2. 配置環境變數
+
+**使用 Docker Compose：**
+
+編輯 `docker-compose.yml` 檔案，取消註釋 Google Analytics 行：
+
+```yaml
+environment:
+  - GOOGLE_ANALYTICS_ID=G-XXXXXXXXXX # 替換為你的實際測量 ID
+```
+
+**獨立部署：**
+
+新增到 `.env` 檔案或設定為環境變數：
+
+```bash
+export GOOGLE_ANALYTICS_ID=G-XXXXXXXXXX
+```
+
+**使用 Docker Run：**
+
+```bash
+docker run -d \
+  -e GOOGLE_ANALYTICS_ID=G-XXXXXXXXXX \
+  ...其他選項...
+  vxon/vxon:latest
+```
+
+#### 3. 重啟應用
+
+```bash
+# Docker Compose
+docker-compose down && docker-compose up -d
+
+# 獨立部署
+# 直接重啟你的應用程式
+```
+
+---
+
+### Umami Analytics 設定
+
+#### 1. 獲取 Umami 憑據
+
+**選項 A：使用 Umami Cloud**
+
+1. 在 [Umami Cloud](https://cloud.umami.is/) 註冊
+2. 新增一個新網站
+3. 複製你的 **網站 ID**（UUID 格式）
+
+**選項 B：自託管 Umami**
+
+1. 部署你自己的 [Umami 例項](https://umami.is/docs/install)
+2. 在儀表板中建立網站
+3. 複製你的 **網站 ID** 和 **指令碼 URL**
+
+#### 2. 配置環境變數
+
+**使用 Docker Compose：**
+
+編輯 `docker-compose.yml` 檔案：
+
+```yaml
+environment:
+  - UMAMI_WEBSITE_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+  # 可選：僅自託管例項需要
+  - UMAMI_SCRIPT_URL=https://<your-umami-domain>/script.js
+```
+
+**獨立部署：**
+
+新增到 `.env` 檔案：
+
+```bash
+export UMAMI_WEBSITE_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+export UMAMI_SCRIPT_URL=https://<your-umami-domain>/script.js  # 可選
+```
+
+**注意：** 如果使用 Umami Cloud，不需要設定 `UMAMI_SCRIPT_URL`，因為它預設使用官方 URL。
+
+#### 3. 重啟應用
+
+與 Google Analytics 相同 - 重啟應用以應用更改。
+
+---
+
+### 同時使用兩種分析工具
+
+你可以同時啟用 Google Analytics 和 Umami：
+
+```yaml
+environment:
+  - GOOGLE_ANALYTICS_ID=G-ABC123XYZ
+  - UMAMI_WEBSITE_ID=a1b2c3d4-e5f6-g7h8-i9j0-k1l2m3n4o5p6
+  - UMAMI_SCRIPT_URL=https://analytics.umami.is/script.js
+```
+
+---
+
+### 驗證
+
+重啟應用後：
+
+1. 在瀏覽器中開啟 Web 介面
+2. 開啟瀏覽器開發者工具（F12）→ **網路**標籤
+3. 重新整理頁面
+4. 查詢以下請求：
+   - Google Analytics：`https://www.googletagmanager.com/gtag/js`
+   - Umami：你配置的指令碼 URL
+
+你也可以檢視頁面原始碼，在 `<head>` 部分查詢注入的指令碼。
+
+---
+
+### 故障排除
+
+**分析工具無法工作？**
+
+1. ✅ 驗證環境變數設定正確
+2. ✅ 更改變數後重啟應用
+3. ✅ 檢查瀏覽器控制檯錯誤
+4. ✅ 確保測量 ID/網站 ID 格式正確
+5. ✅ 檢查廣告攔截器是否干擾
+
+**Docker 使用者：**
+
+```bash
+# 檢查環境變數是否設定
+docker exec vxon env | grep -E "GOOGLE_ANALYTICS|UMAMI"
+```
+
+---
+
+### 隱私考慮
+
+- Google Analytics 根據[谷歌隱私政策](https://policies.google.com/privacy)收集使用者資料
+- Umami 注重隱私，不收集個人資料
+- 如果使用分析工具，請考慮在網站上新增隱私政策
+- 兩種工具在正確配置時都符合 GDPR 要求
+
+---
+
+## 環境變數參考
+
+| 變數                  | 必需 | 預設值                                 | 說明                                             |
+| --------------------- | ---- | -------------------------------------- | ------------------------------------------------ |
+| `GOOGLE_ANALYTICS_ID` | 否   | -                                      | Google Analytics 4 測量 ID（格式：G-XXXXXXXXXX） |
+| `UMAMI_WEBSITE_ID`    | 否   | -                                      | Umami 網站 ID（UUID 格式）                       |
+| `UMAMI_SCRIPT_URL`    | 否   | `https://analytics.umami.is/script.js` | Umami 指令碼 URL（僅自託管需要）                   |
+
+---
+
+## 相關連結
+
+- [Google Analytics](https://analytics.google.com/)
+- [Umami Analytics](https://umami.is/)
+- [Umami Documentation](https://umami.is/docs)
+- [Google Analytics Privacy](https://support.google.com/analytics/answer/6004245)
