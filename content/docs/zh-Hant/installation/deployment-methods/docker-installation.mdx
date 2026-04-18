@@ -1,0 +1,52 @@
+﻿---
+title: Docker 部署
+---
+
+本文件提供了使用Docker部署Vxon的詳細步驟。
+
+<Callout type="warn" title="強烈推薦">
+  我們強烈推薦使用 [Docker Compose
+  安裝方式](/zh-Hant/docs/installation/deployment-methods/docker-compose-installation)
+  而不是手動啟動Docker容器。Docker
+  Compose方式提供了更好的配置管理、服務編排和部署體驗。
+</Callout>
+
+## 基本要求
+
+- 已安裝Docker環境
+- 埠: 預設使用3000埠
+
+## 直接使用Docker映象部署
+
+### 使用SQLite資料庫（不推薦）
+
+```shell
+docker run --name vxon -d --restart always \
+  -p 3000:3000 \
+  -e TZ=Asia/Shanghai \
+  -v /your/data/path:/data \
+  vxon/vxon:latest
+```
+
+<Callout type="warn" title="注意">
+  請將 `/your/data/path` 替換為您想要儲存資料的本地路徑。
+</Callout>
+
+### 使用MySQL資料庫
+
+```shell
+docker run --name vxon -d --restart always \
+  -p 3000:3000 \
+  -e SQL_DSN="使用者名稱:密碼@tcp(資料庫地址:3306)/資料庫名" \
+  -e TZ=Asia/Shanghai \
+  -v /your/data/path:/data \
+  vxon/vxon:latest
+```
+
+<Callout type="warn" title="注意">
+  請替換引數中的資料庫連線資訊。
+</Callout>
+
+## 訪問系統
+
+部署完成後，訪問 `http://伺服器IP:3000` 將自動引導到初始化頁面。按照頁面指引手動設定管理員賬號和密碼（僅首次安裝需要），完成後即可使用新設定的管理員賬號登入系統。
