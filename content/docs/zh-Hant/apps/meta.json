@@ -1,0 +1,21 @@
+{
+  "title": "AI 應用",
+  "description": "支援的AI應用和整合",
+  "icon": "Sparkles",
+  "root": true,
+  "pages": [
+    "index",
+    "aionui",
+    "cc-switch",
+    "cherry-studio",
+    "memoh",
+    "fluent-read",
+    "openclaw",
+    "langbot",
+    "astrbot",
+    "luna-translator",
+    "claude-code",
+    "codex-cli",
+    "factory-droid-cli"
+  ]
+}
