@@ -1,0 +1,6 @@
+{
+  "title": "維基百科",
+  "description": "Vxon 專案文件與基礎知識",
+  "icon": "BookOpen",
+  "pages": ["basic-concepts", "project-records"]
+}
