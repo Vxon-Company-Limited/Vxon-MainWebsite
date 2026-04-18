@@ -1,0 +1,131 @@
+---
+title: 效能分析設定指南
+---
+
+### 概述
+
+Vxon 提供兩類效能分析能力：
+
+- **pprof（內建）**：適合臨時診斷與離線分析
+- **Pyroscope（可選）**：適合線上持續分析與火焰圖視覺化
+
+兩者可以同時啟用，互不衝突。
+
+### 功能特點
+
+✅ 零程式碼整合 - 僅透過環境變數配置  
+✅ 支援 Docker 和獨立部署  
+✅ 支援臨時診斷與持續分析並存  
+✅ 可選鑑權與例項區分
+
+---
+
+### pprof（內建）設定
+
+#### 1. 配置環境變數
+
+**使用 Docker Compose：**
+
+```yaml
+environment:
+  - ENABLE_PPROF=true
+```
+
+**獨立部署：**
+
+```bash
+export ENABLE_PPROF=true
+```
+
+#### 2. 重啟應用
+
+重啟應用以應用更改。
+
+#### 3. 驗證
+
+如果未修改路由，通常可在 `/debug/pprof/` 訪問（以實際部署為準）。
+
+---
+
+### Pyroscope 設定
+
+#### 1. 準備 Pyroscope 服務
+
+確保 Pyroscope 服務可訪問，並記錄服務地址（例如：`http://localhost:4040`）。
+
+#### 2. 配置環境變數
+
+**使用 Docker Compose：**
+
+```yaml
+environment:
+  - PYROSCOPE_URL=http://localhost:4040
+  - PYROSCOPE_APP_NAME=vxon
+  - PYROSCOPE_BASIC_AUTH_USER=your-user
+  - PYROSCOPE_BASIC_AUTH_PASSWORD=your-password
+  - PYROSCOPE_MUTEX_RATE=5
+  - PYROSCOPE_BLOCK_RATE=5
+  - HOSTNAME=your-hostname
+```
+
+**獨立部署：**
+
+```bash
+export PYROSCOPE_URL=http://localhost:4040
+export PYROSCOPE_APP_NAME=vxon
+export PYROSCOPE_BASIC_AUTH_USER=your-user
+export PYROSCOPE_BASIC_AUTH_PASSWORD=your-password
+export PYROSCOPE_MUTEX_RATE=5
+export PYROSCOPE_BLOCK_RATE=5
+export HOSTNAME=your-hostname
+```
+
+#### 3. 重啟應用
+
+重啟應用以應用更改。
+
+#### 4. 驗證
+
+1. 開啟 Pyroscope UI
+2. 選擇 `PYROSCOPE_APP_NAME` 對應的應用
+3. 如設定了 `HOSTNAME`，可在例項維度區分來源
+
+---
+
+### 故障排除
+
+**效能分析無法工作？**
+
+1. ✅ 驗證環境變數設定正確
+2. ✅ 更改變數後重啟應用
+3. ✅ 檢查網路連通性與鑑權配置
+4. ✅ 確認 `PYROSCOPE_APP_NAME` 命名一致
+
+**Docker 使用者：**
+
+```bash
+# Check env vars
+docker exec vxon env | grep -E "PPROF|PYROSCOPE"
+```
+
+---
+
+## 環境變數參考
+
+| 變數                          | 必需 | 預設值 | 說明                         |
+| ----------------------------- | ---- | ------ | ---------------------------- |
+| `ENABLE_PPROF`                | 否   | `false` | 啟用 pprof 效能分析           |
+| `PYROSCOPE_URL`               | 否   | -      | Pyroscope 服務地址           |
+| `PYROSCOPE_APP_NAME`          | 否   | -      | Pyroscope 應用標識           |
+| `PYROSCOPE_BASIC_AUTH_USER`   | 否   | -      | Pyroscope Basic Auth 使用者名稱  |
+| `PYROSCOPE_BASIC_AUTH_PASSWORD` | 否 | -      | Pyroscope Basic Auth 密碼    |
+| `PYROSCOPE_MUTEX_RATE`        | 否   | -      | Mutex 取樣率                 |
+| `PYROSCOPE_BLOCK_RATE`        | 否   | -      | Block 取樣率                 |
+| `HOSTNAME`                    | 否   | -      | 例項標識（可選）             |
+
+---
+
+## 相關連結
+
+- [Pyroscope](https://pyroscope.io/)
+- [Pyroscope Documentation](https://pyroscope.io/docs/)
