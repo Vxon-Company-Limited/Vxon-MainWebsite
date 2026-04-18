@@ -1,0 +1,206 @@
+﻿---
+title: 系統更新指南
+---
+
+本文件提供了Vxon系統的更新方法和最佳實踐，以確保您的系統平穩升級到最新版本。
+
+## 更新前的準備工作
+
+在更新系統之前，建議執行以下準備工作：
+
+1. **備份資料**：備份資料庫和重要配置檔案
+2. **檢視更新日誌**：在[GitHub Releases](https://github.com/Vxon/vxon/releases)檢視最新版本的更新內容
+3. **檢查相容性**：確認新版本與您現有的外掛、整合或自定義配置是否相容
+4. **選擇合適的時間**：在低峰期執行更新，減少對使用者的影響
+
+## Docker部署的更新方法
+
+### 方法一：單容器部署更新
+
+如果您使用單個Docker容器部署了Vxon，可以按照以下步驟更新：
+
+```shell
+# 拉取最新映象
+docker pull vxon/vxon:latest
+
+# 停止並移除舊容器
+docker stop vxon
+docker rm vxon
+
+# 使用相同的引數重新執行容器
+docker run --name vxon -d --restart always \
+  -p 3000:3000 \
+  -e TZ=Asia/Shanghai \
+  -v /your/data/path:/data \
+  vxon/vxon:latest
+```
+
+<Callout type="warn" title="請你注意">
+  請確保使用與原容器相同的引數啟動新容器，特別是資料卷掛載和環境變數配置。
+</Callout>
+
+### 方法二：使用Docker Compose更新
+
+如果您使用Docker Compose部署（參見[Docker Compose配置說明](/zh-Hant/docs/installation/config-maintenance/docker-compose-yml)），更新過程更為簡單：
+
+```shell
+# 進入專案目錄
+cd vxon
+
+# 拉取最新映象
+docker compose pull
+
+# 停止並重啟服務
+docker compose down
+docker compose up -d
+```
+
+或使用更簡潔的命令：
+
+```shell
+docker compose pull && docker compose down && docker compose up -d
+```
+
+### 方法三：使用 1Panel 面板更新
+
+如果您使用 1Panel 面板部署，可以按照以下步驟更新：
+
+1. 登入 1Panel 面板，進入 **應用商店** -> **可升級頁面**
+2. 找到 Vxon 應用，點選 **升級** 按鈕
+3. 選擇 **要升級到的目標版本**
+4. 點選 **確認** 按鈕，系統將自動拉取最新映象升級應用
+
+### 方法四：使用寶塔面板更新
+
+如果您使用寶塔面板部署，可以按照以下步驟更新：
+
+1. 登入寶塔面板，進入 **Docker管理** -> **容器列表**
+2. 找到Vxon容器，點選 **更多** -> **重新建立**
+3. 勾選 **拉取最新映象** 選項，確保其他配置保持不變
+4. 點選 **提交** ，系統將自動拉取最新映象並重新建立容器
+
+## 從原始碼編譯的更新方法
+
+如果您是從原始碼編譯部署的Vxon，更新步驟如下：
+
+```shell
+# 進入專案目錄
+cd vxon
+
+# 拉取最新程式碼
+git pull
+
+# 編譯後端
+go build -o vxon
+
+# 更新並編譯前端
+cd web
+bun install
+bun run build
+cd ..
+
+# 重啟服務
+./vxon --port 3000
+```
+
+## 多節點部署的更新策略
+
+對於多節點部署的環境，建議採用以下更新策略：
+
+1. **先更新從節點**：首先更新一個從節點，測試其穩定性
+2. **逐步推進**：確認從節點穩定後，逐個更新其餘從節點
+3. **最後更新主節點**：所有從節點穩定執行後，更新主節點
+
+這種策略可以最大限度地減少服務中斷風險。
+
+<Callout title="詳細指南">
+  有關叢集部署的完整指南，請參考[叢集部署文件](/zh-Hant/docs/installation/deployment-methods/cluster-deployment)。
+</Callout>
+
+## 更新後的檢查事項
+
+系統更新後，請檢查以下事項以確保系統正常執行：
+
+1. **訪問管理介面**：確認可以正常登入和訪問管理介面
+2. **檢查日誌**：檢視系統日誌是否有錯誤或警告
+3. **測試API呼叫**：測試一些API呼叫以確保功能正常
+4. **檢查資料庫遷移**：確認資料庫結構更新是否成功
+5. **檢查渠道狀態**：確認所有渠道連線是否正常
+
+## 版本回滾
+
+如果更新後出現問題，可以回滾到之前的穩定版本：
+
+### Docker回滾
+
+```shell
+# 拉取特定版本的映象
+docker pull vxon/vxon:v1.x.x
+
+# 停止並移除當前容器
+docker stop vxon
+docker rm vxon
+
+# 使用舊版本映象重新建立容器
+docker run --name vxon -d --restart always \
+  -p 3000:3000 \
+  -e TZ=Asia/Shanghai \
+  -v /your/data/path:/data \
+  vxon/vxon:v1.x.x
+```
+
+### 原始碼回滾
+
+```shell
+# 進入專案目錄
+cd vxon
+
+# 切換到特定版本
+git checkout v1.x.x
+
+# 重新編譯
+go build -o vxon
+
+# 更新並編譯前端
+cd web
+bun install
+bun run build
+cd ..
+
+# 重啟服務
+./vxon --port 3000
+```
+
+## 常見問題
+
+### 更新後無法啟動服務
+
+- 檢查日誌是否有錯誤資訊
+- 確認資料庫連線是否正常
+- 確認環境變數配置是否正確
+
+### 更新後功能異常
+
+- 檢視是否有API格式變更
+- 檢查前端與後端版本是否匹配
+- 確認新版本是否需要額外的配置
+
+### 資料庫結構不相容
+
+- 檢視更新日誌中是否有資料庫遷移說明
+- 檢查是否需要手動執行資料庫遷移指令碼
+- 聯絡開發者獲取資料庫升級指導
+
+## 自動更新工具（謹慎使用）
+
+對於希望自動更新的使用者，可以使用Watchtower自動更新容器：
+
+```shell
+docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+  nickfedor/watchtower -c \
+  --run-once vxon
+```
+
+<Callout type="warn" title="請你注意">
+  自動更新可能導致意外問題，特別是資料庫結構變更時。建議僅在測試環境使用自動更新，生產環境應手動控制更新過程。
+</Callout>
