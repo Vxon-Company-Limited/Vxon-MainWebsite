@@ -1,0 +1,228 @@
+---
+title: API 參考
+description: Vxon 完整介面文件
+---
+
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import {
+  List,
+  MessageSquare,
+  FileText,
+  Database,
+  Search,
+  ShieldCheck,
+  Headphones,
+  Radio,
+  Image,
+  Video,
+  FileQuestion,
+  Server,
+  SlidersHorizontal,
+  UserCheck,
+  Users,
+  KeyRound,
+  Link2,
+  Network,
+  Blocks,
+  Key,
+  Ticket,
+  CreditCard,
+  ScrollText,
+  ChartBar,
+  ListTodo,
+  FolderKanban,
+  Store,
+  ShieldAlert,
+} from 'lucide-react';
+
+## 概述
+
+Vxon 提供完整的 RESTful API 介面，分為 **AI 模型介面** 和 **管理介面** 兩大類。您可以透過這些介面實現 AI 能力呼叫和系統管理功能。
+
+<Callout title="線上除錯">
+  您可以訪問 [Apifox 操練場](https://apifox.vxon.ai/) 線上測試和除錯 API 介面，或瀏覽下方的 API 文件。
+</Callout>
+
+## AI 模型介面
+
+AI 模型介面提供各種 AI 能力的呼叫，相容 OpenAI API 格式。
+
+<Cards>
+  <Card
+    icon={<List />}
+    title="模型列表"
+    description="獲取可用的模型列表。"
+    href="/zh-Hant/docs/api/ai-model/models/list/listmodels"
+  />
+  <Card
+    icon={<MessageSquare />}
+    title="聊天"
+    description="對話補全介面。"
+    href="/zh-Hant/docs/api/ai-model/chat/openai/createchatcompletion"
+  />
+  <Card
+    icon={<FileText />}
+    title="補全"
+    description="傳統文字補全介面。"
+    href="/zh-Hant/docs/api/ai-model/completions/createcompletion"
+  />
+  <Card
+    icon={<Database />}
+    title="嵌入"
+    description="文字嵌入向量生成介面。"
+    href="/zh-Hant/docs/api/ai-model/embeddings/createembedding"
+  />
+  <Card
+    icon={<Search />}
+    title="重排序"
+    description="文件重排序介面。"
+    href="/zh-Hant/docs/api/ai-model/rerank/creatererank"
+  />
+  <Card
+    icon={<ShieldCheck />}
+    title="審查"
+    description="內容安全稽核介面。"
+    href="/zh-Hant/docs/api/ai-model/moderations/createmoderation"
+  />
+  <Card
+    icon={<Headphones />}
+    title="音訊"
+    description="語音識別和語音合成介面。"
+    href="/zh-Hant/docs/api/ai-model/audio/openai/createspeech"
+  />
+  <Card
+    icon={<Radio />}
+    title="實時語音"
+    description="實時音訊流介面。"
+    href="/zh-Hant/docs/api/ai-model/realtime/createrealtimesession"
+  />
+  <Card
+    icon={<Image />}
+    title="影象"
+    description="AI影象生成介面。"
+    href="/zh-Hant/docs/api/ai-model/images/openai/post-v1-images-generations"
+  />
+  <Card
+    icon={<Video />}
+    title="影片"
+    description="AI影片生成介面。"
+    href="/zh-Hant/docs/api/ai-model/videos/sora/createvideo"
+  />
+  <Card
+    icon={<FileQuestion />}
+    title="未實現"
+    description="佔位介面，暫未實現。"
+    href="/zh-Hant/docs/api/ai-model/unimplemented/files/listfiles"
+  />
+</Cards>
+
+## 管理介面
+
+管理介面用於系統配置、使用者管理、業務管理等後臺操作。
+
+<Cards>
+  <Card
+    icon={<Server />}
+    title="系統"
+    description="系統資訊和狀態介面。"
+    href="/zh-Hant/docs/api/management/system/status-get"
+  />
+  <Card
+    icon={<SlidersHorizontal />}
+    title="系統設定"
+    description="系統配置管理介面。"
+    href="/zh-Hant/docs/api/management/system-settings/option-get"
+  />
+  <Card
+    icon={<UserCheck />}
+    title="使用者認證"
+    description="使用者登入、註冊、密碼管理等介面。"
+    href="/zh-Hant/docs/api/management/user-auth/user-login-post"
+  />
+  <Card
+    icon={<Users />}
+    title="使用者管理"
+    description="使用者資訊管理介面。"
+    href="/zh-Hant/docs/api/management/user-management/user-self-get"
+  />
+  <Card
+    icon={<KeyRound />}
+    title="雙因素認證"
+    description="2FA 雙因素認證介面。"
+    href="/zh-Hant/docs/api/management/two-factor-auth/user-2fa-status-get"
+  />
+  <Card
+    icon={<Link2 />}
+    title="OAuth"
+    description="第三方 OAuth 登入介面。"
+    href="/zh-Hant/docs/api/management/oauth/oauth-github-get"
+  />
+  <Card
+    icon={<Network />}
+    title="渠道管理"
+    description="API 渠道配置管理介面。"
+    href="/zh-Hant/docs/api/management/channel-management/channel-get"
+  />
+  <Card
+    icon={<Blocks />}
+    title="模型管理"
+    description="模型配置管理介面。"
+    href="/zh-Hant/docs/api/management/model-management/models-get"
+  />
+  <Card
+    icon={<Key />}
+    title="令牌管理"
+    description="API 令牌管理介面。"
+    href="/zh-Hant/docs/api/management/token-management/token-get"
+  />
+  <Card
+    icon={<Ticket />}
+    title="兌換碼"
+    description="兌換碼管理介面。"
+    href="/zh-Hant/docs/api/management/redemption/redemption-get"
+  />
+  <Card
+    icon={<CreditCard />}
+    title="支付"
+    description="支付和充值介面。"
+    href="/zh-Hant/docs/api/management/payment/user-topup-info-get"
+  />
+  <Card
+    icon={<ScrollText />}
+    title="日誌"
+    description="使用日誌查詢介面。"
+    href="/zh-Hant/docs/api/management/logs/log-get"
+  />
+  <Card
+    icon={<ChartBar />}
+    title="統計"
+    description="資料統計介面。"
+    href="/zh-Hant/docs/api/management/statistics/data-get"
+  />
+  <Card
+    icon={<ListTodo />}
+    title="任務"
+    description="非同步任務管理介面。"
+    href="/zh-Hant/docs/api/management/tasks/task-get"
+  />
+  <Card
+    icon={<FolderKanban />}
+    title="分組"
+    description="使用者分組管理介面。"
+    href="/zh-Hant/docs/api/management/groups/group-get"
+  />
+  <Card
+    icon={<Store />}
+    title="供應商"
+    description="供應商管理介面。"
+    href="/zh-Hant/docs/api/management/vendors/vendors-get"
+  />
+  <Card
+    icon={<ShieldAlert />}
+    title="安全驗證"
+    description="安全驗證相關介面。"
+    href="/zh-Hant/docs/api/management/security-verification/verify-status-get"
+  />
+</Cards>
+
+
