@@ -1,0 +1,11 @@
+{
+  "title": "Skills",
+  "description": "Vxon Skills，支援 Claude Code、Codex、OpenClaw（龍蝦），可提問使用問題",
+  "icon": "Puzzle",
+  "root": true,
+  "pages": [
+    "index",
+    "vxon",
+    "vxon-admin"
+  ]
+}
