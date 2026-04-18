@@ -1,0 +1,293 @@
+---
+title: 環境變數配置指南
+---
+
+本文件提供了Vxon支援的所有環境變數及其配置說明。您可以透過設定這些環境變數來自定義系統的行為。
+
+<Callout type="info" title="提示">
+  Vxon 支援從 `.env` 檔案中讀取環境變數，請參照 `.env.example`
+  檔案，使用時請將其重新命名為 `.env`。
+</Callout>
+
+## 基本配置
+
+| 環境變數 | 說明         | 預設值          | 示例                  |
+| -------- | ------------ | --------------- | --------------------- |
+| `PORT`   | 服務監聽埠 | `3000`          | `PORT=8080`           |
+| `TZ`     | 時區設定     | -               | `TZ=America/New_York` |
+| `VERSION`| 覆蓋執行版本號 | -              | `VERSION=1.2.3`       |
+
+## 資料庫配置
+
+| 環境變數                | 說明                       | 預設值                   | 示例                                                                                                                             |
+| ----------------------- | -------------------------- | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------- |
+| `SQL_DSN`               | 資料庫連線字串           | SQLite (`one-api.db`) | MySQL: `SQL_DSN=root:123456@tcp(localhost:3306)/vxon` \| PostgreSQL: `SQL_DSN=postgresql://root:123456@postgres:5432/vxon` |
+| `SQL_MAX_IDLE_CONNS`    | 空閒連線池最大連線數       | `100`                    | `SQL_MAX_IDLE_CONNS=50`                                                                                                          |
+| `SQL_MAX_OPEN_CONNS`    | 連線池最大開啟連線數       | `1000`                   | `SQL_MAX_OPEN_CONNS=500`                                                                                                         |
+| `SQL_MAX_LIFETIME`      | 連線最大生命週期(秒)       | `60`                     | `SQL_MAX_LIFETIME=120`                                                                                                          |
+| `LOG_SQL_DSN`           | 日誌表獨立資料庫連線字串 | -                        | `LOG_SQL_DSN=root:123456@tcp(localhost:3306)/oneapi_logs`                                                                        |
+| `SQLITE_PATH`           | SQLite資料庫路徑           | `one-api.db`             | `SQLITE_PATH=/var/lib/vxon/vxon.db`                                                                                        |
+
+## 快取配置
+
+| 環境變數                | 說明                     | 預設值  | 示例                                                       |
+| ----------------------- | ------------------------ | ------- | ---------------------------------------------------------- |
+| `REDIS_CONN_STRING`     | Redis連線字串          | -       | `REDIS_CONN_STRING=redis://default:redispw@localhost:6379` |
+| `REDIS_POOL_SIZE`       | Redis連線池大小          | `10`    | `REDIS_POOL_SIZE=20`                                      |
+| `MEMORY_CACHE_ENABLED`  | 是否啟用記憶體快取（啟用Redis後自動啟用） | `false` | `MEMORY_CACHE_ENABLED=true`                                |
+| `SYNC_FREQUENCY`        | 快取與資料庫同步頻率(秒) | `60`    | `SYNC_FREQUENCY=120`                                       |
+| `BATCH_UPDATE_ENABLED`  | 啟用資料庫批次更新聚合   | `false` | `BATCH_UPDATE_ENABLED=true`                                |
+| `BATCH_UPDATE_INTERVAL` | 批次更新聚合時間間隔(秒) | `5`     | `BATCH_UPDATE_INTERVAL=10`                                 |
+
+## 多節點與安全配置
+
+| 環境變數                    | 說明                         | 預設值   | 示例                                        |
+| --------------------------- | ---------------------------- | -------- | ------------------------------------------- |
+| `SESSION_SECRET`            | 會話金鑰(多機部署必須)       | -        | `SESSION_SECRET=your_session_secret`        |
+| `CRYPTO_SECRET`             | 加密金鑰(加密資料庫內容，預設回退到SESSION_SECRET) | -        | `CRYPTO_SECRET=your_crypto_secret`          |
+| `FRONTEND_BASE_URL`         | 前端基礎URL（從節點使用，將未匹配路由重定向到此地址） | -        | `FRONTEND_BASE_URL=https://<your-vxon-domain>` |
+| `NODE_TYPE`                 | 節點型別                     | `master` | `NODE_TYPE=slave`                           |
+| `TLS_INSECURE_SKIP_VERIFY`  | 全域性跳過TLS證書驗證         | `false`  | `TLS_INSECURE_SKIP_VERIFY=true`             |
+| `TRUSTED_REDIRECT_DOMAINS`  | 受信任的重定向域名列表(逗號分隔) | -    | `TRUSTED_REDIRECT_DOMAINS=example.com,api.example.com` |
+
+<Callout type="warn" title="SESSION_SECRET 注意事項">
+  `SESSION_SECRET` 不可設定為 `random_string`，否則程式將拒絕啟動。多機部署時所有節點必須使用相同的金鑰。
+</Callout>
+
+<Callout type="info" title="叢集部署">
+  關於如何使用這些環境變數構建完整的叢集部署，請參考[叢集部署指南](/zh-Hant/docs/installation/deployment-methods/cluster-deployment)。
+</Callout>
+
+## 使用者及令牌配置
+
+| 環境變數                             | 說明                         | 預設值  | 示例                                    |
+| ------------------------------------ | ---------------------------- | ------- | --------------------------------------- |
+| `GENERATE_DEFAULT_TOKEN`             | 為新註冊使用者生成初始令牌     | `false` | `GENERATE_DEFAULT_TOKEN=true`           |
+| `NOTIFICATION_LIMIT_DURATION_MINUTE` | 通知限制的持續時間(分鐘)     | `10`    | `NOTIFICATION_LIMIT_DURATION_MINUTE=15` |
+| `NOTIFY_LIMIT_COUNT`                 | 指定持續時間內的最大通知數量 | `2`     | `NOTIFY_LIMIT_COUNT=3`                  |
+
+## 請求限制配置
+
+| 環境變數                         | 說明                           | 預設值 | 示例                                     |
+| -------------------------------- | ------------------------------ | ------ | ---------------------------------------- |
+| `GLOBAL_API_RATE_LIMIT_ENABLE`   | 全域性API速率限制開關            | `true` | `GLOBAL_API_RATE_LIMIT_ENABLE=false`     |
+| `GLOBAL_API_RATE_LIMIT`          | 全域性API速率限制(單IP)          | `180`  | `GLOBAL_API_RATE_LIMIT=100`              |
+| `GLOBAL_API_RATE_LIMIT_DURATION` | 全域性API速率限制視窗(秒)        | `180`  | `GLOBAL_API_RATE_LIMIT_DURATION=120`     |
+| `GLOBAL_WEB_RATE_LIMIT_ENABLE`   | 全域性Web速率限制開關            | `true` | `GLOBAL_WEB_RATE_LIMIT_ENABLE=false`     |
+| `GLOBAL_WEB_RATE_LIMIT`          | 全域性Web速率限制(單IP)          | `60`   | `GLOBAL_WEB_RATE_LIMIT=30`               |
+| `GLOBAL_WEB_RATE_LIMIT_DURATION` | 全域性Web速率限制視窗(秒)        | `180`  | `GLOBAL_WEB_RATE_LIMIT_DURATION=120`     |
+| `CRITICAL_RATE_LIMIT_ENABLE`     | 關鍵操作速率限制開關           | `true` | `CRITICAL_RATE_LIMIT_ENABLE=false`       |
+| `CRITICAL_RATE_LIMIT`            | 關鍵操作速率限制次數           | `20`   | `CRITICAL_RATE_LIMIT=10`                 |
+| `CRITICAL_RATE_LIMIT_DURATION`   | 關鍵操作速率限制視窗(秒)       | `1200` | `CRITICAL_RATE_LIMIT_DURATION=600`       |
+
+## 中繼與代理配置
+
+| 環境變數                       | 說明                                        | 預設值 | 示例                             |
+| ------------------------------ | ------------------------------------------- | ------ | -------------------------------- |
+| `RELAY_TIMEOUT`                | 中繼請求超時時間(秒)，0為不限               | `0`    | `RELAY_TIMEOUT=60`               |
+| `STREAMING_TIMEOUT`            | 流式一次回覆的超時時間(秒)                  | `300`  | `STREAMING_TIMEOUT=120`          |
+| `RELAY_MAX_IDLE_CONNS`         | 中繼HTTP客戶端池最大空閒連線數              | `500`  | `RELAY_MAX_IDLE_CONNS=1000`      |
+| `RELAY_MAX_IDLE_CONNS_PER_HOST`| 中繼HTTP客戶端池每主機最大空閒連線數        | `100`  | `RELAY_MAX_IDLE_CONNS_PER_HOST=200` |
+| `MAX_FILE_DOWNLOAD_MB`         | 最大檔案下載大小(MB)                        | `64`   | `MAX_FILE_DOWNLOAD_MB=128`       |
+| `MAX_REQUEST_BODY_MB`          | 最大請求體大小(MB，解壓後計；防止zip bomb/OOM) | `128`  | `MAX_REQUEST_BODY_MB=256`        |
+| `STREAM_SCANNER_MAX_BUFFER_MB` | SSE流掃描緩衝區最大大小(MB)                 | `64`   | `STREAM_SCANNER_MAX_BUFFER_MB=128` |
+
+<Callout type="warn" title="RELAY_TIMEOUT 設定警告">
+  設定 `RELAY_TIMEOUT` 環境變數時請謹慎，如果設定過短可能導致以下問題：
+</Callout>
+
+    - 上游API已經完成請求並計費，但本地因超時而未完成計費
+
+    - 造成計費不同步，可能導致系統虧損
+
+    - 建議不設定，除非您知道自己在做什麼
+
+## 渠道管理配置
+
+| 環境變數                        | 說明                       | 預設值                             | 示例                                |
+| ------------------------------- | -------------------------- | ---------------------------------- | ----------------------------------- |
+| `CHANNEL_UPDATE_FREQUENCY`      | 定期更新渠道餘額(分鐘)     | -（不設定則禁用）                  | `CHANNEL_UPDATE_FREQUENCY=1440`     |
+| `CHANNEL_TEST_FREQUENCY`        | 定期檢查渠道(分鐘)，覆蓋資料庫設定 | -（不設定則使用資料庫設定）  | `CHANNEL_TEST_FREQUENCY=1440`       |
+| `POLLING_INTERVAL`              | 請求輪詢間隔(秒)           | `0`                                | `POLLING_INTERVAL=5`                |
+
+### 渠道上游模型同步
+
+| 環境變數                                              | 說明                           | 預設值 | 示例 |
+| ----------------------------------------------------- | ------------------------------ | ------ | ---- |
+| `CHANNEL_UPSTREAM_MODEL_UPDATE_TASK_ENABLED`          | 啟用定期同步上游供應商模型列表 | `true` | `CHANNEL_UPSTREAM_MODEL_UPDATE_TASK_ENABLED=false` |
+| `CHANNEL_UPSTREAM_MODEL_UPDATE_TASK_INTERVAL_MINUTES` | 模型列表同步間隔(分鐘)        | `30`   | `CHANNEL_UPSTREAM_MODEL_UPDATE_TASK_INTERVAL_MINUTES=60` |
+| `CHANNEL_UPSTREAM_MODEL_UPDATE_MIN_CHECK_INTERVAL_SECONDS` | 單渠道最小檢查間隔(秒)   | `300`  | `CHANNEL_UPSTREAM_MODEL_UPDATE_MIN_CHECK_INTERVAL_SECONDS=600` |
+
+## 模型和請求處理配置
+
+| 環境變數                     | 說明                                                 | 預設值  | 示例                                 |
+| ---------------------------- | ---------------------------------------------------- | ------- | ------------------------------------ |
+| `FORCE_STREAM_OPTION`        | 覆蓋客戶端stream_options引數，強制獲取流式用量資訊   | `true`  | `FORCE_STREAM_OPTION=false`          |
+| `CountToken`                 | 是否啟用本地token計數                                | `true`  | `CountToken=false`                   |
+| `GET_MEDIA_TOKEN`            | 流式模式下是否統計圖片/音訊token                     | `true`  | `GET_MEDIA_TOKEN=false`              |
+| `GET_MEDIA_TOKEN_NOT_STREAM` | 非流模式下是否統計圖片/音訊token                     | `false` | `GET_MEDIA_TOKEN_NOT_STREAM=true`    |
+
+## 非同步任務配置
+
+| 環境變數               | 說明                                                        | 預設值  | 示例                               |
+| ---------------------- | ----------------------------------------------------------- | ------- | ---------------------------------- |
+| `UPDATE_TASK`          | 是否啟用非同步任務輪詢更新(MJ、Suno等)                       | `true`  | `UPDATE_TASK=false`                |
+| `TASK_QUERY_LIMIT`     | 每次輪詢查詢的最大任務數                                    | `1000`  | `TASK_QUERY_LIMIT=500`             |
+| `TASK_TIMEOUT_MINUTES` | 非同步任務超時(分鐘)，超時後標記失敗並退款，0為禁用           | `1440`  | `TASK_TIMEOUT_MINUTES=720`         |
+| `TASK_PRICE_PATCH`     | 任務價格補丁，設定的模型僅按次計費，模型名用英文逗號隔開    | -       | `TASK_PRICE_PATCH=sora-2,sora-2-pro` |
+
+## 特定模型配置
+
+| 環境變數                      | 說明                         | 預設值               | 示例                                   |
+| ----------------------------- | ---------------------------- | -------------------- | -------------------------------------- |
+| `AZURE_DEFAULT_API_VERSION`   | Azure渠道預設API版本         | `2025-04-01-preview` | `AZURE_DEFAULT_API_VERSION=2023-05-15` |
+| `COHERE_SAFETY_SETTING`       | Cohere模型安全設定           | `NONE`               | `COHERE_SAFETY_SETTING=CONTEXTUAL`     |
+| `DIFY_DEBUG`                  | Dify渠道輸出工作流和節點資訊 | `true`               | `DIFY_DEBUG=false`                     |
+
+## 訂閱快取配置
+
+| 環境變數                          | 說明                       | 預設值  | 示例 |
+| --------------------------------- | -------------------------- | ------- | ---- |
+| `SUBSCRIPTION_PLAN_CACHE_TTL`     | 訂閱計劃快取TTL(秒)       | `300`   | `SUBSCRIPTION_PLAN_CACHE_TTL=600`      |
+| `SUBSCRIPTION_PLAN_INFO_CACHE_TTL`| 訂閱計劃詳情快取TTL(秒)   | `120`   | `SUBSCRIPTION_PLAN_INFO_CACHE_TTL=300` |
+| `SUBSCRIPTION_PLAN_CACHE_CAP`     | 訂閱計劃快取最大容量       | `5000`  | `SUBSCRIPTION_PLAN_CACHE_CAP=10000`    |
+| `SUBSCRIPTION_PLAN_INFO_CACHE_CAP`| 訂閱計劃詳情快取最大容量   | `10000` | `SUBSCRIPTION_PLAN_INFO_CACHE_CAP=20000` |
+
+## 其他配置
+
+| 環境變數            | 說明                         | 預設值 | 示例                               |
+| ------------------- | ---------------------------- | ------ | ---------------------------------- |
+| `ERROR_LOG_ENABLED` | 是否記錄並在前端顯示錯誤日誌 | `false` | `ERROR_LOG_ENABLED=true`           |
+
+## 分析統計
+
+| 環境變數 | 說明 | 預設值 | 示例 |
+|---------|------|-------|------|
+| `UMAMI_WEBSITE_ID` | Umami站點ID | - | `UMAMI_WEBSITE_ID=xxxx-xxxx` |
+| `UMAMI_SCRIPT_URL` | Umami指令碼地址 | `https://analytics.umami.is/script.js` | `UMAMI_SCRIPT_URL=https://umami.example.com/script.js` |
+| `GOOGLE_ANALYTICS_ID` | Google Analytics 4站點ID | - | `GOOGLE_ANALYTICS_ID=G-XXXXXXX` |
+
+## 後設資料同步
+
+| 環境變數 | 說明 | 預設值 | 示例 |
+|---------|------|-------|------|
+| `SYNC_UPSTREAM_BASE` | 模型/廠商後設資料上游地址 | `https://basellm.github.io/llm-metadata` | `SYNC_UPSTREAM_BASE=https://mirror.example.com/llm-metadata` |
+| `SYNC_HTTP_TIMEOUT_SECONDS` | 同步HTTP超時(秒) | `10` | `SYNC_HTTP_TIMEOUT_SECONDS=15` |
+| `SYNC_HTTP_RETRY` | 同步重試次數 | `3` | `SYNC_HTTP_RETRY=5` |
+| `SYNC_HTTP_MAX_MB` | 響應體最大大小(MB) | `10` | `SYNC_HTTP_MAX_MB=20` |
+
+## 前端配置
+
+| 環境變數 | 說明 | 預設值 | 示例 |
+|---------|------|-------|------|
+| `VITE_REACT_APP_SERVER_URL` | 前端請求後端的基礎地址（編譯時生效） | - | `VITE_REACT_APP_SERVER_URL=https://api.example.com` |
+
+<Callout type="info" title="編譯時變數">
+  `VITE_REACT_APP_SERVER_URL` 是 Vite 編譯時注入的前端變數，僅在構建前端時生效，執行時無法修改。
+</Callout>
+
+## Pyroscope 持續效能分析
+
+| 環境變數 | 說明 | 預設值 | 示例 |
+|---------|------|-------|------|
+| `PYROSCOPE_URL` | Pyroscope伺服器地址，留空禁用 | - | `PYROSCOPE_URL=http://pyroscope:4040` |
+| `PYROSCOPE_APP_NAME` | 上報的應用名稱 | `vxon` | `PYROSCOPE_APP_NAME=my-api` |
+| `PYROSCOPE_BASIC_AUTH_USER` | Pyroscope Basic Auth使用者名稱 | - | `PYROSCOPE_BASIC_AUTH_USER=admin` |
+| `PYROSCOPE_BASIC_AUTH_PASSWORD` | Pyroscope Basic Auth密碼 | - | `PYROSCOPE_BASIC_AUTH_PASSWORD=secret` |
+| `HOSTNAME` | 上報的主機名標籤 | `vxon` | `HOSTNAME=node-1` |
+| `PYROSCOPE_MUTEX_RATE` | 互斥鎖分析取樣率 | `5` | `PYROSCOPE_MUTEX_RATE=10` |
+| `PYROSCOPE_BLOCK_RATE` | 阻塞分析取樣率 | `5` | `PYROSCOPE_BLOCK_RATE=10` |
+
+## LinuxDo OAuth
+
+正常情況下無需修改。
+
+| 環境變數 | 說明 | 預設值 | 示例 |
+|---------|------|-------|------|
+| `LINUX_DO_TOKEN_ENDPOINT` | LinuxDo 令牌端點 | `https://connect.linux.do/oauth2/token` | `LINUX_DO_TOKEN_ENDPOINT=https://connect.linux.do/oauth2/token` |
+| `LINUX_DO_USER_ENDPOINT` | LinuxDo 使用者端點 | `https://connect.linux.do/api/user` | `LINUX_DO_USER_ENDPOINT=https://connect.linux.do/api/user` |
+
+## 除錯相關
+
+| 環境變數 | 說明 | 預設值 | 示例 |
+|---------|------|-------|------|
+| `DEBUG` | 啟用除錯模式（包括GORM除錯輸出） | `false` | `DEBUG=true` |
+| `GIN_MODE` | Gin執行模式 | `release` | `GIN_MODE=debug` |
+| `ENABLE_PPROF` | 啟用pprof效能分析（埠8005） | `false` | `ENABLE_PPROF=true` |
+
+## 已廢棄的環境變數
+
+以下環境變數已被廢棄，請使用系統設定介面中的相應選項：
+
+| 環境變數                  | 替代方式                        |
+| ------------------------- | ------------------------------- |
+| `GEMINI_MODEL_MAP`        | 請在系統設定-模型相關設定中設定 |
+| `GEMINI_SAFETY_SETTING`   | 請在系統設定-模型相關設定中設定 |
+| `GEMINI_VISION_MAX_IMAGE_NUM` | 請在系統設定-模型相關設定中設定 |
+
+## 多機部署示例
+
+在多機部署場景中，必須設定以下環境變數：
+
+### 主節點配置
+
+```bash
+# 資料庫配置 - 使用遠端資料庫
+SQL_DSN=root:password@tcp(db-server:3306)/oneapi
+
+# 安全配置
+SESSION_SECRET=your_unique_session_secret
+CRYPTO_SECRET=your_unique_crypto_secret
+
+# Redis快取配置
+REDIS_CONN_STRING=redis://default:password@redis-server:6379
+```
+
+### 從節點配置
+
+```bash
+# 資料庫配置 - 使用相同的遠端資料庫
+SQL_DSN=root:password@tcp(db-server:3306)/oneapi
+
+# 安全配置 - 與主節點使用相同的金鑰
+SESSION_SECRET=your_unique_session_secret
+CRYPTO_SECRET=your_unique_crypto_secret
+
+# Redis快取配置 - 與主節點使用相同的Redis
+REDIS_CONN_STRING=redis://default:password@redis-server:6379
+
+# 節點型別設定
+NODE_TYPE=slave
+
+# 可選：前端基礎URL
+# FRONTEND_BASE_URL=https://<your-vxon-domain>
+
+# 可選：同步頻率
+SYNC_FREQUENCY=60
+```
+
+<Callout type="info" title="完整叢集配置">
+  這只是基本的多節點配置示例。完整的叢集部署配置、架構說明和最佳實踐，請參考[叢集部署指南](/zh-Hant/docs/installation/deployment-methods/cluster-deployment)。
+</Callout>
+
+## Docker Compose中的環境變數示例
+
+下面是一個在Docker Compose配置檔案中設定環境變數的簡要示例:
+
+```yaml
+services:
+  vxon:
+    image: vxon/vxon:latest
+    environment:
+      - TZ=Asia/Shanghai
+      - SQL_DSN=root:123456@tcp(mysql:3306)/oneapi
+      - REDIS_CONN_STRING=redis://default:redispw@redis:6379
+      - SESSION_SECRET=your_unique_session_secret
+      - CRYPTO_SECRET=your_unique_crypto_secret
+      - MEMORY_CACHE_ENABLED=true
+      - GENERATE_DEFAULT_TOKEN=true
+      - STREAMING_TIMEOUT=120
+      - CHANNEL_UPDATE_FREQUENCY=1440
+```
+
+有關完整的Docker Compose配置，包括更多環境變數設定選項，請參考[Docker Compose配置說明](/zh-Hant/docs/installation/config-maintenance/docker-compose-yml)文件。
