@@ -1,0 +1,142 @@
+﻿---
+title: Docker Compose 部署
+---
+
+本文件提供了使用Docker Compose部署Vxon的詳細步驟。
+
+## 前置要求
+
+- 已安裝Docker和Docker Compose
+- 推薦系統: Linux (Ubuntu/CentOS/Debian等)
+
+## 使用Docker Compose部署
+
+### 方法一：使用Git克隆專案（推薦）
+
+如果您能夠正常訪問GitHub，推薦使用此方法。專案中已包含完整的 `docker-compose.yml` 配置檔案：
+
+```shell
+# 下載專案原始碼
+git clone https://github.com/Vxon/vxon.git
+
+# 進入專案目錄
+cd vxon
+
+# 根據需要編輯 docker-compose.yml 檔案
+# 使用nano編輯器
+nano docker-compose.yml
+# 或使用vim編輯器
+# vim docker-compose.yml
+```
+
+<Callout type="info" title="提示">
+  專案自帶的 `docker-compose.yml` 檔案已經配置好了所有必要的服務（包括 MySQL 和
+  Redis），您只需根據實際情況修改埠、密碼等引數即可使用。
+</Callout>
+
+### 方法二：手動建立配置檔案
+
+如果無法訪問GitHub或克隆倉庫，可以手動建立配置檔案：
+
+1. 建立一個目錄用於Vxon部署：
+
+```shell
+mkdir vxon
+cd vxon
+```
+
+1. 在該目錄中建立`docker-compose.yml`檔案
+
+   您可以參考[Docker Compose配置說明](/zh-Hant/docs/installation/config-maintenance/docker-compose-yml)文件中的配置示例，根據您的需求選擇：
+   - 生產環境推薦使用完整配置（包含MySQL和Redis）
+   - 測試環境可以使用簡化配置
+
+1. 使用文字編輯器建立檔案：
+
+```shell
+# 使用nano編輯器
+nano docker-compose.yml
+
+# 或使用vim編輯器
+vim docker-compose.yml
+```
+
+將選擇的配置內容複製到該檔案中，並根據需要進行自定義修改。
+
+## 啟動服務
+
+配置檔案準備好後，無論您是透過Git克隆還是手動建立，都可以使用以下命令啟動服務：
+
+```shell
+# 使用Docker Compose啟動服務
+docker compose up -d
+```
+
+該命令會自動拉取所需映象並在後臺啟動服務。
+
+## 檢視日誌
+
+- **全部服務實時日誌**
+
+```bash
+docker compose logs -f
+```
+
+- **指定服務日誌**（示例：`vxon`、`mysql`、`redis`）
+
+```bash
+docker compose logs -f vxon
+docker compose logs -f mysql
+docker compose logs -f redis
+```
+
+- **僅檢視最近 N 行**
+
+```bash
+docker compose logs --tail=100 vxon
+```
+
+- **檢視最近一段時間內的日誌**
+
+```bash
+docker compose logs --since=10m vxon
+```
+
+- **顯示時間戳**
+
+```bash
+docker compose logs -f -t vxon
+```
+
+- **前臺模式除錯（隨啟動實時輸出日誌）**
+
+```bash
+docker compose up
+# 或僅啟動並跟隨某個服務
+docker compose up vxon
+```
+
+按 Ctrl+C 退出前臺模式（會停止相應服務）。後臺執行請使用 `-d`。
+
+- **檢視服務列表/狀態**
+
+```bash
+docker compose ps
+```
+
+- **使用容器名檢視日誌**（當 `container_name` 已設定，如配置裡的 `vxon`）
+
+```bash
+docker logs -f vxon
+```
+
+## 停止服務
+
+```shell
+# 停止服務
+docker compose down
+```
+
+## 訪問系統
+
+服務啟動成功後，訪問`http://伺服器IP:3000`將自動引導到初始化頁面。按照頁面指引手動設定管理員賬號和密碼（僅首次安裝需要）。完成初始化後即可使用所設定的管理員賬號登入系統。
