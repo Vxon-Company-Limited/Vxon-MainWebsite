@@ -1,0 +1,144 @@
+---
+title: vxon
+description: vxon 是 Vxon 官方使用者級 Skill 外掛，支援 Claude Code、Codex 和 OpenClaw（龍蝦）。透過自然語言指令在 AI 編碼助手內查詢模型、管理令牌、檢視分組和餘額，並直接提問 Vxon 的使用問題。
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+<Callout type="info" title="什麼是 vxon-skills？">
+  **vxon-skills** 是 Vxon 官方推出的 AI 編輯器 Skill 外掛。Skill 是一種輕量級擴充套件協議，讓 AI 編碼助手（如 Claude Code、Codex、OpenClaw（龍蝦）、Cursor、Windsurf、Cline 等）能夠在編輯器內**直接呼叫 Vxon 介面**，完成模型查詢、令牌管理、餘額檢視，以及提問 Vxon 部署、配置和 API 呼叫等使用問題，實現真正的"編碼即運維"工作流。
+
+  - GitHub 倉庫：[github.com/Vxon/skills](https://github.com/Vxon/skills)
+
+  現在也支援在 OpenClaw（龍蝦）中使用，你可以直接在對話工作流裡呼叫 `/vxon` 指令完成模型查詢、令牌管理、餘額檢視，也能直接提問 Vxon 的使用問題。
+</Callout>
+
+## 為什麼使用 Skills
+
+在日常 AI 開發中，開發者經常需要在編輯器和 Vxon 管理面板之間反覆切換：檢視可用模型、建立 API 令牌、檢查餘額、調整分組配額……這些操作打斷了編碼流程。
+
+**vxon-skills 解決的問題：**
+
+- **零切換**：在 Claude Code、Codex、OpenClaw（龍蝦）等 AI 編碼助手中直接輸入自然語言指令，無需開啟瀏覽器或管理後臺
+- **內建問答**：可直接提問 Vxon 的部署、配置、分組、模型呼叫格式等使用問題，快速獲得幫助
+- **安全優先**：金鑰永不明文顯示，令牌複製與注入均透過安全通道完成（`sk-` 開頭的金鑰絕不會出現在終端或日誌中）
+- **即裝即用**：一行 `npx` 命令完成安裝，自動檢測執行時環境（Bun / Node.js / Deno）
+- **多編輯器相容**：支援所有實現 Skills 協議的 AI 編輯器和編碼助手
+
+## 支援的 AI 編輯器
+
+vxon-skills 可在以下 AI 編碼工具中使用：
+
+| AI 編輯器 / 編碼助手 | 型別 | 備註 |
+|----------------------|------|------|
+| **Claude Code** | 終端 AI 程式設計助手 | Anthropic 官方 CLI |
+| **OpenClaw** | 自託管 AI 助手平臺 | 支援 Skills，可在對話中直接呼叫 `/vxon` 指令 |
+| **Cursor** | AI 原生程式碼編輯器 | 基於 VS Code |
+| **Windsurf** | AI 程式碼編輯器 | Codeium 出品 |
+| **Cline** | VS Code AI 擴充套件 | 開源 AI 編碼代理 |
+| **Codex CLI** | 終端 AI 程式設計助手 | OpenAI 官方 CLI |
+
+> 任何支援 Skills 協議的 AI 工具都可以使用 vxon-skills。
+
+## 功能與指令一覽
+
+以下是 vxon-skills 提供的全部指令。這些指令透過 Vxon REST API 執行，支援查詢和管理 Vxon 例項中的各類資源。
+
+### 查詢類指令
+
+| 指令 | 說明 | 用途 |
+|------|------|------|
+| `/vxon models` | 列出可用 AI 模型 | 檢視當前 Vxon 例項中配置的所有模型（OpenAI、Claude、Gemini 等） |
+| `/vxon groups` | 列出使用者分組 | 檢視賬戶所屬的分組及其配額、倍率設定 |
+| `/vxon balance` | 檢視賬戶餘額 | 實時查詢當前使用者的賬戶餘額和用量 |
+
+### 令牌管理指令
+
+| 指令 | 說明 | 用途 |
+|------|------|------|
+| `/vxon tokens` | 列出 API 令牌 | 檢視所有已建立的令牌（金鑰以掩碼形式顯示，如 `sk-reHR**********OspA`） |
+| `/vxon create-token <name> [--group=xxx]` | 建立新 API 令牌 | 為不同應用或專案建立獨立的 API 金鑰 |
+| `/vxon switch-group <token_id> <group>` | 切換令牌分組 | 更改令牌所屬的分組以調整模型訪問許可權和倍率 |
+| `/vxon copy-token <token_id>` | 複製金鑰到剪貼簿 | 安全地將真實金鑰複製到系統剪貼簿（金鑰不會顯示在終端中） |
+| `/vxon apply-token <token_id> <file>` | 注入金鑰到配置檔案 | 將令牌金鑰安全寫入專案配置檔案（如 `.env`），使用佔位符替換機制 |
+
+### 幫助指令
+
+| 指令 | 說明 | 用途 |
+|------|------|------|
+| `/vxon help <question>` | 提問關於 Vxon 的問題 | 獲取 Vxon 部署、配置、API 呼叫格式等幫助資訊 |
+
+## 安裝與配置
+
+<Steps>
+  <Step>
+    ### 安裝 vxon-skills
+
+    使用 `npx` 一鍵安裝：
+
+    ```bash
+    npx skills add https://github.com/Vxon/skills --skill vxon
+    ```
+
+    該命令會從 GitHub 倉庫拉取最新的 Skill 定義並安裝到你的編輯器環境。
+  </Step>
+  <Step>
+    ### 設定環境變數
+
+    vxon-skills 需要三個環境變數來連線你的 Vxon 例項。推薦在終端配置檔案中設定：
+
+    ```bash
+    # ~/.bashrc 或 ~/.zshrc
+    export VXON_BASE_URL=https://<your-vxon-domain>
+    export VXON_ACCESS_TOKEN=your-access-token
+    export VXON_USER_ID=1
+    ```
+
+    | 變數 | 說明 | 示例 |
+    |------|------|------|
+    | `VXON_BASE_URL` | Vxon 服務地址 | `https://api.example.com` |
+    | `VXON_ACCESS_TOKEN` | 管理員或使用者的訪問令牌 | 從「個人設定 → 賬戶管理 → 安全設定 → 系統訪問令牌」獲取 |
+    | `VXON_USER_ID` | 使用者 ID | `1`（管理員預設為 1） |
+
+    也可以在專案根目錄建立 `.env` 檔案。請確保 `.env` 已加入 `.gitignore`，防止金鑰洩露。
+  </Step>
+  <Step>
+    ### 開始使用
+
+    安裝完成後，在支援 Skills 的 AI 編輯器中直接輸入 `/vxon` 指令即可。例如：
+
+    - 輸入 `/vxon models` 檢視可用模型列表
+    - 輸入 `/vxon balance` 檢視當前餘額
+    - 輸入 `/vxon create-token my-app` 建立一個名為 `my-app` 的新令牌
+    - 輸入 `/vxon help 如何配置模型分組和令牌？` 直接提問 Vxon 的使用問題
+    - 在 OpenClaw（龍蝦）中同樣可以直接呼叫 `/vxon models`、`/vxon balance` 等指令
+  </Step>
+</Steps>
+
+## 執行環境要求
+
+vxon-skills 需要以下任一 JavaScript 執行時（Skill 啟動時自動檢測）：
+
+| 執行時 | 版本要求 | 推薦程度 |
+|--------|---------|---------|
+| **Bun** | 最新版 | 推薦（最快） |
+| **Node.js** | >= 18 | 廣泛支援 |
+| **Deno** | 最新版 | 可選 |
+
+## 安全機制
+
+vxon-skills 內建多層安全防護，保護你的 API 金鑰安全：
+
+- 令牌列表僅顯示**掩碼金鑰**（如 `sk-reHR**********OspA`），真實金鑰不會出現在終端輸出中
+- `copy-token` 僅將金鑰複製到系統剪貼簿，不會在任何輸出中顯示
+- `apply-token` 使用佔位符替換機制注入金鑰，不直接暴露金鑰內容
+- 所有 `sk-` 開頭的金鑰值在整個執行流程中都被嚴格保護
+
+## 瞭解更多
+
+vxon-skills 正在持續迭代中，指令和功能可能隨版本更新。請以倉庫 README 為準獲取最新資訊和變更日誌：
+
+- GitHub 倉庫：[github.com/Vxon/skills](https://github.com/Vxon/skills)
+- Vxon 官網：[www.vxon.ai](https://www.vxon.ai)
+- Vxon GitHub：[github.com/Vxon/vxon](https://github.com/Vxon/vxon)
