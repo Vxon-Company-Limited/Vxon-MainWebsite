@@ -1,0 +1,13 @@
+{
+  "title": "幫助支援",
+  "description": "常見問題和社群支援",
+  "icon": "Headset",
+  "root": true,
+  "pages": [
+    "index",
+    "faq",
+    "community-interaction",
+    "feedback-issues",
+    "buy-us-a-coffee"
+  ]
+}
