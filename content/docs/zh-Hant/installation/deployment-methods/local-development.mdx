@@ -1,0 +1,744 @@
+﻿---
+title: 本地開發部署
+---
+
+本文件提供了在本地環境中設定和開發 Vxon 專案的詳細步驟，適合希望參與專案開發或進行功能定製的開發者。
+
+## 開發環境要求
+
+在開始本地開發之前，請確保您的系統已安裝以下軟體：
+
+- **Go** 1.21 或更高版本（後端開發）
+- **Node.js** 18 或更高版本（前端開發）
+- **Bun** 最新版本（推薦的包管理器，比 npm/yarn 快 25 倍）
+- **Git**（版本控制）
+- **MySQL**（可選，預設使用 SQLite）
+- **Redis**（可選，用於提升效能）
+- **Visual Studio Code** 或其他程式碼編輯器
+
+<Callout type="info" title="關於 Bun">
+  Bun是一個超快的JavaScript包管理器、測試執行器和bundler。相比傳統的npm或yarn，Bun的安裝速度快25倍，是2024年最推薦的JavaScript包管理工具。
+</Callout>
+
+## 克隆專案
+
+首先，從 GitHub 克隆 Vxon 倉庫到本地：
+
+```bash
+git clone https://github.com/Vxon/vxon.git
+cd vxon
+```
+
+## 後端開發設定
+
+### 安裝 Go 依賴
+
+```bash
+go mod download
+```
+
+### 配置開發環境
+
+Vxon 支援透過 `.env` 檔案配置環境變數。建立 `.env` 檔案（可從 `.env.example` 複製）：
+
+```bash
+cp .env.example .env
+```
+
+編輯 `.env` 檔案，根據需要修改配置。以下是開發環境中常用的配置：
+
+```bash
+PORT=3000
+SQL_DSN=root:password@tcp(localhost:3306)/vxon   # 如使用MySQL，取消註釋並修改
+# REDIS_CONN_STRING=redis://localhost:6379         # 如使用Redis，取消註釋並修改
+```
+
+<Callout type="info" title="提示">
+  如果不配置 `SQL_DSN`，系統將預設使用 SQLite 資料庫，儲存在 `one-api.db`
+  檔案中。
+</Callout>
+
+### 執行後端服務
+
+```bash
+# 直接執行
+go run main.go
+
+# 或者編譯後執行
+go build -o vxon
+./vxon
+```
+
+服務預設執行在 `http://localhost:3000`
+
+## 前端開發設定
+
+Vxon 的前端程式碼位於 `web` 目錄中，使用 React 和 [semi design 元件庫](https://semi.design/zh-CN) 開發。
+
+### 安裝 Bun（推薦）
+
+如果還沒有安裝 Bun，請使用以下命令安裝：
+
+**macOS/Linux:**
+
+```bash
+curl -fsSL https://bun.sh/install | bash
+```
+
+**Windows（使用 WSL）:**
+
+```bash
+curl -fsSL https://bun.sh/install | bash
+```
+
+**macOS（使用 Homebrew）:**
+
+```bash
+brew tap oven-sh/bun
+brew install bun
+```
+
+安裝完成後，重啟終端或執行 `source ~/.bashrc`（或 `~/.zshrc`）使 Bun 命令生效。
+
+### 安裝前端依賴
+
+```bash
+cd web
+bun install   # 使用 bun 安裝前端依賴
+```
+
+### 執行開發伺服器
+
+```bash
+bun run dev   # 使用 bun 執行開發伺服器
+```
+
+前端開發伺服器預設執行在 `http://localhost:5173`，並配置了代理，會將 API 請求轉發到後端服務。
+
+### 構建前端資源
+
+```bash
+bun run build   # 使用 bun 構建前端資源
+```
+
+構建後的檔案會生成到 `web/dist` 目錄，後端服務會自動載入這些靜態資源。
+
+7. **建立拉取請求**：在 GitHub 上建立 PR，描述您的更改
+
+## 除錯技巧
+
+### 後端除錯
+
+1. **檢視日誌**：
+
+   ```bash
+   go run main.go --log-dir ./logs
+   ```
+
+2. **使用 Delve 進行除錯**：
+   ```bash
+   go install github.com/go-delve/delve/cmd/dlv@latest
+   dlv debug main.go
+   ```
+
+### 前端除錯
+
+1. **使用 Chrome DevTools**：
+   - 開啟 Chrome 開發者工具 (F12)
+   - 檢視 Console 和 Network 標籤頁
+
+2. **React 開發者工具**：
+   - 在 Chrome 中安裝 React Developer Tools 擴充套件
+   - 使用它檢查元件結構和狀態
+
+## 專案結構
+
+Vxon 專案的目錄結構：
+
+```
+vxon/                                 # 專案根目錄
+│  .dockerignore                         # Docker 構建時忽略的檔案配置
+│  .env.example                          # 環境變數示例檔案
+│  .gitignore                            # Git 忽略檔案配置
+│  BT.md                                 # BT（可能是寶塔面板）相關說明文件
+│  docker-compose.yml                    # Docker Compose 配置檔案，用於容器編排
+│  Dockerfile                            # Docker 映象構建配置
+│  go.mod                                # Go 模組依賴配置檔案
+│  go.sum                                # Go 模組依賴校驗和檔案
+│  LICENSE                               # 專案許可證檔案
+│  main.go                               # 專案主入口檔案
+│  makefile                              # 專案構建指令碼
+│  Midjourney.md                         # Midjourney 服務相關文件
+│  one-api.service                       # systemd 服務配置檔案
+│  README.en.md                          # 英文版專案說明文件
+│  README.md                             # 中文版專案說明文件
+│  Rerank.md                             # Rerank 功能相關文件
+│  Suno.md                               # Suno API 相關文件
+│  VERSION                               # 專案版本資訊檔案
+│
+├─.github                                # GitHub 相關配置目錄
+│  │  FUNDING.yml                        # GitHub 贊助配置檔案
+│  │
+│  ├─ISSUE_TEMPLATE                      # GitHub Issue 模板目錄
+│  │      bug_report.md                  # Bug 報告模板
+│  │      config.yml                     # Issue 配置檔案
+│  │      feature_request.md             # 功能請求模板
+│  │
+│  └─workflows                           # GitHub Actions 工作流配置目錄
+│          docker-image-amd64.yml        # AMD64 架構 Docker 映象構建工作流
+│          docker-image-arm64.yml        # ARM64 架構 Docker 映象構建工作流
+│          linux-release.yml             # Linux 平臺釋出工作流
+│          macos-release.yml             # macOS 平臺釋出工作流
+│          windows-release.yml           # Windows 平臺釋出工作流
+│
+├─bin                                    # 二進位制檔案和指令碼目錄
+│      migration_v0.2-v0.3.sql           # 資料庫 v0.2 到 v0.3 遷移指令碼
+│      migration_v0.3-v0.4.sql           # 資料庫 v0.3 到 v0.4 遷移指令碼
+│      time_test.sh                      # 時間測試指令碼
+│
+├─common                                 # 通用功能模組目錄
+│      constants.go                      # 通用常量定義
+│      crypto.go                         # 加密相關功能
+│      custom-event.go                   # 自定義事件處理
+│      database.go                       # 資料庫連線和操作
+│      email-outlook-auth.go             # Outlook 郵箱認證
+│      email.go                          # 電子郵件功能
+│      embed-file-system.go              # 嵌入式檔案系統
+│      env.go                            # 環境變數處理
+│      gin.go                            # Gin 框架相關功能
+│      go-channel.go                     # Go 通道管理
+│      gopool.go                         # Go 協程池
+│      init.go                           # 初始化函式
+│      logger.go                         # 日誌記錄功能
+│      pprof.go                          # 效能分析工具
+│      rate-limit.go                     # 速率限制功能
+│      redis.go                          # Redis 客戶端
+│      str.go                            # 字串處理工具
+│      topup-ratio.go                    # 充值比率計算
+│      utils.go                          # 通用工具函式
+│      validate.go                       # 資料驗證功能
+│      verification.go                   # 驗證碼相關功能
+│
+├─constant                               # 常量定義目錄
+│      cache_key.go                      # 快取鍵名常量
+│      channel_setting.go                # 渠道設定常量
+│      context_key.go                    # 上下文鍵名常量
+│      env.go                            # 環境變數常量
+│      finish_reason.go                  # 完成原因常量
+│      midjourney.go                     # Midjourney 相關常量
+│      task.go                           # 任務相關常量
+│      user_setting.go                   # 使用者設定常量
+│
+├─controller                             # 控制器層，處理HTTP請求
+│      billing.go                        # 計費控制器
+│      channel-billing.go                # 渠道計費控制器
+│      channel-test.go                   # 渠道測試控制器
+│      channel.go                        # 渠道管理控制器
+│      github.go                         # GitHub 相關控制器
+│      group.go                          # 使用者組控制器
+│      linuxdo.go                        # LinuxDo 相關控制器
+│      log.go                            # 日誌控制器
+│      midjourney.go                     # Midjourney 服務控制器
+│      misc.go                           # 雜項功能控制器
+│      model.go                          # 模型管理控制器
+│      oidc.go                           # OpenID Connect 認證控制器
+│      option.go                         # 選項設定控制器
+│      playground.go                     # 測試場景控制器
+│      pricing.go                        # 價格管理控制器
+│      redemption.go                     # 兌換碼控制器
+│      relay.go                          # 請求轉發控制器
+│      task.go                           # 任務管理控制器
+│      telegram.go                       # Telegram 相關控制器
+│      token.go                          # 令牌管理控制器
+│      topup.go                          # 充值控制器
+│      usedata.go                        # 使用者資料控制器
+│      user.go                           # 使用者管理控制器
+│      wechat.go                         # 微信相關控制器
+│
+├─docs                                   # 文件目錄
+│  ├─api                                 # API 文件
+│  │      api_auth.md                    # API 認證文件
+│  │      user.md                        # 使用者相關 API 文件
+│  │
+│  └─channel                             # 渠道文件
+│          other_setting.md              # 其他設定文件
+│
+├─dto                                    # 資料傳輸物件目錄
+│      audio.go                          # 音訊相關 DTO
+│      dalle.go                          # DALL-E 相關 DTO
+│      embedding.go                      # 嵌入向量相關 DTO
+│      error.go                          # 錯誤響應 DTO
+│      file_data.go                      # 檔案資料 DTO
+│      midjourney.go                     # Midjourney 相關 DTO
+│      notify.go                         # 通知相關 DTO
+│      openai_request.go                 # OpenAI 請求 DTO
+│      openai_response.go                # OpenAI 響應 DTO
+│      playground.go                     # 測試場景 DTO
+│      pricing.go                        # 價格相關 DTO
+│      realtime.go                       # 實時資料 DTO
+│      rerank.go                         # 重排序相關 DTO
+│      sensitive.go                      # 敏感內容相關 DTO
+│      suno.go                           # Suno 相關 DTO
+│      task.go                           # 任務相關 DTO
+│
+├─middleware                             # 中介軟體目錄
+│      auth.go                           # 認證中介軟體
+│      cache.go                          # 快取中介軟體
+│      cors.go                           # 跨域資源共享中介軟體
+│      distributor.go                    # 請求分發中介軟體
+│      gzip.go                           # Gzip 壓縮中介軟體
+│      logger.go                         # 日誌記錄中介軟體
+│      model-rate-limit.go               # 模型級別速率限制中介軟體
+│      rate-limit.go                     # 通用速率限制中介軟體
+│      recover.go                        # 異常恢復中介軟體
+│      request-id.go                     # 請求 ID 中介軟體
+│      turnstile-check.go                # Cloudflare Turnstile 檢查中介軟體
+│      utils.go                          # 中介軟體工具函式
+│
+├─model                                  # 資料模型目錄
+│      ability.go                        # 能力模型
+│      cache.go                          # 快取模型
+│      channel.go                        # 渠道模型
+│      log.go                            # 日誌模型
+│      main.go                           # 主要模型和ORM配置
+│      midjourney.go                     # Midjourney 相關模型
+│      option.go                         # 選項設定模型
+│      pricing.go                        # 價格模型
+│      redemption.go                     # 兌換碼模型
+│      task.go                           # 任務模型
+│      token.go                          # 令牌模型
+│      token_cache.go                    # 令牌快取模型
+│      topup.go                          # 充值模型
+│      usedata.go                        # 使用者資料模型
+│      user.go                           # 使用者模型
+│      user_cache.go                     # 使用者快取模型
+│      utils.go                          # 模型工具函式
+│
+├─relay                                  # 請求轉發模組目錄
+│  │  relay-audio.go                     # 音訊請求轉發
+│  │  relay-image.go                     # 影象請求轉發
+│  │  relay-mj.go                        # Midjourney 請求轉發
+│  │  relay-text.go                      # 文字請求轉發
+│  │  relay_adaptor.go                   # 轉發介面卡
+│  │  relay_embedding.go                 # 嵌入向量請求轉發
+│  │  relay_rerank.go                    # 重排序請求轉發
+│  │  relay_task.go                      # 任務請求轉發
+│  │  websocket.go                       # WebSocket 通訊處理
+│  │
+│  ├─channel                             # 轉發渠道目錄
+│  │  │  adapter.go                      # 通用渠道介面卡
+│  │  │  api_request.go                  # API 請求處理
+│  │  │
+│  │  ├─ai360                            # 360 AI 渠道
+│  │  │      constants.go                # 360 AI 常量定義
+│  │  │
+│  │  ├─ali                              # 阿里雲 AI 渠道
+│  │  │      adaptor.go                  # 阿里雲介面卡
+│  │  │      constants.go                # 阿里雲常量定義
+│  │  │      dto.go                      # 阿里雲資料傳輸物件
+│  │  │      image.go                    # 阿里雲影象處理
+│  │  │      text.go                     # 阿里雲文字處理
+│  │  │
+│  │  ├─aws                              # AWS AI 渠道
+│  │  │      adaptor.go                  # AWS 介面卡
+│  │  │      constants.go                # AWS 常量定義
+│  │  │      dto.go                      # AWS 資料傳輸物件
+│  │  │      relay-aws.go                # AWS 請求轉發
+│  │  │
+│  │  ├─baidu                            # 百度 AI 渠道
+│  │  │      adaptor.go                  # 百度介面卡
+│  │  │      constants.go                # 百度常量定義
+│  │  │      dto.go                      # 百度資料傳輸物件
+│  │  │      relay-baidu.go              # 百度請求轉發
+│  │  │
+│  │  ├─baidu_v2                         # 百度 AI v2 版本渠道
+│  │  │      adaptor.go                  # 百度 v2 介面卡
+│  │  │      constants.go                # 百度 v2 常量定義
+│  │  │
+│  │  ├─claude                           # Claude AI 渠道
+│  │  │      adaptor.go                  # Claude 介面卡
+│  │  │      constants.go                # Claude 常量定義
+│  │  │      dto.go                      # Claude 資料傳輸物件
+│  │  │      relay-claude.go             # Claude 請求轉發
+│  │  │
+│  │  ├─cloudflare                       # Cloudflare AI 渠道
+│  │  │      adaptor.go                  # Cloudflare 介面卡
+│  │  │      constant.go                 # Cloudflare 常量定義
+│  │  │      dto.go                      # Cloudflare 資料傳輸物件
+│  │  │      relay_cloudflare.go         # Cloudflare 請求轉發
+│  │  │
+│  │  ├─cohere                           # Cohere AI 渠道
+│  │  │      adaptor.go                  # Cohere 介面卡
+│  │  │      constant.go                 # Cohere 常量定義
+│  │  │      dto.go                      # Cohere 資料傳輸物件
+│  │  │      relay-cohere.go             # Cohere 請求轉發
+│  │  │
+│  │  ├─deepseek                         # DeepSeek AI 渠道
+│  │  │      adaptor.go                  # DeepSeek 介面卡
+│  │  │      constants.go                # DeepSeek 常量定義
+│  │  │
+│  │  ├─dify                             # Dify AI 渠道
+│  │  │      adaptor.go                  # Dify 介面卡
+│  │  │      constants.go                # Dify 常量定義
+│  │  │      dto.go                      # Dify 資料傳輸物件
+│  │  │      relay-dify.go               # Dify 請求轉發
+│  │  │
+│  │  ├─gemini                           # Google Gemini AI 渠道
+│  │  │      adaptor.go                  # Gemini 介面卡
+│  │  │      constant.go                 # Gemini 常量定義
+│  │  │      dto.go                      # Gemini 資料傳輸物件
+│  │  │      relay-gemini.go             # Gemini 請求轉發
+│  │  │
+│  │  ├─jina                             # Jina AI 渠道
+│  │  │      adaptor.go                  # Jina 介面卡
+│  │  │      constant.go                 # Jina 常量定義
+│  │  │      relay-jina.go               # Jina 請求轉發
+│  │  │
+│  │  ├─lingyiwanwu                      # 靈醫萬物 AI 渠道
+│  │  │      constrants.go               # 靈醫萬物常量定義
+│  │  │
+│  │  ├─minimax                          # MiniMax AI 渠道
+│  │  │      constants.go                # MiniMax 常量定義
+│  │  │      relay-minimax.go            # MiniMax 請求轉發
+│  │  │
+│  │  ├─mistral                          # Mistral AI 渠道
+│  │  │      adaptor.go                  # Mistral 介面卡
+│  │  │      constants.go                # Mistral 常量定義
+│  │  │      text.go                     # Mistral 文字處理
+│  │  │
+│  │  ├─mokaai                           # MokaAI 渠道
+│  │  │      adaptor.go                  # MokaAI 介面卡
+│  │  │      constants.go                # MokaAI 常量定義
+│  │  │      relay-mokaai.go             # MokaAI 請求轉發
+│  │  │
+│  │  ├─moonshot                         # Moonshot AI 渠道
+│  │  │      constants.go                # Moonshot 常量定義
+│  │  │
+│  │  ├─ollama                           # Ollama AI 渠道
+│  │  │      adaptor.go                  # Ollama 介面卡
+│  │  │      constants.go                # Ollama 常量定義
+│  │  │      dto.go                      # Ollama 資料傳輸物件
+│  │  │      relay-ollama.go             # Ollama 請求轉發
+│  │  │
+│  │  ├─openai                           # OpenAI 渠道
+│  │  │      adaptor.go                  # OpenAI 介面卡
+│  │  │      constant.go                 # OpenAI 常量定義
+│  │  │      relay-openai.go             # OpenAI 請求轉發
+│  │  │
+│  │  ├─openrouter                       # OpenRouter AI 渠道
+│  │  │      adaptor.go                  # OpenRouter 介面卡
+│  │  │      constant.go                 # OpenRouter 常量定義
+│  │  │
+│  │  ├─palm                             # Google PaLM AI 渠道
+│  │  │      adaptor.go                  # PaLM 介面卡
+│  │  │      constants.go                # PaLM 常量定義
+│  │  │      dto.go                      # PaLM 資料傳輸物件
+│  │  │      relay-palm.go               # PaLM 請求轉發
+│  │  │
+│  │  ├─perplexity                       # Perplexity AI 渠道
+│  │  │      adaptor.go                  # Perplexity 介面卡
+│  │  │      constants.go                # Perplexity 常量定義
+│  │  │      relay-perplexity.go         # Perplexity 請求轉發
+│  │  │
+│  │  ├─siliconflow                      # SiliconFlow AI 渠道
+│  │  │      adaptor.go                  # SiliconFlow 介面卡
+│  │  │      constant.go                 # SiliconFlow 常量定義
+│  │  │      dto.go                      # SiliconFlow 資料傳輸物件
+│  │  │      relay-siliconflow.go        # SiliconFlow 請求轉發
+│  │  │
+│  │  ├─task                             # 任務相關渠道
+│  │  │  └─suno                          # Suno 音訊生成任務
+│  │  │          adaptor.go              # Suno 介面卡
+│  │  │          models.go               # Suno 模型定義
+│  │  │
+│  │  ├─tencent                          # 騰訊 AI 渠道
+│  │  │      adaptor.go                  # 騰訊介面卡
+│  │  │      constants.go                # 騰訊常量定義
+│  │  │      dto.go                      # 騰訊資料傳輸物件
+│  │  │      relay-tencent.go            # 騰訊請求轉發
+│  │  │
+│  │  ├─vertex                           # Google Vertex AI 渠道
+│  │  │      adaptor.go                  # Vertex 介面卡
+│  │  │      constants.go                # Vertex 常量定義
+│  │  │      dto.go                      # Vertex 資料傳輸物件
+│  │  │      relay-vertex.go             # Vertex 請求轉發
+│  │  │      service_account.go          # Vertex 服務賬戶
+│  │  │
+│  │  ├─volcengine                       # 火山引擎 AI 渠道
+│  │  │      adaptor.go                  # 火山引擎介面卡
+│  │  │      constants.go                # 火山引擎常量定義
+│  │  │
+│  │  ├─xunfei                           # 訊飛 AI 渠道
+│  │  │      adaptor.go                  # 訊飛介面卡
+│  │  │      constants.go                # 訊飛常量定義
+│  │  │      dto.go                      # 訊飛資料傳輸物件
+│  │  │      relay-xunfei.go             # 訊飛請求轉發
+│  │  │
+│  │  ├─zhipu                            # 智譜 AI 渠道
+│  │  │      adaptor.go                  # 智譜介面卡
+│  │  │      constants.go                # 智譜常量定義
+│  │  │      dto.go                      # 智譜資料傳輸物件
+│  │  │      relay-zhipu.go              # 智譜請求轉發
+│  │  │
+│  │  └─zhipu_4v                         # 智譜 4.0 版本渠道
+│  │          adaptor.go                 # 智譜 4.0 介面卡
+│  │          constants.go               # 智譜 4.0 常量定義
+│  │          dto.go                     # 智譜 4.0 資料傳輸物件
+│  │          relay-zhipu_v4.go          # 智譜 4.0 請求轉發
+│  │
+│  ├─common                              # 轉發公共模組
+│  │      relay_info.go                  # 轉發資訊
+│  │      relay_utils.go                 # 轉發工具函式
+│  │
+│  ├─constant                            # 轉發常量目錄
+│  │      api_type.go                    # API 型別常量
+│  │      relay_mode.go                  # 轉發模式常量
+│  │
+│  └─helper                              # 轉發輔助功能
+│          common.go                     # 通用輔助函式
+│          model_mapped.go               # 模型對映
+│          price.go                      # 價格計算
+│          stream_scanner.go             # 流資料掃描器
+│
+├─router                                 # 路由配置目錄
+│      api-router.go                     # API 路由配置
+│      dashboard.go                      # 儀表盤路由
+│      main.go                           # 主路由配置
+│      relay-router.go                   # 轉發路由配置
+│      web-router.go                     # Web 介面路由配置
+│
+├─service                                # 服務層目錄
+│      audio.go                          # 音訊服務
+│      cf_worker.go                      # Cloudflare Worker 服務
+│      channel.go                        # 渠道服務
+│      epay.go                           # 電子支付服務
+│      error.go                          # 錯誤處理服務
+│      file_decoder.go                   # 檔案解碼器服務
+│      http_client.go                    # HTTP 客戶端服務
+│      image.go                          # 影象處理服務
+│      log_info_generate.go              # 日誌資訊生成服務
+│      midjourney.go                     # Midjourney 服務
+│      notify-limit.go                   # 通知限制服務
+│      quota.go                          # 配額管理服務
+│      sensitive.go                      # 敏感內容過濾服務
+│      str.go                            # 字串處理服務
+│      task.go                           # 任務管理服務
+│      token_counter.go                  # 令牌計數服務
+│      usage_helpr.go                    # 使用量統計輔助服務
+│      user_notify.go                    # 使用者通知服務
+│      webhook.go                        # WebHook 服務
+│
+├─setting                                # 設定管理目錄
+│  │  chat.go                            # 聊天設定
+│  │  group_ratio.go                     # 使用者組比率設定
+│  │  midjourney.go                      # Midjourney 設定
+│  │  payment.go                         # 支付設定
+│  │  rate_limit.go                      # 速率限制設定
+│  │  sensitive.go                       # 敏感內容設定
+│  │  system_setting.go                  # 系統設定
+│  │  user_usable_group.go               # 使用者可用組設定
+│  │
+│  ├─config                              # 配置目錄
+│  │      config.go                      # 配置載入和處理
+│  │
+│  ├─model_setting                       # 模型設定目錄
+│  │      claude.go                      # Claude 模型設定
+│  │      gemini.go                      # Gemini 模型設定
+│  │      global.go                      # 全域性模型設定
+│  │
+│  ├─operation_setting                   # 運營設定目錄
+│  │      cache_ratio.go                 # 快取比率設定
+│  │      general_setting.go             # 通用設定
+│  │      model-ratio.go                 # 模型比率設定
+│  │      operation_setting.go           # 運營設定
+│  │
+│  └─system_setting                      # 系統設定目錄
+│          oidc.go                       # OpenID Connect 設定
+│
+└─web                                    # 前端 Web 介面目錄
+    │  .gitignore                        # 前端 Git 忽略檔案配置
+    │  .prettierrc.mjs                   # Prettier 程式碼格式配置
+    │  bun.lockb                         # Bun 包管理器鎖檔案
+    │  index.html                        # 主 HTML 檔案
+    │  package.json                      # 前端依賴配置
+    │  bun.lockb                         # Bun 包管理器鎖檔案（二進位制格式，更快）
+    │  README.md                         # 前端說明文件
+    │  vercel.json                       # Vercel 部署配置
+    │  vite.config.js                    # Vite 構建配置
+    │
+    ├─public                             # 靜態資源目錄
+    │      favicon.ico                   # 網站圖示
+    │      logo.png                      # 網站 Logo
+    │      ratio.png                     # 比率圖片
+    │      robots.txt                    # 搜尋引擎爬蟲配置
+    │
+    └─src                                # 前端原始碼目錄
+        │  App.js                        # 應用主元件
+        │  index.css                     # 主樣式檔案
+        │  index.js                      # 應用入口 JS
+        │
+        ├─components                     # 元件目錄
+        │  │  ChannelsTable.js           # 渠道表格元件
+        │  │  fetchTokenKeys.js          # 獲取令牌 Key 的工具
+        │  │  Footer.js                  # 頁尾元件
+        │  │  HeaderBar.js               # 頁頭元件
+        │  │  LinuxDoIcon.js             # LinuxDo 圖示元件
+        │  │  Loading.js                 # 載入中元件
+        │  │  LoginForm.js               # 登入表單元件
+        │  │  LogsTable.js               # 日誌表格元件
+        │  │  MjLogsTable.js             # Midjourney 日誌表格元件
+        │  │  ModelPricing.js            # 模型定價元件
+        │  │  ModelSetting.js            # 模型設定元件
+        │  │  OAuth2Callback.js          # OAuth2 回撥元件
+        │  │  OIDCIcon.js                # OIDC 圖示元件
+        │  │  OperationSetting.js        # 運營設定元件
+        │  │  OtherSetting.js            # 其他設定元件
+        │  │  PageLayout.js              # 頁面佈局元件
+        │  │  PasswordResetConfirm.js    # 密碼重置確認元件
+        │  │  PasswordResetForm.js       # 密碼重置表單元件
+        │  │  PersonalSetting.js         # 個人設定元件
+        │  │  PrivateRoute.js            # 私有路由元件
+        │  │  RateLimitSetting.js        # 速率限制設定元件
+        │  │  RedemptionsTable.js        # 兌換碼錶格元件
+        │  │  RegisterForm.js            # 登錄檔單元件
+        │  │  SafetySetting.js           # 安全設定元件
+        │  │  SiderBar.js                # 側邊欄元件
+        │  │  SystemSetting.js           # 系統設定元件
+        │  │  TaskLogsTable.js           # 任務日誌表格元件
+        │  │  TokensTable.js             # 令牌管理表格元件
+        │  │  UsersTable.js              # 使用者管理表格元件
+        │  │  utils.js                   # 通用工具函式
+        │  │  WeChatIcon.js              # 微信圖示元件
+        │  │
+        │  └─custom                      # 自定義元件目錄
+        │          TextInput.js          # 文字輸入框元件
+        │          TextNumberInput.js    # 數字輸入框元件
+        │
+        ├─constants                      # 常量定義目錄
+        │      channel.constants.js      # 渠道相關常量
+        │      common.constant.js        # 通用常量
+        │      index.js                  # 常量匯出索引
+        │      toast.constants.js        # 提示訊息常量
+        │      user.constants.js         # 使用者相關常量
+        │
+        ├─context                        # React Context 上下文目錄
+        │  ├─Status                      # 狀態上下文
+        │  │      index.js               # 狀態上下文入口
+        │  │      reducer.js             # 狀態上下文 reducer
+        │  │
+        │  ├─Style                       # 樣式上下文
+        │  │      index.js               # 樣式上下文入口
+        │  │
+        │  ├─Theme                       # 主題上下文
+        │  │      index.js               # 主題上下文入口
+        │  │
+        │  └─User                        # 使用者上下文
+        │          index.js              # 使用者上下文入口
+        │          reducer.js            # 使用者上下文 reducer
+        │
+        ├─helpers                        # 輔助函式目錄
+        │      api.js                    # API 請求輔助函式
+        │      auth-header.js            # 認證頭部處理
+        │      data.js                   # 資料處理函式
+        │      history.js                # 路由歷史管理
+        │      index.js                  # 輔助函式匯出索引
+        │      other.js                  # 其他輔助函式
+        │      render.js                 # 渲染輔助函式
+        │      utils.js                  # 實用工具函式
+        │
+        ├─i18n                           # 國際化目錄
+        │  │  i18n.js                    # 國際化配置檔案
+        │  │
+        │  └─locales                     # 語言包目錄
+        │          en.json               # 英文語言包
+        │          zh.json               # 中文語言包
+        │
+        └─pages                          # 頁面元件目錄
+            ├─About                      # 關於頁面
+            │      index.js              # 關於頁面入口
+            │
+            ├─Channel                    # 渠道管理頁面
+            │      EditChannel.js        # 編輯渠道元件
+            │      EditTagModal.js       # 編輯標籤模態框
+            │      index.js              # 渠道管理頁面入口
+            │
+            ├─Chat                       # 聊天頁面
+            │      index.js              # 聊天頁面入口
+            │
+            ├─Chat2Link                  # 聊天連結分享頁面
+            │      index.js              # 聊天連結入口
+            │
+            ├─Detail                     # 詳情頁面
+            │      index.js              # 詳情頁面入口
+            │
+            ├─Home                       # 首頁
+            │      index.js              # 首頁入口
+            │
+            ├─Log                        # 日誌頁面
+            │      index.js              # 日誌頁面入口
+            │
+            ├─Midjourney                 # Midjourney 管理頁面
+            │      index.js              # Midjourney 頁面入口
+            │
+            ├─NotFound                   # 404 頁面
+            │      index.js              # 404 頁面入口
+            │
+            ├─Playground                 # 測試場景頁面
+            │      Playground.js         # 測試場景元件
+            │
+            ├─Pricing                    # 價格管理頁面
+            │      index.js              # 價格管理頁面入口
+            │
+            ├─Redemption                 # 兌換碼管理頁面
+            │      EditRedemption.js     # 編輯兌換碼元件
+            │      index.js              # 兌換碼管理頁面入口
+            │
+            ├─Setting                    # 設定頁面
+            │  │  index.js               # 設定頁面入口
+            │  │
+            │  ├─Model                   # 模型設定頁面
+            │  │      SettingClaudeModel.js # Claude 模型設定元件
+            │  │      SettingGeminiModel.js # Gemini 模型設定元件
+            │  │      SettingGlobalModel.js # 全域性模型設定元件
+            │  │
+            │  ├─Operation               # 運營設定頁面
+            │  │      GroupRatioSettings.js       # 使用者組比率設定元件
+            │  │      ModelRationNotSetEditor.js  # 模型比率未設定編輯器
+            │  │      ModelRatioSettings.js       # 模型比率設定元件
+            │  │      ModelSettingsVisualEditor.js # 模型設定視覺化編輯器
+            │  │      SettingsChats.js            # 聊天設定元件
+            │  │      SettingsCreditLimit.js      # 額度限制設定元件
+            │  │      SettingsDataDashboard.js    # 資料儀表盤設定元件
+            │  │      SettingsDrawing.js          # 繪圖設定元件
+            │  │      SettingsGeneral.js          # 通用設定元件
+            │  │      SettingsLog.js              # 日誌設定元件
+            │  │      SettingsMonitoring.js       # 監控設定元件
+            │  │      SettingsSensitiveWords.js   # 敏感詞設定元件
+            │  │
+            │  └─RateLimit                   # 速率限制設定頁面
+            │          SettingsRequestRateLimit.js # 請求速率限制設定元件
+            │
+            ├─Task                           # 任務管理頁面
+            │      index.js                  # 任務管理頁面入口
+            │
+            ├─Token                          # 令牌管理頁面
+            │      EditToken.js              # 編輯令牌元件
+            │      index.js                  # 令牌管理頁面入口
+            │
+            ├─TopUp                          # 充值頁面
+            │      index.js                  # 充值頁面入口
+            │
+            └─User                           # 使用者管理頁面
+                    AddUser.js               # 新增使用者元件
+                    EditUser.js              # 編輯使用者元件
+                    index.js                 # 使用者管理頁面入口
+```
+
+<Callout type="info" title="需要幫助？">
+如果您在開發過程中遇到問題，可以：
+
+1. 檢視 [GitHub Issues](https://github.com/Vxon/vxon/issues)
+2. 加入 [QQ交流群](/zh-Hant/docs/support/community-interaction)
+3. 透過 [問題反饋](/zh-Hant/docs/support/feedback-issues) 頁面提交問題
+
+</Callout>
