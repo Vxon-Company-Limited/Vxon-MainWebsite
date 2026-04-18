@@ -1,0 +1,77 @@
+---
+title: vxon-admin（敬請期待）
+description: vxon-admin 是 Vxon 官方管理員級 Skill 外掛，支援在 Claude Code、Cursor、Windsurf 等 AI 編輯器中直接執行渠道管理、使用者管理、系統配置、日誌查詢等管理員運維操作。正在開發中，敬請期待。
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+
+<Callout type="warn" title="開發中 — 敬請期待">
+  **vxon-admin** 目前正在開發中，尚未釋出。以下為計劃支援的功能預覽。正式釋出後本頁面將更新為完整文件。
+</Callout>
+
+## 簡介
+
+**vxon-admin** 是面向 Vxon 管理員的 Skill 外掛。與使用者級的 [vxon](/zh-Hant/docs/skills/vxon) Skill 不同，vxon-admin 專注於**管理員運維場景**，讓站點管理員在 AI 編輯器中透過自然語言指令完成日常管理任務，無需登入管理後臺。
+
+## 計劃功能
+
+### 渠道管理
+
+| 指令（規劃中） | 說明 |
+|---------------|------|
+| `/vxon-admin channels` | 列出所有渠道及其狀態 |
+| `/vxon-admin channel-add` | 新增新渠道（OpenAI、Claude、Gemini、Azure 等） |
+| `/vxon-admin channel-test <id>` | 測試指定渠道的連通性 |
+| `/vxon-admin channel-toggle <id>` | 啟用或禁用指定渠道 |
+| `/vxon-admin channel-priority` | 檢視和調整渠道優先順序 |
+
+### 使用者管理
+
+| 指令（規劃中） | 說明 |
+|---------------|------|
+| `/vxon-admin users` | 列出使用者列表 |
+| `/vxon-admin user-info <id>` | 檢視使用者詳情（餘額、分組、用量） |
+| `/vxon-admin user-quota <id>` | 調整使用者配額和餘額 |
+| `/vxon-admin user-group <id> <group>` | 修改使用者所屬分組 |
+| `/vxon-admin user-ban <id>` | 封禁或解封使用者 |
+
+### 系統配置
+
+| 指令（規劃中） | 說明 |
+|---------------|------|
+| `/vxon-admin config` | 檢視當前系統配置 |
+| `/vxon-admin config-set <key> <value>` | 修改系統配置項 |
+| `/vxon-admin ratio` | 檢視模型倍率設定 |
+| `/vxon-admin ratio-sync` | 同步上游模型倍率 |
+
+### 日誌與監控
+
+| 指令（規劃中） | 說明 |
+|---------------|------|
+| `/vxon-admin logs` | 檢視最近的請求日誌 |
+| `/vxon-admin stats` | 檢視系統統計資料（請求量、消耗、錯誤率） |
+| `/vxon-admin status` | 檢查系統健康狀態和渠道連通性 |
+
+### 令牌與兌換碼管理
+
+| 指令（規劃中） | 說明 |
+|---------------|------|
+| `/vxon-admin redemptions` | 列出兌換碼 |
+| `/vxon-admin redemption-create` | 批次建立兌換碼 |
+| `/vxon-admin token-overview` | 全域性令牌使用概覽 |
+
+## 與 vxon Skill 的區別
+
+| | vxon | vxon-admin |
+|---|--------|-------------|
+| **面向使用者** | 普通使用者 / 開發者 | 站點管理員 |
+| **操作範圍** | 個人模型、令牌、餘額、分組 | 全域性渠道、使用者、配置、日誌 |
+| **許可權要求** | 使用者訪問令牌 | 管理員訪問令牌 |
+| **狀態** | 已釋出 | 開發中 |
+
+## 關注進展
+
+vxon-admin 正在積極開發中，歡迎關注倉庫獲取最新動態：
+
+- GitHub 倉庫：[github.com/Vxon/skills](https://github.com/Vxon/skills)
+- 已釋出的使用者級 Skill：[vxon](/zh-Hant/docs/skills/vxon)
