@@ -1,0 +1,20 @@
+{
+  "title": "部署安裝",
+  "description": "安裝部署與系統配置",
+  "icon": "Wrench",
+  "root": true,
+  "pages": [
+    "index",
+    "---安裝部署---",
+    "deployment-methods/docker-compose-installation",
+    "deployment-methods/docker-installation",
+    "deployment-methods/1panel-installation",
+    "deployment-methods/bt-docker-installation",
+    "deployment-methods/cluster-deployment",
+    "deployment-methods/local-development",
+    "---配置維護---",
+    "config-maintenance/system-update",
+    "config-maintenance/environment-variables",
+    "config-maintenance/docker-compose-yml"
+  ]
+}
