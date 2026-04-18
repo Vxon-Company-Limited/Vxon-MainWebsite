@@ -1,0 +1,128 @@
+---
+title: 1Panel 面板部署
+---
+
+本文件提供使用 1Panel 面板部署 Vxon 的圖文教程。
+
+## 前置要求
+
+| 專案 | 要求 |
+| --- | --- |
+| 1Panel 面板 | 最新穩定版 |
+| 推薦系統 | Linux (Ubuntu/CentOS/Debian 等) |
+| 伺服器配置 | 至少 1 核 2G 記憶體 |
+
+## 步驟一：安裝 1Panel 面板
+
+<Callout type="info" title="安裝 1Panel 面板">
+  關於 1Panel 的安裝部署與基礎功能介紹，請參考 [1Panel 官方文件](https://1panel.cn/docs/)
+
+  在完成了 1Panel 的安裝部署後，根據提示網址開啟瀏覽器進入 1Panel 面板
+</Callout>
+
+![1panel](/assets/1panel/1panel.jpg)
+
+## 步驟二：安裝 Vxon
+
+### 搜尋應用
+
+<Callout type="info" title="搜尋應用">
+  進入應用商店應用列表，在【AI】分類下找到 Vxon 應用進行安裝
+</Callout>
+
+![1panel-vxon](/assets/1panel/1panel-vxon.jpg)
+
+### 配置引數
+
+<Callout type="info" title="安裝應用">
+  在安裝頁面配置 Vxon 應用引數：
+</Callout>
+
+- **名稱**：要建立的 Vxon 應用的名稱
+- **版本**：選擇 Vxon 的版本
+- **埠**：Vxon 應用的服務埠
+- **時區**：輸入伺服器所在時區（預設 Asia/Shanghai）
+- **高階設定**：務必勾選埠外部訪問
+
+![vxon-setting](/assets/1panel/vxon-setting.jpg)
+
+### 確認安裝
+
+<Callout type="info" title="確認安裝">
+  點選確認開始安裝，頁面將自動跳轉到已安裝應用列表，等待 Vxon 應用狀態變為已啟動
+</Callout>
+
+![vxon-start](/assets/1panel/vxon-start.jpg)
+
+## 步驟三：配置環境變數（重要）
+
+安裝完成後，建議配置以下關鍵環境變數：
+
+### 必要環境變數
+
+| 變數名 | 說明 | 是否必填 |
+| --- | --- | --- |
+| `SESSION_SECRET` | 會話金鑰，多機部署必須一致 | **必填** |
+| `CRYPTO_SECRET` | 加密金鑰，使用 Redis 時必填 | 條件必填 |
+
+### 配置方法
+
+1. 在 1Panel 應用列表中，點選 Vxon 應用的 **引數** 按鈕
+2. 在環境變數區域新增：
+   - `SESSION_SECRET=your_random_secret_key`
+   - `CRYPTO_SECRET=your_crypto_secret_key`（可選）
+3. 點選 **確認** 儲存配置
+4. 重啟應用使配置生效
+
+### 生成隨機金鑰
+
+```bash
+# 生成 SESSION_SECRET
+openssl rand -hex 16
+
+# 或使用 Linux 命令
+head -c 16 /dev/urandom | xxd -p
+```
+
+## 步驟四：訪問 Vxon
+
+<Callout type="info" title="訪問應用">
+  - 在 `已安裝` 頁面，點選 `跳轉` 即可進入 Vxon 的 WebUI 頁面
+  - 使用前建議在 `面板設定` 頁面設定好 `預設訪問地址`
+</Callout>
+
+![vxon-visit](/assets/1panel/vxon-visit.jpg)
+
+首次訪問將自動引導到初始化頁面，按照頁面指引設定管理員賬號與密碼。
+
+## 常見問題
+
+### 無法訪問應用介面
+
+1. 檢查應用狀態是否為"已啟動"
+2. 確認埠是否正確對映並開放
+3. 檢查伺服器防火牆和雲伺服器安全組
+
+### 登入後提示會話失效
+
+確保設定了 `SESSION_SECRET` 環境變數，且值不為空。
+
+### 如何更新版本
+
+1. 登入 1Panel 面板，進入 **應用商店** → **可升級頁面**
+2. 找到 Vxon 應用，點選 **升級** 按鈕
+3. 選擇目標版本，點選 **確認**
+
+### 資料如何持久化
+
+1Panel 應用預設會將資料儲存在 Docker 卷中。如需自定義儲存位置：
+
+1. 在應用引數設定中，配置目錄對映
+2. 確保 `/data` 目錄對映到持久化儲存
+
+## 相關連結
+
+- [環境變數配置](/docs/installation/config-maintenance/environment-variables)
+- [Docker Compose 部署](/docs/installation/deployment-methods/docker-compose-installation)
+- [常見問題](/docs/support/faq)
+- [GitHub 倉庫](https://github.com/Vxon/vxon)
