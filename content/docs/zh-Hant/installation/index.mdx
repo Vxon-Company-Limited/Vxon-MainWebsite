@@ -1,0 +1,84 @@
+---
+title: 安裝部署
+description: 選擇適合您的部署方式
+---
+
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import {
+  Container,
+  Boxes,
+  Server,
+  Network,
+  Code2,
+  Settings,
+  RefreshCw,
+  FileCode,
+} from 'lucide-react';
+
+## 概述
+
+Vxon 支援多種部署方式，您可以根據自己的技術背景和使用場景選擇最合適的方案。
+
+## 部署方式
+
+<Cards>
+  <Card
+    icon={<Boxes />}
+    title="Docker Compose 部署"
+    description="使用 Docker Compose 編排多個服務，適合生產環境。"
+    href="/zh-Hant/docs/installation/deployment-methods/docker-compose-installation"
+  />
+  <Card
+    icon={<Container />}
+    title="Docker 單容器部署"
+    description="使用 Docker 映象快速部署，適合個人使用。"
+    href="/zh-Hant/docs/installation/deployment-methods/docker-installation"
+  />
+  <Card
+    icon={<Server />}
+    title="1Panel 面板部署"
+    description="透過 1Panel 圖形化介面快速部署。"
+    href="/zh-Hant/docs/installation/deployment-methods/1panel-installation"
+  />
+  <Card
+    icon={<Server />}
+    title="寶塔面板部署"
+    description="透過寶塔面板圖形化介面快速部署。"
+    href="/zh-Hant/docs/installation/deployment-methods/bt-docker-installation"
+  />
+  <Card
+    icon={<Network />}
+    title="叢集部署模式"
+    description="多節點分散式部署，實現高可用和負載均衡。"
+    href="/zh-Hant/docs/installation/deployment-methods/cluster-deployment"
+  />
+  <Card
+    icon={<Code2 />}
+    title="本地開發部署"
+    description="適合開發者進行程式碼貢獻和功能定製。"
+    href="/zh-Hant/docs/installation/deployment-methods/local-development"
+  />
+</Cards>
+
+## 配置與維護
+
+<Cards>
+  <Card
+    icon={<FileCode />}
+    title="docker-compose.yml 配置"
+    description="詳細瞭解 Docker Compose 配置檔案的各項引數。"
+    href="/zh-Hant/docs/installation/config-maintenance/docker-compose-yml"
+  />
+  <Card
+    icon={<Settings />}
+    title="環境變數配置"
+    description="完整的環境變數配置說明和最佳實踐。"
+    href="/zh-Hant/docs/installation/config-maintenance/environment-variables"
+  />
+  <Card
+    icon={<RefreshCw />}
+    title="系統更新"
+    description="瞭解如何安全地更新 Vxon 到最新版本。"
+    href="/zh-Hant/docs/installation/config-maintenance/system-update"
+  />
+</Cards>
