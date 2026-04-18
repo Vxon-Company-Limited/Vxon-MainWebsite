@@ -1,0 +1,116 @@
+﻿---
+title: 常見問題
+---
+
+import { Accordions, Accordion } from 'fumadocs-ui/components/accordion';
+
+## 💰 額度相關問題
+
+<Accordions>
+  <Accordion title="額度是什麼？怎麼計算的？">
+    額度計算公式如下：
+
+    ```
+    額度 = 分組倍率 * 模型倍率 * （提示 token 數 + 補全 token 數 * 補全倍率）
+    ```
+
+    **補全倍率說明：**
+    - GPT3.5：固定為 1.33
+    - GPT4：固定為 2（與官方保持一致）
+
+    **注意事項：**
+    - 非流模式下，官方介面會返回消耗的總 token，但提示和補全的消耗倍率不同
+    - Vxon 的預設倍率與官方倍率一致，已經過調整
+  </Accordion>
+
+  <Accordion title="賬戶額度足夠為什麼提示額度不足？">
+    這是因為令牌額度和賬戶額度是分開的：
+
+    - 令牌額度僅用於設定最大使用量限制
+    - 使用者可以自由設定令牌額度
+    - 請檢查您的令牌額度是否充足
+  </Accordion>
+</Accordions>
+
+## 🔧 渠道配置問題
+
+<Accordions>
+  <Accordion title="渠道中的權重和優先順序是什麼？">
+    權重和優先順序是控制渠道使用順序和分配的兩個重要引數：
+
+    - **優先順序（Priority）**：數字越大優先順序越高，優先順序高的渠道會優先被使用
+    - **權重（Weight）**：在同優先順序的渠道中，按權重比例分配請求
+
+    **例如：**
+    - 優先順序為 2 的渠道會優先於優先順序為 1 的渠道被使用
+    - 同為優先順序 1 的兩個渠道，權重比為 2:1 時，請求會按照 2:1 的比例分配
+  </Accordion>
+
+  <Accordion title="提示無可用渠道？">
+    請檢查以下設定：
+
+    1. 使用者分組設定
+    2. 渠道分組設定
+    3. 渠道的模型設定
+  </Accordion>
+
+  <Accordion title="渠道測試報錯：invalid character '<' looking for beginning of value">
+    此錯誤表示返回值不是合法的 JSON，而是一個 HTML 頁面。
+
+    最可能的原因是：您的部署站的 IP 或代理節點被 CloudFlare 封禁。
+  </Accordion>
+
+  <Accordion title="渠道測試報錯：倍率或價格未配置，請聯絡管理員設定">
+    請檢查是否在「系統設定 - 運營設定 - 模型倍率設定」中配置了倍率或價格。
+
+    或者在「系統設定 - 運營設定」開啟「自用模式」。
+  </Accordion>
+</Accordions>
+
+## 🌐 部署與連線問題
+
+<Accordions>
+  <Accordion title="ChatGPT Next Web 報錯：Failed to fetch">
+    請檢查以下幾點：
+
+    1. 部署時不要設定 `BASE_URL`
+    2. 確認介面地址和 API Key 填寫正確
+    3. 檢查是否啟用了 HTTPS（瀏覽器會攔截 HTTPS 域名下的 HTTP 請求）
+  </Accordion>
+
+  <Accordion title="報錯：當前分組負載已飽和，請稍後再試">
+    這表示上游渠道出現了 429 錯誤（請求過多）。
+  </Accordion>
+</Accordions>
+
+## 📦 資料庫與升級問題
+
+<Accordions>
+  <Accordion title="升級之後我的資料會丟失嗎？">
+    根據資料庫型別有所不同：
+
+    - **MySQL**：資料不會丟失
+    - **SQLite**：需要按照部署命令掛載 volume 來持久化 `one-api.db` 資料庫檔案，否則容器重啟後資料會丟失
+  </Accordion>
+
+  <Accordion title="升級之前資料庫需要做變更嗎？">
+    一般情況下不需要，系統會在初始化時自動調整。
+
+    如需特殊處理，會在更新日誌中說明並提供相應指令碼。
+  </Accordion>
+
+  <Accordion title="手動修改資料庫後報錯：資料庫一致性已被破壞，請聯絡管理員？">
+    此錯誤表示在 `ability` 表中檢測到無效的渠道 ID 記錄。常見原因：
+
+    - 刪除 `channel` 表記錄時未同步清理 `ability` 表中的無效渠道
+    - 每個渠道支援的模型都需要在 `ability` 表中有對應記錄
+  </Accordion>
+</Accordions>
+
+## ❓ 沒有找到您的問題？
+
+如果這裡沒有解答您的問題，歡迎：
+
+1. 檢視 [安裝部署文件](/zh-Hant/docs/installation)
+2. 在 [GitHub 上提交 issue](/zh-Hant/docs/support/feedback-issues)
+3. 加入 [QQ 交流群尋求幫助](/zh-Hant/docs/support/community-interaction)
