@@ -1,0 +1,158 @@
+---
+title: 寶塔面板部署
+---
+
+本文件提供使用寶塔面板 Docker 功能部署 Vxon 的圖文教程。
+
+## 前置要求
+
+| 專案 | 要求 |
+| --- | --- |
+| 寶塔面板 | ≥ 9.2.0 版本 |
+| 推薦系統 | CentOS 7+、Ubuntu 18.04+、Debian 10+ |
+| 伺服器配置 | 至少 1 核 2G 記憶體 |
+
+## 步驟一：安裝寶塔面板
+
+1. 前往 [寶塔面板官網](https://www.bt.cn/new/download.html) 下載適合您系統的安裝指令碼
+2. 執行安裝指令碼安裝寶塔面板
+3. 安裝完成後，使用提供的地址、使用者名稱和密碼登入寶塔面板
+
+## 步驟二：安裝 Docker
+
+1. 登入寶塔面板後，在左側選單欄找到並點選 **Docker**
+2. 首次進入會提示安裝 Docker 服務，點選 **立即安裝**
+3. 按照提示完成 Docker 服務的安裝
+
+## 步驟三：安裝 Vxon
+
+### 方法一：使用寶塔應用商店（推薦）
+
+1. 在寶塔面板 Docker 功能中，點選 **應用商店**
+2. 搜尋並找到 **New-API**
+3. 點選 **安裝**
+4. 配置以下基本選項：
+   - **容器名稱**：可自定義，預設為 `vxon`
+   - **埠對映**：預設為 `3000:3000`
+   - **環境變數**：
+     - `SESSION_SECRET`：會話金鑰（**必填**，多機部署時必須一致）
+     - `CRYPTO_SECRET`：加密金鑰（使用 Redis 時必填）
+   - **目錄對映**：確保將 `/data` 目錄對映到主機目錄
+5. 點選 **確認** 開始安裝
+6. 等待安裝完成後，訪問 `http://您的伺服器IP:3000` 即可使用
+
+### 方法二：使用 Docker Compose
+
+適合需要更多自定義配置的場景。
+
+1. 在寶塔面板中建立網站目錄，如 `/www/wwwroot/vxon`
+2. 建立 `docker-compose.yml` 檔案：
+
+```yaml
+version: '3'
+services:
+  vxon:
+    image: vxon/vxon:latest
+    container_name: vxon
+    restart: always
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./data:/data
+    environment:
+      - SESSION_SECRET=your_session_secret_here  # 請修改為隨機字串
+      - TZ=Asia/Shanghai
+```
+
+3. 透過 SSH 終端進入目錄並啟動：
+
+```bash
+cd /www/wwwroot/vxon
+docker-compose up -d
+```
+
+### 方法三：使用自定義映象
+
+<Callout type="warn" title="高階用法">
+  強烈建議透過"應用商店"安裝。本節為高階用法，適合熟悉 Docker 的使用者。
+</Callout>
+
+1. 在寶塔面板 Docker 功能中，點選 **映象管理**
+2. 點選 **獲取映象** → **拉取映象**
+3. 輸入映象名稱：`vxon/vxon:latest`
+4. 點選 **提交**，等待映象拉取完成
+5. 拉取完成後，進入 **容器列表**，點選 **建立容器**
+6. 填寫以下資訊：
+   - **容器名稱**：`vxon`（可自定義）
+   - **映象**：選擇剛剛拉取的 `vxon/vxon:latest`
+   - **埠對映**：新增 `3000:3000`
+   - **目錄對映**：新增 `/your/host/path:/data`（替換為您的主機路徑）
+   - **環境變數**：根據需要新增
+7. 點選 **提交**，完成安裝
+
+## 環境變數配置
+
+### 必要環境變數
+
+| 變數名 | 說明 | 是否必填 |
+| --- | --- | --- |
+| `SESSION_SECRET` | 會話金鑰，多機部署必須一致 | **必填** |
+| `CRYPTO_SECRET` | 加密金鑰，使用 Redis 時必填 | 條件必填 |
+| `SQL_DSN` | 資料庫連線字串（使用外部資料庫時） | 可選 |
+| `REDIS_CONN_STRING` | Redis 連線字串 | 可選 |
+
+### 生成隨機金鑰
+
+```bash
+# 生成 SESSION_SECRET
+openssl rand -hex 16
+
+# 或使用 Linux 命令
+head -c 16 /dev/urandom | xxd -p
+```
+
+## 訪問與初始化
+
+安裝完成後，訪問 `http://伺服器IP:3000`
+
+首次訪問將自動引導到初始化頁面，按照頁面指引設定管理員賬號與密碼。
+
+## 常見問題
+
+### 無法訪問 3000 埠
+
+1. 檢查伺服器防火牆是否開放 3000 埠
+2. 在寶塔面板 **安全** 中放行 3000 埠
+3. 檢查雲伺服器安全組是否開放埠
+
+### 登入後提示會話失效
+
+確保設定了 `SESSION_SECRET` 環境變數，且值不為空。
+
+### 資料如何持久化
+
+使用 Docker 卷對映資料目錄：
+
+```yaml
+volumes:
+  - ./data:/data
+```
+
+### 如何更新版本
+
+```bash
+# 拉取最新映象
+docker pull vxon/vxon:latest
+
+# 使用 Docker Compose 重啟
+docker-compose down && docker-compose up -d
+
+# 或使用寶塔容器管理重啟容器
+```
+
+## 相關連結
+
+- [環境變數配置](/docs/installation/config-maintenance/environment-variables)
+- [Docker Compose 部署](/docs/installation/deployment-methods/docker-compose-installation)
+- [常見問題](/docs/support/faq)
+- [GitHub 倉庫](https://github.com/Vxon/vxon)
