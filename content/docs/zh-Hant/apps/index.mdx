@@ -1,0 +1,107 @@
+---
+title: AI 應用
+description: 支援的 AI 應用和整合方案
+---
+
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import {
+  Cherry,
+  Sparkles,
+  Terminal,
+  BookOpen,
+  MessageCircle,
+  Languages,
+  Bot,
+  Settings,
+} from 'lucide-react';
+
+## 概述
+
+Vxon 相容多種流行的 AI 應用和工具。以下是已驗證支援的應用列表及配置指南。
+
+## 支援的應用
+
+<Cards>
+  <Card
+    icon={<Sparkles />}
+    title="AionUi"
+    description="免費開源的Cowork，支援多模型、檔案管理和實時預覽。"
+    href="/zh-Hant/docs/apps/aionui"
+  />
+  <Card
+    icon={<Settings />}
+    title="CC Switch"
+    description="支援一鍵填入，點選 Vxon 後彈窗配置 Claude/Codex/Gemini 及主模型與各型號。"
+    href="/zh-Hant/docs/apps/cc-switch"
+  />
+  <Card
+    icon={<Cherry />}
+    title="Cherry Studio"
+    description="功能強大的 AI 助手客戶端，支援多模型對話。"
+    href="/zh-Hant/docs/apps/cherry-studio"
+  />
+  <Card
+    icon={<Bot />}
+    title="Memoh"
+    description="容器化 AI 智慧體平臺，每個機器人獨立容器執行，支援長期記憶與多渠道接入。"
+    href="/zh-Hant/docs/apps/memoh"
+  />
+  <Card
+    icon={<Bot />}
+    title="OpenClaw"
+    description="自託管 AI 助手平臺 — 安裝 OpenClaw，對接 Vxon，支援飛書、Discord、Slack 等多渠道 AI 代理管理。"
+    href="/zh-Hant/docs/apps/openclaw"
+  />
+  <Card
+    icon={<BookOpen />}
+    title="Fluent Read"
+    description="AI 驅動的智慧閱讀和翻譯助手。"
+    href="/zh-Hant/docs/apps/fluent-read"
+  />
+  <Card
+    icon={<MessageCircle />}
+    title="LangBot"
+    description="基於大語言模型的聊天機器人框架。"
+    href="/zh-Hant/docs/apps/langbot"
+  />
+  <Card
+    icon={<Languages />}
+    title="Luna Translator"
+    description="遊戲和文件的實時翻譯工具。"
+    href="/zh-Hant/docs/apps/luna-translator"
+  />
+  <Card
+    icon={<Bot />}
+    title="AstrBot"
+    description="開源的一站式 Agent 聊天機器人平臺。"
+    href="/zh-Hant/docs/apps/astrbot"
+  />
+  <Card
+    icon={<Terminal />}
+    title="Claude Code"
+    description="Anthropic Claude 驅動的程式碼編輯器整合。"
+    href="/zh-Hant/docs/apps/claude-code"
+  />
+  <Card
+    icon={<Terminal />}
+    title="Codex CLI"
+    description="命令列介面的 AI 程式碼助手工具。"
+    href="/zh-Hant/docs/apps/codex-cli"
+  />
+  <Card
+    icon={<Bot />}
+    title="Factory Droid CLI"
+    description="自動化工作流的 AI 代理工具。"
+    href="/zh-Hant/docs/apps/factory-droid-cli"
+  />
+</Cards>
+
+## 整合指南
+
+大多數應用只需要配置以下資訊即可連線 Vxon：
+
+1. **API 地址**：您的 Vxon 服務地址
+2. **API Key**：在 Vxon 控制檯生成的令牌
+3. **模型名稱**：選擇需要使用的模型
+
+具體配置步驟請參考各應用的詳細文件。
