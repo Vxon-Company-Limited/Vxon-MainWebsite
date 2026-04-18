@@ -1,0 +1,223 @@
+﻿---
+title: Docker Compose 配置說明
+---
+
+本文件詳細介紹了Vxon的Docker Compose配置選項，可用於多種部署場景。
+
+## 基本配置結構
+
+Docker Compose配置檔案 `docker-compose.yml` 定義了Vxon服務及其依賴服務（如MySQL、Redis）的部署方式。
+
+## 標準配置（推薦生產環境）
+
+下面是標準的Docker Compose配置，適合大多數生產環境：
+
+```yaml
+# New-API Docker Compose Configuration
+#
+# Quick Start:
+#   1. docker-compose up -d
+#   2. Access at http://localhost:3000
+#
+# Using MySQL instead of PostgreSQL:
+#   1. Comment out the postgres service and SQL_DSN line 15
+#   2. Uncomment the mysql service and SQL_DSN line 16
+#   3. Uncomment mysql in depends_on (line 28)
+#   4. Uncomment mysql_data in volumes section (line 64)
+#
+# ⚠️  IMPORTANT: Change all default passwords before deploying to production!
+
+version: '3.4' # For compatibility with older Docker versions
+
+services:
+  vxon:
+    image: vxon/vxon:latest
+    container_name: vxon
+    restart: always
+    command: --log-dir /app/logs
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./data:/data
+      - ./logs:/app/logs
+    environment:
+      - SQL_DSN=postgresql://root:123456@postgres:5432/vxon # ⚠️ IMPORTANT: Change the password in production!
+      #      - SQL_DSN=root:123456@tcp(mysql:3306)/vxon  # Point to the mysql service, uncomment if using MySQL
+      - REDIS_CONN_STRING=redis://redis
+      - TZ=Asia/Shanghai
+      - ERROR_LOG_ENABLED=true # 是否啟用錯誤日誌記錄
+      - BATCH_UPDATE_ENABLED=true # 是否啟用批次更新 batch update enabled
+    #      - STREAMING_TIMEOUT=300  # 流模式無響應超時時間，單位秒，預設120秒，如果出現空補全可以嘗試改為更大值 Streaming timeout in seconds, default is 120s. Increase if experiencing empty completions
+    #      - SESSION_SECRET=random_string  # 多機部署時設定，必須修改這個隨機字串！！ multi-node deployment, set this to a random string!!!!!!!
+    #      - SYNC_FREQUENCY=60  # Uncomment if regular database syncing is needed
+
+    depends_on:
+      - redis
+      - postgres
+    #      - mysql  # Uncomment if using MySQL
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          "wget -q -O - http://localhost:3000/api/status | grep -o '\"success\":\\s*true' || exit 1",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: always
+
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: 123456 # ⚠️ IMPORTANT: Change this password in production!
+      POSTGRES_DB: vxon
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+#    ports:
+#      - "5432:5432"  # Uncomment if you need to access PostgreSQL from outside Docker
+
+#  mysql:
+#    image: mysql:8.2
+#    container_name: mysql
+#    restart: always
+#    environment:
+#      MYSQL_ROOT_PASSWORD: 123456  # ⚠️ IMPORTANT: Change this password in production!
+#      MYSQL_DATABASE: vxon
+#    volumes:
+#      - mysql_data:/var/lib/mysql
+#    ports:
+#      - "3306:3306"  # Uncomment if you need to access MySQL from outside Docker
+
+volumes:
+  pg_data:
+#  mysql_data:
+```
+
+## 簡化配置（適合測試環境）
+
+如果只是測試使用，可以採用以下簡化版本，僅包含Vxon服務本身：
+
+```yaml
+services:
+  vxon:
+    image: vxon/vxon:latest
+    container_name: vxon
+    restart: always
+    ports:
+      - '3000:3000'
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./data:/data
+```
+
+## 配置說明
+
+### Vxon服務配置
+
+| 引數             | 說明                                                      |
+| ---------------- | --------------------------------------------------------- |
+| `image`          | 映象名稱，通常使用`vxon/vxon:latest`獲取最新版本 |
+| `container_name` | 容器名稱，可自定義                                        |
+| `restart`        | 容器重啟策略，建議設為`always`確保服務自動重啟            |
+| `command`        | 啟動命令，可自定義啟動引數                                |
+| `ports`          | 埠對映，預設將容器內3000埠對映到主機3000埠          |
+| `volumes`        | 資料卷對映，確保資料持久化                                |
+| `environment`    | 環境變數設定，用於配置Vxon行為                         |
+| `depends_on`     | 依賴服務，確保按正確順序啟動                              |
+| `healthcheck`    | 健康檢查配置，用於監控服務狀態                            |
+
+### 環境變數說明
+
+Vxon支援多種環境變數配置，以下是常用的幾個：
+
+| 環境變數            | 說明                   | 示例                                  |
+| ------------------- | ---------------------- | ------------------------------------- |
+| `SQL_DSN`           | 資料庫連線字串       | `root:123456@tcp(mysql:3306)/vxon` |
+| `REDIS_CONN_STRING` | Redis連線字串        | `redis://redis`                       |
+| `TZ`                | 時區設定               | `Asia/Shanghai`                       |
+| `SESSION_SECRET`    | 會話金鑰(多機部署必須) | `your_random_string`                  |
+| `NODE_TYPE`         | 節點型別(主/從)        | `master`或`slave`                     |
+| `SYNC_FREQUENCY`    | 同步頻率(秒)           | `60`                                  |
+
+更完整的環境變數列表請參考[環境變數配置指南](/zh-Hant/docs/installation/config-maintenance/environment-variables)。
+
+## 多節點部署配置
+
+對於多節點部署場景，主節點和從節點的配置略有不同：
+
+### 主節點配置
+
+```yaml
+services:
+  vxon-master:
+    image: vxon/vxon:latest
+    container_name: vxon-master
+    restart: always
+    ports:
+      - '3000:3000'
+    environment:
+      - SQL_DSN=root:123456@tcp(mysql:3306)/vxon
+      - REDIS_CONN_STRING=redis://redis
+      - SESSION_SECRET=your_unique_session_secret
+      - CRYPTO_SECRET=your_unique_crypto_secret
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./data:/data
+```
+
+### 從節點配置
+
+```yaml
+services:
+  vxon-slave:
+    image: vxon/vxon:latest
+    container_name: vxon-slave
+    restart: always
+    ports:
+      - '3001:3000' # 注意埠對映不同
+    environment:
+      - SQL_DSN=root:123456@tcp(mysql:3306)/vxon
+      - REDIS_CONN_STRING=redis://redis
+      - SESSION_SECRET=your_unique_session_secret # 必須與主節點相同
+      - CRYPTO_SECRET=your_unique_crypto_secret # 必須與主節點相同
+      - NODE_TYPE=slave # 設定為從節點
+      - SYNC_FREQUENCY=60
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./data-slave:/data
+```
+
+## 使用方法
+
+### 安裝
+
+將配置儲存為`docker-compose.yml`檔案，然後在同一目錄下執行：
+
+```bash
+docker compose up -d
+```
+
+### 檢視日誌
+
+```bash
+docker compose logs -f
+```
+
+### 停止服務
+
+```bash
+docker compose down
+```
+
+<Callout type="info" title="提示">
+  更多關於Docker Compose的使用方法，請參考[Docker
+  Compose安裝指南](/zh-Hant/docs/installation/deployment-methods/docker-compose-installation)。
+</Callout>
