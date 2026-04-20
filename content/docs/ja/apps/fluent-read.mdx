@@ -1,0 +1,76 @@
+---
+title: FluentRead - オープンソース翻訳プラグイン
+description: FluentRead設定ガイド — 20以上のエンジンとAIモデルに対応したオープンソースブラウザ翻訳プラグイン。Vxonに接続して没入型バイリンガルリーディングを実現。
+---
+
+<Callout type="info" title="チャット設定オプション">
+  Vxonコンソールのシステム設定 -> チャット設定で、以下のショートカットオプションを追加すると、トークン管理ページからワンクリックでFluentReadに簡単に入力できます：
+</Callout>
+
+    ```json
+    { "流畅阅读": "fluentread" }
+    ```
+
+<Callout type="info">
+  🌊 FluentReadは、ネイティブに近い読書体験を提供することに特化したオープンソースのブラウザ翻訳プラグインです。
+</Callout>
+
+- プロジェクトアドレス：[https://github.com/Bistutu/FluentRead](https://github.com/Bistutu/FluentRead)
+
+## 🌟 コア機能
+
+### スマート翻訳エンジン
+
+- **マルチエンジン対応**：20以上の翻訳エンジンに対応
+- **従来型翻訳**：Microsoft翻訳、Google翻訳、DeepL翻訳など
+- **AI大規模モデル**：OpenAI、DeepSeek、Kimi、Ollamaなど
+- **カスタムエンジン**：カスタム翻訳サービスの設定に対応
+
+### 没入型リーディング体験
+
+- **バイリンガル対照**：原文と翻訳文を並べて表示し、読みやすさを向上
+- **選択翻訳**：任意のテキストを選択して即座に翻訳結果を取得
+- **ワンクリックコピー**：翻訳テキストを素早くコピーして読書効率を向上
+- **全ページ翻訳**：フローティングボタンでウェブページ全体をワンクリック翻訳、ページ更新不要
+
+### プライバシーとカスタマイズ
+
+- **プライバシー保護**：すべてのデータはローカルに保存、オープンソースで透明なコード
+- **高いカスタマイズ性**：さまざまなシナリオのニーズに対応する豊富なカスタマイズオプション
+- **完全無料**：オープンソースで無料、非商用プロジェクト
+
+## 📦 インストール方法
+
+| ブラウザ     | インストール方法                                                                                                                                                                                                                                   |
+| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Chrome**  | [Chrome Web Store](https://chromewebstore.google.com/detail/%E6%B5%81%E7%95%85%E9%98%85%E8%AF%BB/djnlaiohfaaifbibleebjggkghlmcpcj?hl=zh-CN&authuser=0) \| [国内ミラー](https://www.crxsoso.com/webstore/detail/djnlaiohfaaifbibleebjggkghlmcpcj) |
+| **Edge**    | [Edge Add-ons Store](https://microsoftedge.microsoft.com/addons/detail/%E6%B5%81%E7%95%85%E9%98%85%E8%AF%BB/kakgmllfpjldjhcnkghpplmlbnmcoflp?hl=zh-CN)                                                                                                |
+| **Firefox** | [Firefox Add-ons Store](https://addons.mozilla.org/zh-CN/firefox/addon/%E6%B5%81%E7%95%85%E9%98%85%E8%AF%BB/)                                                                                                                                         |
+
+## 🚀 設定方法
+
+### Vxonコンソールから設定をインポート（推奨）
+
+FluentReadプラグインをブラウザにインストールした後、Vxonコンソール -> トークン管理ページを開くと、FluentReadの追加プロンプトが表示されます。
+
+![添加提示](/assets/fluentread/hint.png)
+
+モデルを選択した後、「ワンクリックでFluentReadに入力」をクリックすると、確認ウィンドウがポップアップします。対応する情報が正しいか確認してください。
+
+![确认](/assets/fluentread/confirm.png)
+
+インポートを確認すると、FluentReadのVxon設定が有効になります。
+
+![配置结果](/assets/fluentread/fluentread.png)
+
+### FluentReadで手動設定
+
+![手动配置](/assets/fluentread/configuration.png)
+
+| 設定項目  | 内容                                 |
+| ------------------- | --------------------------------------- |
+| 翻訳サービス | Vxon                                  |
+| アクセストークン        | Vxonキー                              |
+| Vxonエンドポイント     | Vxonデプロイアドレス（/v1なし） |
+| モデル               | リストから選択、またはカスタムモデル       |
+| カスタムモデル        | モデル名                              |
