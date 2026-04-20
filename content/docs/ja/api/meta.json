@@ -1,0 +1,11 @@
+{
+  "title": "APIリファレンス",
+  "description": "Vxon Complete API Documentation",
+  "icon": "Code",
+  "root": true,
+  "pages": [
+    "index",
+    "ai-model",
+    "management"
+  ]
+}
