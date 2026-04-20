@@ -1,0 +1,50 @@
+---
+title: AstrBot - Agentチャットボット
+description: AstrBotセットアップガイド — このオープンソースAgentチャットボットプラットフォームをVxonと連携し、QQ、Feishu、DingTalk、企業微信などにAI機能を提供。
+---
+
+<Callout type="info">
+  AstrBotは、オープンソースのオールインワンAgentチャットボットプラットフォームで、大規模モデルの機能をQQ、Feishu、DingTalk、企業微信などの主要なインスタントメッセージングソフトウェアにシームレスに統合し、個人、開発者、チーム向けに信頼性が高くスケーラブルな会話型AIインフラストラクチャを構築します。パーソナルAIコンパニオン、スマートカスタマーサービス、自動化アシスタント、エンタープライズナレッジベースなど、AstrBotはインスタントメッセージングプラットフォームのワークフロー内で本番対応のAIアプリケーションを素早く構築できます。
+</Callout>
+
+- 公式サイト：[https://astrbot.app](https://astrbot.app)
+- 公式ドキュメント：[https://docs.astrbot.app](https://docs.astrbot.app)
+- プロジェクトホームページ：[https://github.com/astrbotdevs/astrbot](https://github.com/astrbotdevs/astrbot)
+
+## Vxon連携方法
+
+AstrBotは、Vxonをモデルプロバイダーとして統合することをサポートしており、ユーザーはVxonを通じてさまざまなAIモデルサービスにアクセスして利用できます。
+
+### 設定手順
+
+#### Vxon APIキーの取得
+
+Vxonに登録・ログイン後、上部ナビゲーションバーの「コンソール」をクリックし、「トークン管理」をクリックして、「トークン追加」ボタンをクリックして新しいAPIキーを作成します。適切な権限を選択し、「作成」をクリックします。
+
+![create-api-key](/assets/astrbot/image.png)
+
+作成が成功したら、「キーをコピー」ボタンをクリックして、生成されたAPIキーをコピーします。
+
+![copy-api-key](/assets/astrbot/image-1.png)
+
+#### AstrBotでVxonサービスプロバイダーを設定
+
+AstrBot管理パネルを開き、「モデルプロバイダー」ページに移動して、「モデルプロバイダーを追加」ボタンをクリックします。
+
+VxonはOpenAI Chat CompletionおよびResponsesインターフェースに完全対応しています。「OpenAI」をクリックしてOpenAIプロバイダーの設定ページに入ります。
+
+ポップアップダイアログボックスで、API Base URLをVxonのインターフェースアドレスに設定します。Vxonをローカルにデプロイしている場合はローカルアドレスを入力します（例：`http://localhost:3000/v1`）。サードパーティのサービスプロバイダーが提供するVxonサービスを使用している場合は、対応するURLアドレスを入力します（例：`https://api.example.com/v1`）。
+
+次に、APIキーを「APIキー」フィールドに入力し、「保存」ボタンをクリックします。
+
+![astrbot-provider-config](/assets/astrbot/image-2.png)
+
+保存をクリックして、Vxonプロバイダーの設定を完了します。
+
+#### サービスプロバイダーの適用
+
+「設定ファイル」ページに移動し、「モデル」セクションを見つけて、「デフォルトチャットモデル」を先ほど作成したVxonプロバイダーに変更し、「保存」ボタンをクリックします。
+
+![apply](/assets/astrbot/image-3.png)
+
+これで、VxonをAstrBotのモデルプロバイダーとして正常に設定できました。AstrBotを通じて、Vxonが提供するさまざまなAIモデルサービスにアクセスして利用できます。
