@@ -1,0 +1,9 @@
+{
+  "title": "ビジネス提携",
+  "description": "Business cooperation and contact information",
+  "root": true,
+  "icon": "Handshake",
+  "pages": [
+    "index"
+  ]
+}
