@@ -1,0 +1,49 @@
+---
+title: Dockerデプロイ
+---
+
+このドキュメントでは、Dockerを使用してVxonをデプロイする詳細な手順を説明します。
+
+<Callout type="warn" title="強く推奨">
+  手動でDockerコンテナを起動する代わりに、[Docker Composeインストール方法](/ja/docs/installation/deployment-methods/docker-compose-installation)の使用を強く推奨します。Docker Compose方式は、より優れた設定管理、サービスオーケストレーション、デプロイ体験を提供します。
+</Callout>
+
+## 基本要件
+
+- Docker環境がインストール済み
+- ポート：デフォルトでポート3000を使用
+
+## Dockerイメージを使用して直接デプロイ
+
+### SQLiteデータベースの使用（非推奨）
+
+```shell
+docker run --name vxon -d --restart always \
+  -p 3000:3000 \
+  -e TZ=Asia/Shanghai \
+  -v /your/data/path:/data \
+  vxon/vxon:latest
+```
+
+<Callout type="warn" title="注意">
+  `/your/data/path`をデータ保存用のローカルパスに置き換えてください。
+</Callout>
+
+### MySQLデータベースの使用
+
+```shell
+docker run --name vxon -d --restart always \
+  -p 3000:3000 \
+  -e SQL_DSN="用户名:密码@tcp(数据库地址:3306)/数据库名" \
+  -e TZ=Asia/Shanghai \
+  -v /your/data/path:/data \
+  vxon/vxon:latest
+```
+
+<Callout type="warn" title="注意">
+  パラメータ内のデータベース接続情報を置き換えてください。
+</Callout>
+
+## システムへのアクセス
+
+デプロイ後、`http://サーバーIP:3000`にアクセスすると、自動的に初期化ページにリダイレクトされます。画面の指示に従って管理者アカウントとパスワードを手動で設定し（初回インストール時のみ必要）、完了後に新しく設定した管理者アカウントでシステムにログインできます。
