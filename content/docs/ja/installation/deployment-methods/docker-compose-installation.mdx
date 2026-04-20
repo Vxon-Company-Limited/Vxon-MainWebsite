@@ -1,0 +1,141 @@
+---
+title: Docker Composeデプロイ
+---
+
+このドキュメントでは、Docker Composeを使用してVxonをデプロイする詳細な手順を説明します。
+
+## 前提条件
+
+- DockerおよびDocker Composeがインストール済み
+- 推奨OS：Linux（Ubuntu/CentOS/Debianなど）
+
+## Docker Composeでデプロイ
+
+### 方法1：Gitでプロジェクトをクローン（推奨）
+
+GitHubに正常にアクセスできる場合は、この方法を推奨します。プロジェクトには完全な`docker-compose.yml`設定ファイルが含まれています：
+
+```shell
+# プロジェクトソースコードをダウンロード
+git clone https://github.com/Vxon/vxon.git
+
+# プロジェクトディレクトリに入る
+cd vxon
+
+# 必要に応じてdocker-compose.ymlファイルを編集
+# nanoエディタを使用
+nano docker-compose.yml
+# またはvimエディタを使用
+# vim docker-compose.yml
+```
+
+<Callout type="info" title="ヒント">
+  プロジェクトに含まれる`docker-compose.yml`ファイルは、必要なすべてのサービス（MySQLとRedisを含む）が設定済みです。実際の状況に応じてポートやパスワードなどのパラメータを変更するだけで使用できます。
+</Callout>
+
+### 方法2：設定ファイルを手動で作成
+
+GitHubにアクセスできない場合やリポジトリをクローンできない場合は、設定ファイルを手動で作成できます：
+
+1. Vxonデプロイ用のディレクトリを作成：
+
+```shell
+mkdir vxon
+cd vxon
+```
+
+2. このディレクトリに`docker-compose.yml`ファイルを作成
+
+   [Docker Compose設定ガイド](/ja/docs/installation/config-maintenance/docker-compose-yml)ドキュメントの設定例を参照し、ニーズに応じて選択してください：
+   - 本番環境には、完全な設定（MySQLとRedisを含む）を推奨。
+   - テスト環境には、簡易設定を使用可能。
+
+3. テキストエディタでファイルを作成：
+
+```shell
+# nanoエディタを使用
+nano docker-compose.yml
+
+# またはvimエディタを使用
+vim docker-compose.yml
+```
+
+選択した設定内容をこのファイルにコピーし、必要に応じてカスタマイズしてください。
+
+## サービスの起動
+
+設定ファイルの準備ができたら、Gitでクローンした場合でも手動で作成した場合でも、以下のコマンドでサービスを起動できます：
+
+```shell
+# Docker Composeでサービスを起動
+docker compose up -d
+```
+
+このコマンドは、必要なイメージを自動的にプルし、バックグラウンドでサービスを起動します。
+
+## ログの確認
+
+- **すべてのサービスのリアルタイムログ**
+
+```bash
+docker compose logs -f
+```
+
+- **特定のサービスのログ**（例：`vxon`、`mysql`、`redis`）
+
+```bash
+docker compose logs -f vxon
+docker compose logs -f mysql
+docker compose logs -f redis
+```
+
+- **最後のN行のみ表示**
+
+```bash
+docker compose logs --tail=100 vxon
+```
+
+- **最近の期間のログを表示**
+
+```bash
+docker compose logs --since=10m vxon
+```
+
+- **タイムスタンプを表示**
+
+```bash
+docker compose logs -f -t vxon
+```
+
+- **フォアグラウンドモードデバッグ（起動時にリアルタイムログ出力）**
+
+```bash
+docker compose up
+# または特定のサービスのみ起動してフォロー
+docker compose up vxon
+```
+
+Ctrl+Cでフォアグラウンドモードを終了（対応するサービスが停止します）。バックグラウンド動作には`-d`を使用してください。
+
+- **サービスリスト/ステータスの表示**
+
+```bash
+docker compose ps
+```
+
+- **コンテナ名でログを表示**（設定で`container_name`が設定されている場合、例：`vxon`）
+
+```bash
+docker logs -f vxon
+```
+
+## サービスの停止
+
+```shell
+# サービスを停止
+docker compose down
+```
+
+## システムへのアクセス
+
+サービスが正常に起動した後、`http://サーバーIP:3000`にアクセスすると、自動的に初期化ページにリダイレクトされます。画面の指示に従って管理者アカウントとパスワードを手動で設定してください（初回インストール時のみ必要）。初期化完了後、設定した管理者アカウントでシステムにログインできます。
