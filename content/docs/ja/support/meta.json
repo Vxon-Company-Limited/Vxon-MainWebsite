@@ -1,0 +1,13 @@
+{
+  "title": "ヘルプとサポート",
+  "description": "FAQ and community support",
+  "icon": "Headset",
+  "root": true,
+  "pages": [
+    "index",
+    "faq",
+    "community-interaction",
+    "feedback-issues",
+    "buy-us-a-coffee"
+  ]
+}
