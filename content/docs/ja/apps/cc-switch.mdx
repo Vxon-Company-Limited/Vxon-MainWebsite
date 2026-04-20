@@ -1,0 +1,107 @@
+---
+title: CC Switch - オールインワンAI CLI管理ツール
+description: CC Switchチュートリアル — Claude Code、Codex、Gemini CLIのプロバイダー設定、MCPサーバー、システムプロンプトを統合管理するクロスプラットフォームツール。Vxonからワンクリックインポート。
+---
+
+<Callout type="info" title="チャット設定オプション">
+  Vxonコンソールのシステム設定 -> チャット設定で、以下のショートカットを追加すると、トークン管理ページからCC Switchへのワンクリック入力が可能になります：
+</Callout>
+
+    ```json
+    { "CC Switch": "ccswitch" }
+    ```
+
+<Callout type="info">
+  🔀 CC Switchは、オープンソースのクロスプラットフォーム対応オールインワンAI CLI管理ツールです。Claude Code、Codex、Gemini CLIのワンクリックプロバイダー切り替え、統合MCPサーバー管理、システムプロンプト管理、Skills拡張管理に対応しており、設定ファイルを手動で編集することなく、複数のAIコーディングアシスタント間を自由に切り替えられます。
+</Callout>
+
+- GitHubリポジトリ：[https://github.com/farion1231/cc-switch](https://github.com/farion1231/cc-switch)
+- ダウンロード：[GitHub Releases](https://github.com/farion1231/cc-switch/releases)
+
+## 主な機能
+
+### 🔌 プロバイダー管理
+- **ワンクリック切り替え** — Claude Code、Codex、Gemini API設定を即座に切り替え、手動での環境変数や設定ファイルの編集は不要
+- **マルチエンドポイント対応** — プロバイダーごとに複数のエンドポイントを設定し、APIキー管理とレイテンシ速度テストに対応
+- **4段階モデル設定** — Haiku / Sonnet / Opus / カスタムの各段階で細かいモデル選択が可能
+
+### 🛠️ MCPサーバー管理
+- **統合クロスアプリ管理** — Claude / Codex / GeminiのMCPサーバーを単一パネルから管理
+- **3つのトランスポートタイプ** — stdio、HTTP、SSE（Server-Sent Events）に対応
+- **自動同期** — 双方向同期による統合インポート/エクスポート
+
+### 💬 プロンプト管理
+- **マルチプリセットシステムプロンプト** — 無制限のプリセットと素早い切り替え
+- **クロスアプリ対応** — Claude（`CLAUDE.md`）、Codex（`AGENTS.md`）、Gemini（`GEMINI.md`）
+- **Markdownエディタ** — ライブプレビュー付きCodeMirror 6
+
+### 🌐 マルチプラットフォーム対応
+- **デスクトップアプリ** — Windows、macOS、Linux向けネイティブインストーラー
+- **Web版** — ヘッドレスサーバー / SSH環境向けのブラウザアクセス可能なインターフェース
+- **CLI版** — インタラクティブメニュー駆動モードとコマンドラインモードの両方に対応
+
+## Vxon連携
+
+CC Switchは`ccswitch://`ディープリンクプロトコルに対応しており、Vxonトークン管理ページからワンクリックでプロバイダー設定をインポートできます。
+
+### 設定手順
+
+1. **Vxonトークン管理ページで、対応するトークンのドロップダウンメニューをクリック**
+   メニューから**CC Switch**オプションを選択します。システムが自動的にCC Switchを起動し、設定ダイアログを開きます。
+
+2. **ダイアログで設定を完了**
+   ![CC Switch Configuration Dialog](/assets/cc_switch/fill_dialog.png)
+
+   フィールドの説明：
+   - **アプリケーション**：上部でアプリタイプを切り替え — **Claude** / **Codex** / **Gemini**、必要に応じてターゲットアプリケーションを選択
+   - **名前**：この設定の名前を入力（例：`My Claude`）、後でCC Switchで簡単に識別・切り替え可能
+   - **メインモデル**（必須） — デフォルトで使用するプライマリモデル
+   - **Haikuモデル** — 軽量で高速なモデル
+   - **Sonnetモデル** — バランスの取れたモデル
+   - **Opusモデル** — 最も高性能なモデル
+
+   すべてのモデルはドロップダウン選択式で、未選択のフィールドには「モデルを選択してください」と表示されます。
+
+3. **完了**
+   **「CC Switchを開く」**をクリックして設定をCC Switchにインポートし、使用を開始します。**「キャンセル」**をクリックすると破棄されます。
+
+## インストール
+
+### macOS（Homebrew推奨）
+
+```shell
+brew tap farion1231/ccswitch
+brew install --cask cc-switch
+```
+
+### Windows
+
+[Releases](https://github.com/farion1231/cc-switch/releases)から`.msi`インストーラーまたはポータブル`.zip`をダウンロードしてください。
+
+### Linux
+
+[Releases](https://github.com/farion1231/cc-switch/releases)から`.deb`パッケージまたは`.AppImage`をダウンロードしてください。
+
+ArchLinuxユーザー：
+
+```shell
+paru -S cc-switch-bin
+```
+
+### Web版（ヘッドレス / SSHサーバー）
+
+```shell
+wget https://github.com/farion1231/cc-switch/releases/latest/download/cc-switch-web-linux-x64.tar.gz
+tar -xzf cc-switch-web-linux-x64.tar.gz
+cd cc-switch-web/
+./cc-switch-web
+```
+
+デフォルトポート`17666`、ブラウザで`http://localhost:17666`にアクセスしてください。
+
+## 関連リンク
+
+- [GitHubリポジトリ](https://github.com/farion1231/cc-switch)
+- [変更履歴](https://github.com/farion1231/cc-switch/blob/main/CHANGELOG.md)
+- [Web版リポジトリ](https://github.com/cp-yu/cc-switch-web)
+- [CLI版リポジトリ](https://github.com/thomas-jack/cc-switch-cli)
