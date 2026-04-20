@@ -1,0 +1,292 @@
+---
+title: 環境変数設定ガイド
+---
+
+このドキュメントでは、Vxonがサポートするすべての環境変数とその設定方法を説明します。これらの環境変数を設定することで、システムの動作をカスタマイズできます。
+
+<Callout type="info" title="ヒント">
+  Vxonは`.env`ファイルからの環境変数の読み取りに対応しています。`.env.example`ファイルを参照し、使用時に`.env`にリネームしてください。
+</Callout>
+
+## 基本設定
+
+| 環境変数 | 説明           | デフォルト値 | 例               |
+| -------------------- | --------------------- | ------------- | --------------------- |
+| `PORT`               | サービスリスニングポート | `3000`        | `PORT=8080`           |
+| `TZ`                 | タイムゾーン設定     | -             | `TZ=America/New_York` |
+| `VERSION`            | 実行バージョン番号の上書き | -     | `VERSION=1.2.3`       |
+
+## データベース設定
+
+| 環境変数          | 説明                                    | デフォルト値             | 例                                                                                                                             |
+| ----------------------------- | ---------------------------------------------- | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `SQL_DSN`                     | データベース接続文字列                     | SQLite (`one-api.db`)     | MySQL: `SQL_DSN=root:123456@tcp(localhost:3306)/vxon` \| PostgreSQL: `SQL_DSN=postgresql://root:123456@postgres:5432/vxon` |
+| `SQL_MAX_IDLE_CONNS`          | コネクションプールの最大アイドル接続数    | `100`                     | `SQL_MAX_IDLE_CONNS=50`                                                                                                          |
+| `SQL_MAX_OPEN_CONNS`          | コネクションプールの最大オープン接続数    | `1000`                    | `SQL_MAX_OPEN_CONNS=500`                                                                                                         |
+| `SQL_MAX_LIFETIME`            | 最大接続ライフタイム（秒）          | `60`                      | `SQL_MAX_LIFETIME=120`                                                                                                          |
+| `LOG_SQL_DSN`                 | ログテーブル用の個別データベース接続文字列 | -                         | `LOG_SQL_DSN=root:123456@tcp(localhost:3306)/oneapi_logs`                                                                        |
+| `SQLITE_PATH`                 | SQLiteデータベースパス                           | `one-api.db`              | `SQLITE_PATH=/var/lib/vxon/vxon.db`                                                                                        |
+
+## キャッシュ設定
+
+| 環境変数          | 説明                                                  | デフォルト値 | 例                                                    |
+| ----------------------------- | ------------------------------------------------------------ | ------------- | ---------------------------------------------------------- |
+| `REDIS_CONN_STRING`           | Redis接続文字列                                      | -             | `REDIS_CONN_STRING=redis://default:redispw@localhost:6379` |
+| `REDIS_POOL_SIZE`             | Redisコネクションプールサイズ                                   | `10`          | `REDIS_POOL_SIZE=20`                                      |
+| `MEMORY_CACHE_ENABLED`        | メモリキャッシュを有効にするか（Redis有効時は自動的に有効） | `false`       | `MEMORY_CACHE_ENABLED=true`                                |
+| `SYNC_FREQUENCY`              | キャッシュとデータベースの同期頻度（秒）       | `60`          | `SYNC_FREQUENCY=120`                                       |
+| `BATCH_UPDATE_ENABLED`        | データベースバッチ更新集約を有効化                     | `false`       | `BATCH_UPDATE_ENABLED=true`                                |
+| `BATCH_UPDATE_INTERVAL`       | バッチ更新集約間隔（秒）                  | `5`           | `BATCH_UPDATE_INTERVAL=10`                                 |
+
+## マルチノードとセキュリティ設定
+
+| 環境変数              | 説明                                                  | デフォルト値 | 例                                        |
+| --------------------------------- | ------------------------------------------------------------ | ------------- | ------------------------------------------- |
+| `SESSION_SECRET`                  | セッションシークレット（マルチマシンデプロイで必須）       | -             | `SESSION_SECRET=your_session_secret`        |
+| `CRYPTO_SECRET`                   | 暗号化シークレット（データベース内容を暗号化、デフォルトはSESSION_SECRET） | -             | `CRYPTO_SECRET=your_crypto_secret`          |
+| `FRONTEND_BASE_URL`               | フロントエンドベースURL（スレーブノードで使用、一致しないルートをこのアドレスにリダイレクト） | -             | `FRONTEND_BASE_URL=https://<your-vxon-domain>` |
+| `NODE_TYPE`                       | ノードタイプ                                                    | `master`      | `NODE_TYPE=slave`                           |
+| `TLS_INSECURE_SKIP_VERIFY`        | TLS証明書検証をグローバルにスキップ                   | `false`       | `TLS_INSECURE_SKIP_VERIFY=true`             |
+| `TRUSTED_REDIRECT_DOMAINS`        | 信頼されたリダイレクトドメインのリスト（カンマ区切り）           | -             | `TRUSTED_REDIRECT_DOMAINS=example.com,api.example.com` |
+
+<Callout type="warn" title="SESSION_SECRETの注意事項">
+  `SESSION_SECRET`を`random_string`に設定することはできません。設定するとプログラムは起動を拒否します。マルチマシンデプロイでは、すべてのノードが同じシークレットを使用する必要があります。
+</Callout>
+
+<Callout type="info" title="クラスターデプロイ">
+  これらの環境変数を使用して完全なクラスターデプロイを構築する方法については、[クラスターデプロイガイド](/ja/docs/installation/deployment-methods/cluster-deployment)を参照してください。
+</Callout>
+
+## ユーザーとトークン設定
+
+| 環境変数                     | 説明                                    | デフォルト値 | 例                                    |
+| ---------------------------------------- | ---------------------------------------------- | ------------- | --------------------------------------- |
+| `GENERATE_DEFAULT_TOKEN`                 | 新規登録ユーザーに初期トークンを生成 | `false`       | `GENERATE_DEFAULT_TOKEN=true`           |
+| `NOTIFICATION_LIMIT_DURATION_MINUTE`     | 通知制限期間（分）          | `10`          | `NOTIFICATION_LIMIT_DURATION_MINUTE=15` |
+| `NOTIFY_LIMIT_COUNT`                     | 指定期間内の最大通知数 | `2`           | `NOTIFY_LIMIT_COUNT=3`                  |
+
+## リクエスト制限設定
+
+| 環境変数                 | 説明                                    | デフォルト値 | 例                                     |
+| ------------------------------------ | ---------------------------------------------- | ------------- | ---------------------------------------- |
+| `GLOBAL_API_RATE_LIMIT_ENABLE`       | グローバルAPIレート制限スイッチ                   | `true`        | `GLOBAL_API_RATE_LIMIT_ENABLE=false`     |
+| `GLOBAL_API_RATE_LIMIT`              | グローバルAPIレート制限（IPごと）                 | `180`         | `GLOBAL_API_RATE_LIMIT=100`              |
+| `GLOBAL_API_RATE_LIMIT_DURATION`     | グローバルAPIレート制限ウィンドウ（秒）         | `180`         | `GLOBAL_API_RATE_LIMIT_DURATION=120`     |
+| `GLOBAL_WEB_RATE_LIMIT_ENABLE`       | グローバルWebレート制限スイッチ                   | `true`        | `GLOBAL_WEB_RATE_LIMIT_ENABLE=false`     |
+| `GLOBAL_WEB_RATE_LIMIT`              | グローバルWebレート制限（IPごと）                 | `60`          | `GLOBAL_WEB_RATE_LIMIT=30`               |
+| `GLOBAL_WEB_RATE_LIMIT_DURATION`     | グローバルWebレート制限ウィンドウ（秒）         | `180`         | `GLOBAL_WEB_RATE_LIMIT_DURATION=120`     |
+| `CRITICAL_RATE_LIMIT_ENABLE`         | 重要操作レート制限スイッチ           | `true`        | `CRITICAL_RATE_LIMIT_ENABLE=false`       |
+| `CRITICAL_RATE_LIMIT`                | 重要操作レート制限回数            | `20`          | `CRITICAL_RATE_LIMIT=10`                 |
+| `CRITICAL_RATE_LIMIT_DURATION`       | 重要操作レート制限ウィンドウ（秒） | `1200`        | `CRITICAL_RATE_LIMIT_DURATION=600`       |
+
+## リレーとプロキシ設定
+
+| 環境変数                  | 説明                                                  | デフォルト値 | 例                             |
+| ------------------------------------- | ------------------------------------------------------------ | ------------- | -------------------------------- |
+| `RELAY_TIMEOUT`                       | リレーリクエストタイムアウト（秒）、0で無制限             | `0`           | `RELAY_TIMEOUT=60`               |
+| `STREAMING_TIMEOUT`                   | ストリーミング単一レスポンスタイムアウト（秒）                  | `300`         | `STREAMING_TIMEOUT=120`          |
+| `RELAY_MAX_IDLE_CONNS`                | リレーHTTPクライアントプールの最大アイドル接続数           | `500`         | `RELAY_MAX_IDLE_CONNS=1000`      |
+| `RELAY_MAX_IDLE_CONNS_PER_HOST`       | リレーHTTPクライアントプールのホストごとの最大アイドル接続数  | `100`         | `RELAY_MAX_IDLE_CONNS_PER_HOST=200` |
+| `MAX_FILE_DOWNLOAD_MB`                | 最大ファイルダウンロードサイズ（MB）                              | `64`          | `MAX_FILE_DOWNLOAD_MB=128`       |
+| `MAX_REQUEST_BODY_MB`                 | 最大リクエストボディサイズ（MB、解凍後にカウント、zip bomb/OOM防止） | `128`         | `MAX_REQUEST_BODY_MB=256`        |
+| `STREAM_SCANNER_MAX_BUFFER_MB`        | SSEストリームスキャナー最大バッファサイズ（MB）                  | `64`          | `STREAM_SCANNER_MAX_BUFFER_MB=128` |
+
+<Callout type="warn" title="RELAY_TIMEOUT設定の警告">
+  `RELAY_TIMEOUT`環境変数の設定には注意してください。短すぎる設定は以下の問題を引き起こす可能性があります：
+</Callout>
+
+    - 上流APIがリクエストを完了して課金済みだが、タイムアウトによりローカルの課金が失敗
+
+    - 課金の非同期化につながり、システムの損失を招く可能性
+
+    - 何をしているか理解していない限り、設定しないことを推奨
+
+## チャネル管理設定
+
+| 環境変数                  | 説明                                    | デフォルト値                 | 例                                |
+| ------------------------------------- | ---------------------------------------------- | ----------------------------- | ----------------------------------- |
+| `CHANNEL_UPDATE_FREQUENCY`            | チャネル残高の定期更新（分）     | -（未設定時は無効）       | `CHANNEL_UPDATE_FREQUENCY=1440`     |
+| `CHANNEL_TEST_FREQUENCY`              | チャネルの定期チェック（分）、データベース設定を上書き | -（未設定時はデータベース設定を使用） | `CHANNEL_TEST_FREQUENCY=1440`       |
+| `POLLING_INTERVAL`                    | リクエストポーリング間隔（秒）             | `0`                           | `POLLING_INTERVAL=5`                |
+
+### チャネル上流モデル同期
+
+| 環境変数                                              | 説明                                    | デフォルト値 | 例 |
+| ----------------------------------------------------------------- | ---------------------------------------------- | ------------- | ---- |
+| `CHANNEL_UPSTREAM_MODEL_UPDATE_TASK_ENABLED`                      | 上流プロバイダーモデルリストの定期同期を有効化 | `true`        | `CHANNEL_UPSTREAM_MODEL_UPDATE_TASK_ENABLED=false` |
+| `CHANNEL_UPSTREAM_MODEL_UPDATE_TASK_INTERVAL_MINUTES`             | モデルリスト同期間隔（分）  | `30`          | `CHANNEL_UPSTREAM_MODEL_UPDATE_TASK_INTERVAL_MINUTES=60` |
+| `CHANNEL_UPSTREAM_MODEL_UPDATE_MIN_CHECK_INTERVAL_SECONDS`        | チャネルごとの最小チェック間隔（秒）   | `300`         | `CHANNEL_UPSTREAM_MODEL_UPDATE_MIN_CHECK_INTERVAL_SECONDS=600` |
+
+## モデルとリクエスト処理設定
+
+| 環境変数             | 説明                                                  | デフォルト値 | 例                                 |
+| -------------------------------- | ------------------------------------------------------------ | ------------- | ------------------------------------ |
+| `FORCE_STREAM_OPTION`            | クライアントのstream_optionsパラメータを上書き、ストリーミング使用情報を強制取得 | `true`        | `FORCE_STREAM_OPTION=false`          |
+| `CountToken`                     | ローカルトークンカウントを有効にするか                       | `true`        | `CountToken=false`                   |
+| `GET_MEDIA_TOKEN`                | ストリーミングモードで画像/音声トークンをカウントするか        | `true`        | `GET_MEDIA_TOKEN=false`              |
+| `GET_MEDIA_TOKEN_NOT_STREAM`     | 非ストリーミングモードで画像/音声トークンをカウントするか    | `false`       | `GET_MEDIA_TOKEN_NOT_STREAM=true`    |
+
+## 非同期タスク設定
+
+| 環境変数           | 説明                                                  | デフォルト値 | 例                               |
+| ------------------------------ | ------------------------------------------------------------ | ------------- | ---------------------------------- |
+| `UPDATE_TASK`                  | 非同期タスクポーリング更新を有効にするか（MJ、Sunoなど） | `true`        | `UPDATE_TASK=false`                |
+| `TASK_QUERY_LIMIT`             | ポーリングごとの最大クエリタスク数                     | `1000`        | `TASK_QUERY_LIMIT=500`             |
+| `TASK_TIMEOUT_MINUTES`         | 非同期タスクタイムアウト（分）、タイムアウト後に失敗とマークし返金、0で無効 | `1440`        | `TASK_TIMEOUT_MINUTES=720`         |
+| `TASK_PRICE_PATCH`             | タスク価格パッチ、指定モデルは使用ごとの課金のみ、モデル名は英語カンマ区切り | -             | `TASK_PRICE_PATCH=sora-2,sora-2-pro` |
+
+## 特定モデル設定
+
+| 環境変数                | 説明                                    | デフォルト値        | 例                                   |
+| ----------------------------------- | ---------------------------------------------- | -------------------- | -------------------------------------- |
+| `AZURE_DEFAULT_API_VERSION`         | AzureチャネルデフォルトAPIバージョン              | `2025-04-01-preview` | `AZURE_DEFAULT_API_VERSION=2023-05-15` |
+| `COHERE_SAFETY_SETTING`             | Cohereモデルセーフティ設定                    | `NONE`               | `COHERE_SAFETY_SETTING=CONTEXTUAL`     |
+| `DIFY_DEBUG`                        | Difyチャネルのワークフローとノード情報出力 | `true`               | `DIFY_DEBUG=false`                     |
+
+## サブスクリプションキャッシュ設定
+
+| 環境変数                   | 説明                                    | デフォルト値 | 例 |
+| -------------------------------------- | ---------------------------------------------- | ------------- | ---- |
+| `SUBSCRIPTION_PLAN_CACHE_TTL`          | サブスクリプションプランキャッシュTTL（秒）          | `300`         | `SUBSCRIPTION_PLAN_CACHE_TTL=600`      |
+| `SUBSCRIPTION_PLAN_INFO_CACHE_TTL`     | サブスクリプションプラン詳細キャッシュTTL（秒）  | `120`         | `SUBSCRIPTION_PLAN_INFO_CACHE_TTL=300` |
+| `SUBSCRIPTION_PLAN_CACHE_CAP`          | サブスクリプションプランキャッシュ最大容量       | `5000`        | `SUBSCRIPTION_PLAN_CACHE_CAP=10000`    |
+| `SUBSCRIPTION_PLAN_INFO_CACHE_CAP`     | サブスクリプションプラン詳細キャッシュ最大容量 | `10000`       | `SUBSCRIPTION_PLAN_INFO_CACHE_CAP=20000` |
+
+## その他の設定
+
+| 環境変数            | 説明                                    | デフォルト値 | 例                               |
+| ------------------------------- | ---------------------------------------------- | ------------- | ---------------------------------- |
+| `ERROR_LOG_ENABLED`             | エラーログの記録とフロントエンドでの表示を有効にするか | `false`       | `ERROR_LOG_ENABLED=true`           |
+
+## アナリティクスと統計
+
+| 環境変数 | 説明                  | デフォルト値                        | 例                     |
+| -------------------- | ---------------------------- | ------------------------------------ | --------------------------- |
+| `UMAMI_WEBSITE_ID`   | Umami Website ID             | -                                    | `UMAMI_WEBSITE_ID=xxxx-xxxx` |
+| `UMAMI_SCRIPT_URL`   | Umami Script URL             | `https://analytics.umami.is/script.js` | `UMAMI_SCRIPT_URL=https://umami.example.com/script.js` |
+| `GOOGLE_ANALYTICS_ID`| Google Analytics 4 Website ID | -                                    | `GOOGLE_ANALYTICS_ID=G-XXXXXXX` |
+
+## メタデータ同期
+
+| 環境変数        | 説明                       | デフォルト値                                | 例                                   |
+| --------------------------- | --------------------------------- | -------------------------------------------- | ----------------------------------------- |
+| `SYNC_UPSTREAM_BASE`        | モデル/ベンダーメタデータ上流アドレス | `https://basellm.github.io/llm-metadata`     | `SYNC_UPSTREAM_BASE=https://mirror.example.com/llm-metadata` |
+| `SYNC_HTTP_TIMEOUT_SECONDS` | 同期HTTPタイムアウト（秒）       | `10`                                         | `SYNC_HTTP_TIMEOUT_SECONDS=15`            |
+| `SYNC_HTTP_RETRY`           | 同期リトライ回数                  | `3`                                          | `SYNC_HTTP_RETRY=5`                       |
+| `SYNC_HTTP_MAX_MB`          | 最大レスポンスボディサイズ（MB）       | `10`                                         | `SYNC_HTTP_MAX_MB=20`                     |
+
+## フロントエンド設定
+
+| 環境変数          | 説明                                                  | デフォルト値 | 例                                    |
+| ----------------------------- | ------------------------------------------------------------ | ------------- | ------------------------------------------ |
+| `VITE_REACT_APP_SERVER_URL`   | バックエンドリクエスト用フロントエンドベースURL（コンパイル時に有効） | -             | `VITE_REACT_APP_SERVER_URL=https://api.example.com` |
+
+<Callout type="info" title="コンパイル時変数">
+  `VITE_REACT_APP_SERVER_URL`はViteがコンパイル時に注入するフロントエンド変数で、フロントエンドビルド時にのみ有効です。ランタイムでは変更できません。
+</Callout>
+
+## Pyroscope継続的パフォーマンス分析
+
+| 環境変数          | 説明                                    | デフォルト値 | 例                      |
+| ----------------------------- | ---------------------------------------------- | ------------- | ---------------------------- |
+| `PYROSCOPE_URL`               | Pyroscopeサーバーアドレス、空白で無効 | -             | `PYROSCOPE_URL=http://pyroscope:4040` |
+| `PYROSCOPE_APP_NAME`          | レポート用アプリケーション名                 | `vxon`     | `PYROSCOPE_APP_NAME=my-api`  |
+| `PYROSCOPE_BASIC_AUTH_USER`   | Pyroscope Basic Authユーザー名                  | -             | `PYROSCOPE_BASIC_AUTH_USER=admin` |
+| `PYROSCOPE_BASIC_AUTH_PASSWORD` | Pyroscope Basic Authパスワード                  | -             | `PYROSCOPE_BASIC_AUTH_PASSWORD=secret` |
+| `HOSTNAME`                    | レポート用ホスト名ラベル                   | `vxon`     | `HOSTNAME=node-1`            |
+| `PYROSCOPE_MUTEX_RATE`        | Mutexプロファイリングサンプルレート                    | `5`           | `PYROSCOPE_MUTEX_RATE=10`    |
+| `PYROSCOPE_BLOCK_RATE`        | Blockプロファイリングサンプルレート                    | `5`           | `PYROSCOPE_BLOCK_RATE=10`    |
+
+## LinuxDo OAuth
+
+通常の状況では変更不要です。
+
+| 環境変数          | 説明               | デフォルト値                            | 例                                  |
+| ----------------------------- | ------------------------- | ---------------------------------------- | ---------------------------------------- |
+| `LINUX_DO_TOKEN_ENDPOINT`     | LinuxDo Token Endpoint    | `https://connect.linux.do/oauth2/token`  | `LINUX_DO_TOKEN_ENDPOINT=https://connect.linux.do/oauth2/token` |
+| `LINUX_DO_USER_ENDPOINT`      | LinuxDo User Endpoint     | `https://connect.linux.do/api/user`      | `LINUX_DO_USER_ENDPOINT=https://connect.linux.do/api/user` |
+
+## デバッグ関連
+
+| 環境変数 | 説明                                    | デフォルト値 | 例          |
+| -------------------- | ---------------------------------------------- | ------------- | ---------------- |
+| `DEBUG`              | デバッグモードを有効化（GORMデバッグ出力を含む） | `false`       | `DEBUG=true`     |
+| `GIN_MODE`           | Gin実行モード                               | `release`     | `GIN_MODE=debug` |
+| `ENABLE_PPROF`       | pprofパフォーマンス分析を有効化（ポート8005）  | `false`       | `ENABLE_PPROF=true` |
+
+## 非推奨の環境変数
+
+以下の環境変数は非推奨です。システム設定インターフェースの対応するオプションを使用してください：
+
+| 環境変数          | 代替方法                                |
+| ----------------------------- | ------------------------------------------------- |
+| `GEMINI_MODEL_MAP`            | システム設定 - モデル関連設定で設定してください |
+| `GEMINI_SAFETY_SETTING`       | システム設定 - モデル関連設定で設定してください |
+| `GEMINI_VISION_MAX_IMAGE_NUM` | システム設定 - モデル関連設定で設定してください |
+
+## マルチマシンデプロイの例
+
+マルチマシンデプロイシナリオでは、以下の環境変数を設定する必要があります：
+
+### マスターノード設定
+
+```bash
+# Database Configuration - Use a remote database
+SQL_DSN=root:password@tcp(db-server:3306)/oneapi
+
+# Security Configuration
+SESSION_SECRET=your_unique_session_secret
+CRYPTO_SECRET=your_unique_crypto_secret
+
+# Redis Cache Configuration
+REDIS_CONN_STRING=redis://default:password@redis-server:6379
+```
+
+### スレーブノード設定
+
+```bash
+# Database Configuration - Use the same remote database
+SQL_DSN=root:password@tcp(db-server:3306)/oneapi
+
+# Security Configuration - Use the same secret as the master node
+SESSION_SECRET=your_unique_session_secret
+CRYPTO_SECRET=your_unique_crypto_secret
+
+# Redis Cache Configuration - Use the same Redis as the master node
+REDIS_CONN_STRING=redis://default:password@redis-server:6379
+
+# Node Type Setting
+NODE_TYPE=slave
+
+# Optional: Frontend Base URL
+# FRONTEND_BASE_URL=https://<your-vxon-domain>
+
+# Optional: Synchronization Frequency
+SYNC_FREQUENCY=60
+```
+
+<Callout type="info" title="完全なクラスター設定">
+  これは基本的なマルチノード設定の例です。完全なクラスターデプロイ設定、アーキテクチャの説明、ベストプラクティスについては、[クラスターデプロイガイド](/ja/docs/installation/deployment-methods/cluster-deployment)を参照してください。
+</Callout>
+
+## Docker Composeでの環境変数の例
+
+以下は、Docker Compose設定ファイルで環境変数を設定する簡単な例です：
+
+```yaml
+services:
+  vxon:
+    image: vxon/vxon:latest
+    environment:
+      - TZ=Asia/Shanghai
+      - SQL_DSN=root:123456@tcp(mysql:3306)/oneapi
+      - REDIS_CONN_STRING=redis://default:redispw@redis:6379
+      - SESSION_SECRET=your_unique_session_secret
+      - CRYPTO_SECRET=your_unique_crypto_secret
+      - MEMORY_CACHE_ENABLED=true
+      - GENERATE_DEFAULT_TOKEN=true
+      - STREAMING_TIMEOUT=120
+      - CHANNEL_UPDATE_FREQUENCY=1440
+```
+
+完全なDocker Compose設定（より多くの環境変数設定オプションを含む）については、[Docker Compose設定説明](/ja/docs/installation/config-maintenance/docker-compose-yml)ドキュメントを参照してください。
