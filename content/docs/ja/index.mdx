@@ -1,0 +1,89 @@
+---
+title: クイックスタート
+description: ニーズに最適なデプロイ方法を選択してください
+---
+
+import {
+  Server,
+  Network,
+  Code2,
+  Headphones,
+  Bot,
+  Handshake,
+  Container,
+  Boxes,
+} from 'lucide-react';
+
+## デプロイ方法の選択
+
+環境と技術要件に基づいて、適切なデプロイ方法を選択してください。
+
+<Cards>
+  <Card
+    icon={<Boxes />}
+    title="Docker Composeデプロイ"
+    description="Docker Composeで複数のサービスをオーケストレーション。本番環境やMySQLやRedisなどの依存関係が必要なシナリオに適しています。"
+    href="/ja/docs/installation/deployment-methods/docker-compose-installation"
+  />
+  <Card
+    icon={<Container />}
+    title="Docker単一コンテナデプロイ"
+    description="Dockerイメージを使用してVxonを素早くデプロイ。個人利用や小規模アプリケーションに適しています。"
+    href="/ja/docs/installation/deployment-methods/docker-installation"
+  />
+  <Card
+    icon={<Server />}
+    title="1Panelデプロイ"
+    description="1Panelのグラフィカルインターフェースで素早くデプロイ。コマンドラインに不慣れなユーザーに適しています。"
+    href="/ja/docs/installation/deployment-methods/1panel-installation"
+  />
+  <Card
+    icon={<Server />}
+    title="宝塔パネルデプロイ"
+    description="宝塔パネルのグラフィカルインターフェースで素早くデプロイ。コマンドラインに不慣れなユーザーに適しています。"
+    href="/ja/docs/installation/deployment-methods/bt-docker-installation"
+  />
+  <Card
+    icon={<Network />}
+    title="クラスターデプロイモード"
+    description="高可用性、負荷分散、水平スケーラビリティのためのマルチノード分散デプロイ。大規模アプリケーションやエンタープライズシナリオに適しています。"
+    href="/ja/docs/installation/deployment-methods/cluster-deployment"
+  />
+  <Card
+    icon={<Code2 />}
+    title="ローカル開発デプロイ"
+    description="コード貢献やカスタム開発を行う開発者向け。ローカル開発環境のセットアップに関する完全なガイドを提供します。"
+    href="/ja/docs/installation/deployment-methods/local-development"
+  />
+</Cards>
+
+## ドキュメントを閲覧する
+
+Vxonの強力な機能を最大限に活用するための包括的なガイドとリソースをご覧ください。
+
+<Cards>
+  <Card
+    icon={<Code2 />}
+    title="APIドキュメント"
+    description="包括的なAPIインターフェースの説明と呼び出し例。"
+    href="/ja/docs/api"
+  />
+  <Card
+    icon={<Bot />}
+    title="AIアプリケーション"
+    description="Vxonをベースに開発されたさまざまなAIアプリケーション例をご覧ください。"
+    href="/ja/docs/apps"
+  />
+  <Card
+    icon={<Headphones />}
+    title="ヘルプ＆サポート"
+    description="よくある質問とコミュニティ交流。"
+    href="/ja/docs/support"
+  />
+  <Card
+    icon={<Handshake />}
+    title="ビジネス提携"
+    description="AIエコシステムとビジネスチャンスを共に探求するパートナーシップ。"
+    href="/ja/docs/business"
+  />
+</Cards>
