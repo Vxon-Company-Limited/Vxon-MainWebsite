@@ -1,0 +1,40 @@
+---
+title: ヘルプ＆サポート
+description: ヘルプの取得とコミュニティへの参加
+---
+
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { HelpCircle, MessageCircle, Bug, Coffee } from 'lucide-react';
+
+## 概要
+
+お困りですか？サポートが必要ですか？ご利用中のさまざまな問題を解決するために、複数のサポートチャネルをご用意しています。
+
+## ヘルプを受ける
+
+<Cards>
+  <Card
+    icon={<HelpCircle />}
+    title="よくある質問"
+    description="よくある質問の回答を確認して、問題をすばやく解決しましょう。"
+    href="/ja/docs/support/faq"
+  />
+  <Card
+    icon={<MessageCircle />}
+    title="コミュニティ"
+    description="コミュニティに参加して、他のユーザーと経験やヒントを交換しましょう。"
+    href="/ja/docs/support/community-interaction"
+  />
+  <Card
+    icon={<Bug />}
+    title="フィードバック"
+    description="バグを発見したり、機能の提案がありますか？お知らせください！"
+    href="/ja/docs/support/feedback-issues"
+  />
+  <Card
+    icon={<Coffee />}
+    title="スポンサー"
+    description="Vxonがお役に立ちましたら、コーヒーをおごってください。"
+    href="/ja/docs/support/buy-us-a-coffee"
+  />
+</Cards>
