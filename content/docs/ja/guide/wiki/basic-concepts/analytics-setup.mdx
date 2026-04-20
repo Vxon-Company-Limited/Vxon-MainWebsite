@@ -1,0 +1,191 @@
+---
+title: アナリティクスツール設定ガイド
+---
+
+### 概要
+
+Vxonは、ユーザー行動やウェブサイトパフォーマンスを追跡するために、人気のアナリティクスプラットフォームとの統合をサポートしています:
+
+- **Google Analytics 4 (GA4)**: Googleの最新バージョンのアナリティクスプラットフォーム
+- **Umami Analytics**: プライバシー重視のオープンソースアナリティクスツール
+
+両方のアナリティクスツールを同時に有効にしても競合しません。
+
+### 機能
+
+✅ ゼロコード統合 - 環境変数のみで構成  
+✅ ウェブインターフェースへの自動スクリプト注入  
+✅ Dockerおよびスタンドアロンデプロイをサポート  
+✅ プライバシー重視の実装  
+✅ フロントエンドコードの変更不要
+
+---
+
+### Google Analytics 4 セットアップ
+
+#### 1. 測定IDの取得
+
+1. [Google Analytics](https://analytics.google.com/)にアクセス
+2. 新しいプロパティを作成するか、既存のものを選択
+3. **管理** → **データストリーム**に移動
+4. ウェブデータストリームを作成または選択
+5. **測定ID**をコピー（形式: `G-XXXXXXXXXX`）
+
+#### 2. 環境変数の構成
+
+**Docker Composeを使用する場合:**
+
+`docker-compose.yml`ファイルを編集し、Google Analyticsの行のコメントを解除:
+
+```yaml
+environment:
+  - GOOGLE_ANALYTICS_ID=G-XXXXXXXXXX # 実際の測定IDに置き換えてください
+```
+
+**スタンドアロンデプロイ:**
+
+`.env`ファイルに追加するか、環境変数として設定:
+
+```bash
+export GOOGLE_ANALYTICS_ID=G-XXXXXXXXXX
+```
+
+**Docker Runを使用する場合:**
+
+```bash
+docker run -d \
+  -e GOOGLE_ANALYTICS_ID=G-XXXXXXXXXX \
+  ...其他选项...
+  vxon/vxon:latest
+```
+
+#### 3. アプリケーションの再起動
+
+```bash
+# Docker Compose
+docker-compose down && docker-compose up -d
+
+# スタンドアロンデプロイ
+# アプリケーションを直接再起動
+```
+
+---
+
+### Umami Analytics セットアップ
+
+#### 1. Umami認証情報の取得
+
+**オプションA: Umami Cloudを使用**
+
+1. [Umami Cloud](https://cloud.umami.is/)に登録
+2. 新しいウェブサイトを追加
+3. **ウェブサイトID**をコピー（UUID形式）
+
+**オプションB: Umamiをセルフホスティング**
+
+1. 独自の[Umamiインスタンス](https://umami.is/docs/install)をデプロイ
+2. ダッシュボードでウェブサイトを作成
+3. **ウェブサイトID**と**スクリプトURL**をコピー
+
+#### 2. 環境変数の構成
+
+**Docker Composeを使用する場合:**
+
+`docker-compose.yml`ファイルを編集:
+
+```yaml
+environment:
+  - UMAMI_WEBSITE_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+  # オプション: セルフホスティングインスタンスの場合のみ必要
+  - UMAMI_SCRIPT_URL=https://<your-umami-domain>/script.js
+```
+
+**スタンドアロンデプロイ:**
+
+`.env`ファイルに追加:
+
+```bash
+export UMAMI_WEBSITE_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+export UMAMI_SCRIPT_URL=https://<your-umami-domain>/script.js  # オプション
+```
+
+**注意:** Umami Cloudを使用する場合、`UMAMI_SCRIPT_URL`を設定する必要はありません。デフォルトで公式URLが使用されます。
+
+#### 3. アプリケーションの再起動
+
+Google Analyticsと同様に、アプリケーションを再起動して変更を適用します。
+
+---
+
+### 両方のアナリティクスツールを同時に使用
+
+Google AnalyticsとUmamiを同時に有効にできます:
+
+```yaml
+environment:
+  - GOOGLE_ANALYTICS_ID=G-ABC123XYZ
+  - UMAMI_WEBSITE_ID=a1b2c3d4-e5f6-g7h8-i9j0-k1l2m3n4o5p6
+  - UMAMI_SCRIPT_URL=https://analytics.umami.is/script.js
+```
+
+---
+
+### 検証
+
+アプリケーションの再起動後:
+
+1. ブラウザでウェブインターフェースを開く
+2. ブラウザの開発者ツール（F12）→ **ネットワーク**タブを開く
+3. ページを更新
+4. 以下のリクエストを確認:
+   - Google Analytics: `https://www.googletagmanager.com/gtag/js`
+   - Umami: 構成したスクリプトURL
+
+ページのソースコードを表示し、`<head>`セクションに注入されたスクリプトを確認することもできます。
+
+---
+
+### トラブルシューティング
+
+**アナリティクスツールが動作しない場合**
+
+1. ✅ 環境変数が正しく設定されているか確認
+2. ✅ 変数変更後にアプリケーションを再起動
+3. ✅ ブラウザコンソールでエラーを確認
+4. ✅ 測定ID/ウェブサイトIDの形式が正しいか確認
+5. ✅ 広告ブロッカーが干渉していないか確認
+
+**Dockerユーザー:**
+
+```bash
+# 環境変数が設定されているか確認
+docker exec vxon env | grep -E "GOOGLE_ANALYTICS|UMAMI"
+```
+
+---
+
+### プライバシーに関する考慮事項
+
+- Google Analyticsは[Googleのプライバシーポリシー](https://policies.google.com/privacy)に従ってユーザーデータを収集します
+- Umamiはプライバシー重視で、個人データを収集しません
+- アナリティクスツールを使用する場合、ウェブサイトにプライバシーポリシーの追加を検討してください
+- 両方のツールは正しく構成すればGDPRに準拠します
+
+---
+
+## 環境変数リファレンス
+
+| 変数                  | 必須 | デフォルト値                           | 説明                                                       |
+| --------------------- | ---- | -------------------------------------- | ---------------------------------------------------------- |
+| `GOOGLE_ANALYTICS_ID` | いいえ | -                                      | Google Analytics 4 測定ID（形式: G-XXXXXXXXXX）            |
+| `UMAMI_WEBSITE_ID`    | いいえ | -                                      | Umami ウェブサイトID（UUID形式）                           |
+| `UMAMI_SCRIPT_URL`    | いいえ | `https://analytics.umami.is/script.js` | Umami スクリプトURL（セルフホスティングインスタンスのみ必要）|
+
+---
+
+## 関連リンク
+
+- [Google Analytics](https://analytics.google.com/)
+- [Umami Analytics](https://umami.is/)
+- [Umami ドキュメント](https://umami.is/docs)
+- [Google Analytics プライバシー](https://support.google.com/analytics/answer/6004245)
