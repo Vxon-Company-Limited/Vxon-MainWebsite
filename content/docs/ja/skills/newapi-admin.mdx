@@ -1,0 +1,77 @@
+---
+title: vxon-admin（近日公開）
+description: vxon-adminは、Vxon公式の管理者レベルSkillプラグインで、Claude Code、Cursor、Windsurfなどのエディタから直接チャネル管理、ユーザー管理、システム設定、ログクエリなどを実行可能。現在開発中。
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+
+<Callout type="warn" title="開発中 — 近日公開">
+  **vxon-admin**は現在開発中で、まだリリースされていません。以下は計画中の機能のプレビューです。リリース時に完全なドキュメントでこのページを更新します。
+</Callout>
+
+## はじめに
+
+**vxon-admin**は、Vxon管理者向けに設計されたSkillプラグインです。ユーザーレベルの[vxon](/ja/docs/skills/vxon) Skillとは異なり、vxon-adminは**管理者操作**に焦点を当てており、サイト管理者がAIエディタ内から自然言語コマンドで日常的な管理タスクを実行できます。管理ダッシュボードにログインする必要はありません。
+
+## 計画中の機能
+
+### チャネル管理
+
+| コマンド（計画中） | 説明 |
+|-------------------|-------------|
+| `/vxon-admin channels` | すべてのチャネルとそのステータスを一覧表示 |
+| `/vxon-admin channel-add` | 新しいチャネルを追加（OpenAI、Claude、Gemini、Azureなど） |
+| `/vxon-admin channel-test <id>` | 特定のチャネルの接続性をテスト |
+| `/vxon-admin channel-toggle <id>` | 特定のチャネルを有効化または無効化 |
+| `/vxon-admin channel-priority` | チャネルの優先度を表示・調整 |
+
+### ユーザー管理
+
+| コマンド（計画中） | 説明 |
+|-------------------|-------------|
+| `/vxon-admin users` | ユーザーを一覧表示 |
+| `/vxon-admin user-info <id>` | ユーザーの詳細を表示（残高、グループ、使用状況） |
+| `/vxon-admin user-quota <id>` | ユーザーのクォータと残高を調整 |
+| `/vxon-admin user-group <id> <group>` | ユーザーのグループを変更 |
+| `/vxon-admin user-ban <id>` | ユーザーをBANまたはBAN解除 |
+
+### システム設定
+
+| コマンド（計画中） | 説明 |
+|-------------------|-------------|
+| `/vxon-admin config` | 現在のシステム設定を表示 |
+| `/vxon-admin config-set <key> <value>` | システム設定項目を変更 |
+| `/vxon-admin ratio` | モデルレート倍率設定を表示 |
+| `/vxon-admin ratio-sync` | 上流のモデルレート倍率を同期 |
+
+### ログ＆モニタリング
+
+| コマンド（計画中） | 説明 |
+|-------------------|-------------|
+| `/vxon-admin logs` | 最近のリクエストログを表示 |
+| `/vxon-admin stats` | システム統計を表示（リクエスト量、消費量、エラー率） |
+| `/vxon-admin status` | システムの健全性とチャネル接続性を確認 |
+
+### トークン＆引き換えコード管理
+
+| コマンド（計画中） | 説明 |
+|-------------------|-------------|
+| `/vxon-admin redemptions` | 引き換えコードを一覧表示 |
+| `/vxon-admin redemption-create` | 引き換えコードを一括作成 |
+| `/vxon-admin token-overview` | グローバルトークン使用状況の概要 |
+
+## vxon Skillとの比較
+
+| | vxon | vxon-admin |
+|---|--------|-------------|
+| **対象ユーザー** | 一般ユーザー / 開発者 | サイト管理者 |
+| **スコープ** | 個人のモデル、トークン、残高、グループ | グローバルチャネル、ユーザー、設定、ログ |
+| **権限** | ユーザーアクセストークン | 管理者アクセストークン |
+| **ステータス** | リリース済み | 開発中 |
+
+## 最新情報
+
+vxon-adminは活発に開発中です。最新のアップデートについてはリポジトリをフォローしてください：
+
+- GitHubリポジトリ：[github.com/Vxon/skills](https://github.com/Vxon/skills)
+- リリース済みユーザーレベルSkill：[vxon](/ja/docs/skills/vxon)
