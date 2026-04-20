@@ -1,0 +1,43 @@
+---
+title: 機能紹介
+---
+
+1.  🎨 全く新しいUIインターフェース（一部のインターフェースはまだ更新待ち）
+2.  🌍 多言語サポート（改善予定）
+3.  🎨 [Midjourney-Proxy(Plus)](https://github.com/novicezk/midjourney-proxy) APIサポートを追加
+4.  💰 オンラインチャージ機能をサポート、システム設定で構成可能:
+    - - [x] Epay
+5.  🔍 キーによる使用Quotaの照会をサポート:
+    - プロジェクト[neko-api-key-tool](https://github.com/Vxon/neko-api-key-tool)と連携することで、キーによる使用量の照会が可能です。
+6.  📑 ページネーションで1ページあたりの表示件数を選択可能
+7.  🔄 SQLiteデータベースストレージをサポート、すぐに使える軽量で便利な構成
+8.  💵 使用回数によるモデル課金をサポート、システム設定 - 運営設定で構成可能
+9.  ⚖️ **重み付きランダム**チャネル選択をサポート
+10. 📈 データダッシュボード（コンソール）
+11. 🔒 トークンが呼び出せるモデルを構成可能
+12. 🤖 Telegram認証ログインをサポート:
+    1.  システム設定 - ログイン＆登録の構成 - Telegramによるログインを許可
+    2.  [@Botfather](https://t.me/botfather)にコマンド/setdomainを入力
+    3.  ボットを選択し、http(s)://あなたのウェブサイトアドレス/loginを入力
+    4.  Telegram Bot Nameは@なしのボットユーザー名文字列です
+13. 🎵 [Suno API](https://github.com/Suno-API/Suno-API) APIサポートを追加
+14. 🔄 Rerankモデルをサポート、現在CohereとJinaに対応、Difyとの統合が可能
+15. ⚡ **[OpenAI Realtime API](https://platform.openai.com/docs/guides/realtime/integration)** - OpenAIのRealtime APIをサポート、Azureチャネルに対応
+16. ルート`/chat2link`を使用してチャットインターフェースに入ることをサポート
+17. 🧠 モデル名のサフィックスによる推論努力度の設定をサポート:
+    1.  OpenAI oシリーズモデル
+        - - サフィックス`-high`を追加して高い推論努力度に設定（例: `o3-mini-high`）
+        - - サフィックス`-medium`を追加して中程度の推論努力度に設定（例: `o3-mini-medium`）
+        - - サフィックス`-low`を追加して低い推論努力度に設定（例: `o3-mini-low`）
+    2.  Claude thinkingモデル
+        - - サフィックス`-thinking`を追加してthinkingモードを有効化（例: `claude-3-7-sonnet-20250219-thinking`）
+18. 🔄 Thinking to Content、`チャネル - 編集 - チャネル追加設定`で`thinking_to_content`オプションの設定をサポート、デフォルトは`false`。有効にすると、thinking内容`reasoning_content`を`<think>`タグに変換し、返却内容に追加します。
+19. 🔄 モデルレート制限、`システム設定 - レート制限設定`でモデルのレート制限を設定可能。総リクエスト数制限と成功リクエスト数制限を含みます。
+20. 💰 キャッシュ課金サポート、有効にするとキャッシュヒット時に設定されたRatioで課金可能:
+    1.  `システム設定 - 運営設定`でプロンプトキャッシュRatioオプションを設定
+    2.  チャネルでプロンプトキャッシュRatioを設定、範囲は0-1。例えば0.5に設定すると、キャッシュヒット時に50%で課金されます。
+    3.  対応チャネル:
+        - - [x] OpenAI
+        - - [x] Azure
+        - - [x] DeepSeek
+        - - [ ] Claude
