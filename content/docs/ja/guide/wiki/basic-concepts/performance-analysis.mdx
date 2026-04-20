@@ -1,0 +1,131 @@
+---
+title: パフォーマンス分析設定ガイド
+---
+
+### 概要
+
+Vxonは2種類のパフォーマンス分析機能を提供しています:
+
+- **pprof（組み込み）**: 一時的な診断やオフライン分析に適しています
+- **Pyroscope（オプション）**: オンラインの継続的分析やフレームグラフの可視化に適しています
+
+両方を同時に有効にしても競合しません。
+
+### 機能
+
+✅ ゼロコード統合 - 環境変数のみで構成  
+✅ Dockerおよびスタンドアロンデプロイをサポート  
+✅ 一時的な診断と継続的分析の共存をサポート  
+✅ オプションの認証とインスタンス識別
+
+---
+
+### pprof（組み込み）セットアップ
+
+#### 1. 環境変数の構成
+
+**Docker Composeを使用する場合:**
+
+```yaml
+environment:
+  - ENABLE_PPROF=true
+```
+
+**スタンドアロンデプロイ:**
+
+```bash
+export ENABLE_PPROF=true
+```
+
+#### 2. アプリケーションの再起動
+
+アプリケーションを再起動して変更を適用します。
+
+#### 3. 検証
+
+ルートが変更されていない場合、通常は`/debug/pprof/`でアクセスできます（実際のデプロイに依存します）。
+
+---
+
+### Pyroscope セットアップ
+
+#### 1. Pyroscopeサービスの準備
+
+Pyroscopeサービスにアクセスできることを確認し、そのアドレスを記録します（例: `http://localhost:4040`）。
+
+#### 2. 環境変数の構成
+
+**Docker Composeを使用する場合:**
+
+```yaml
+environment:
+  - PYROSCOPE_URL=http://localhost:4040
+  - PYROSCOPE_APP_NAME=vxon
+  - PYROSCOPE_BASIC_AUTH_USER=your-user
+  - PYROSCOPE_BASIC_AUTH_PASSWORD=your-password
+  - PYROSCOPE_MUTEX_RATE=5
+  - PYROSCOPE_BLOCK_RATE=5
+  - HOSTNAME=your-hostname
+```
+
+**スタンドアロンデプロイ:**
+
+```bash
+export PYROSCOPE_URL=http://localhost:4040
+export PYROSCOPE_APP_NAME=vxon
+export PYROSCOPE_BASIC_AUTH_USER=your-user
+export PYROSCOPE_BASIC_AUTH_PASSWORD=your-password
+export PYROSCOPE_MUTEX_RATE=5
+export PYROSCOPE_BLOCK_RATE=5
+export HOSTNAME=your-hostname
+```
+
+#### 3. アプリケーションの再起動
+
+アプリケーションを再起動して変更を適用します。
+
+#### 4. 検証
+
+1. Pyroscope UIを開く
+2. `PYROSCOPE_APP_NAME`に対応するアプリケーションを選択
+3. `HOSTNAME`が設定されている場合、インスタンスディメンションでソースを区別できます
+
+---
+
+### トラブルシューティング
+
+**パフォーマンス分析が動作しない場合**
+
+1. ✅ 環境変数が正しく設定されているか確認
+2. ✅ 変数変更後にアプリケーションを再起動
+3. ✅ ネットワーク接続と認証構成を確認
+4. ✅ `PYROSCOPE_APP_NAME`の命名の一貫性を確認
+
+**Dockerユーザー:**
+
+```bash
+# 環境変数を確認
+docker exec vxon env | grep -E "PPROF|PYROSCOPE"
+```
+
+---
+
+## 環境変数リファレンス
+
+| 変数                            | 必須 | デフォルト値 | 説明                                |
+| ----------------------------- | ---- | ------ | ---------------------------- |
+| `ENABLE_PPROF`                | いいえ | `false` | pprofパフォーマンス分析を有効化          |
+| `PYROSCOPE_URL`               | いいえ | -      | Pyroscopeサービスアドレス          |
+| `PYROSCOPE_APP_NAME`          | いいえ | -      | Pyroscopeアプリケーション識別子      |
+| `PYROSCOPE_BASIC_AUTH_USER`   | いいえ | -      | Pyroscope Basic Auth ユーザー名 |
+| `PYROSCOPE_BASIC_AUTH_PASSWORD` | いいえ | -      | Pyroscope Basic Auth パスワード   |
+| `PYROSCOPE_MUTEX_RATE`        | いいえ | -      | Mutexサンプリングレート                |
+| `PYROSCOPE_BLOCK_RATE`        | いいえ | -      | Blockサンプリングレート                |
+| `HOSTNAME`                    | いいえ | -      | インスタンス識別子（オプション）            |
+
+---
+
+## 関連リンク
+
+- [Pyroscope](https://pyroscope.io/)
+- [Pyroscope ドキュメント](https://pyroscope.io/docs/)
