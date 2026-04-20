@@ -1,0 +1,51 @@
+---
+title: LangBot - インスタントメッセージングボット開発プラットフォーム
+description: LangBot連携ガイド — Feishu、DingTalk、Telegram、DiscordなどのAI搭載チャットボットを構築。ナレッジベース、Agent、MCPをVxonで利用可能。
+---
+
+<Callout type="info">
+  LangBotは、Feishu、DingTalk、WeChat、QQ、Telegram、Discord、Slackなどのさまざまなインスタントメッセージングプラットフォームに対応したオープンソースのインスタントメッセージングボット開発プラットフォームです。グローバルな主要AIモデルと統合し、ナレッジベース、Agent、MCPなどのさまざまなAIアプリケーション機能に対応し、Vxonと完全に互換性があります。
+</Callout>
+
+- 公式サイト：[https://langbot.app](https://langbot.app/)
+- ダウンロード：[https://github.com/langbot-app/LangBot/releases](https://github.com/langbot-app/LangBot/releases)
+- 公式ドキュメント：[https://docs.langbot.app](https://docs.langbot.app/)
+- オープンソースアドレス：[https://github.com/langbot-app/LangBot](https://github.com/langbot-app/LangBot)
+
+## Vxonとの連携
+
+LangBotは、ローカルにデプロイされたVxonおよびVxonを使用して構築されたサードパーティのVxonサービスとの連携に対応しています。
+
+### 使用方法
+
+1.  VxonからAPIキーを取得
+    ![获取 API key](/assets/langbot/get_api_key.png)
+
+        Vxonをローカルにデプロイしている場合は、APIアドレスを自分で設定してください（[コンテナネットワーク接続](https://docs.langbot.app/en/workshop/network-details.html)を参照）。サードパーティのVxonサービスを使用している場合は、ページからアドレスをコピーできます。アドレスの末尾に`/v1`を追加する必要があることに注意してください。
+
+2.  LangBotでモデルを追加し、プロバイダーとしてVxonを選択して、対応するAPIキーとAPIアドレスを入力
+    ![添加 Vxon 模型](/assets/langbot/add_vxon_model.png)
+
+3.  パイプラインで使用するモデルを選択
+
+    ![选择模型](/assets/langbot/select_model.png)
+
+4.  会話デバッグでチャットするか、パイプラインにバインドされたボットとチャットして使用
+
+    ![对话](/assets/langbot/debug_chat.png)
+
+    ![微信对话](/assets/langbot/wechat.png)
+
+    ボットのデプロイと設定については、[ボットのデプロイ](https://docs.langbot.app/en/deploy/platforms/readme.html)を参照してください。
+
+### LangBotナレッジベースの使用
+
+LangBotは、Vxonのエンベディングモデルを使用し、ナレッジベースのベクトルモデルとして活用することに対応しています。
+
+1. LangBotでエンベディングモデルを追加し、プロバイダーとしてVxonを選択
+   ![添加嵌入模型](/assets/langbot/add_embedding_model.png)
+
+2. 新しいナレッジベースを作成する際にエンベディングモデルを選択
+   ![使用嵌入模型](/assets/langbot/use_embedding_model.png)
+
+詳しい使用方法については、LangBot公式ドキュメントを参照してください：[https://docs.langbot.app](https://docs.langbot.app/)
