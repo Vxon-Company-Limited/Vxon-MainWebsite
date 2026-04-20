@@ -1,0 +1,222 @@
+---
+title: Docker Compose設定ガイド
+---
+
+このドキュメントでは、Vxonの Docker Compose設定オプションについて詳しく説明します。さまざまなデプロイシナリオに適用可能です。
+
+## 基本設定構造
+
+Docker Compose設定ファイル`docker-compose.yml`は、Vxonサービスとその依存サービス（MySQL、Redisなど）のデプロイ方法を定義します。
+
+## 標準設定（本番環境推奨）
+
+以下は、ほとんどの本番環境に適した標準的なDocker Compose設定です：
+
+```yaml
+# New-API Docker Compose Configuration
+#
+# Quick Start:
+#   1. docker-compose up -d
+#   2. Access at http://localhost:3000
+#
+# Using MySQL instead of PostgreSQL:
+#   1. Comment out the postgres service and SQL_DSN line 15
+#   2. Uncomment the mysql service and SQL_DSN line 16
+#   3. Uncomment mysql in depends_on (line 28)
+#   4. Uncomment mysql_data in volumes section (line 64)
+#
+# ⚠️  IMPORTANT: Change all default passwords before deploying to production!
+
+version: '3.4' # For compatibility with older Docker versions
+
+services:
+  vxon:
+    image: vxon/vxon:latest
+    container_name: vxon
+    restart: always
+    command: --log-dir /app/logs
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./data:/data
+      - ./logs:/app/logs
+    environment:
+      - SQL_DSN=postgresql://root:123456@postgres:5432/vxon # ⚠️ IMPORTANT: Change the password in production!
+      #      - SQL_DSN=root:123456@tcp(mysql:3306)/vxon  # Point to the mysql service, uncomment if using MySQL
+      - REDIS_CONN_STRING=redis://redis
+      - TZ=Asia/Shanghai
+      - ERROR_LOG_ENABLED=true # Whether to enable error logging
+      - BATCH_UPDATE_ENABLED=true # Whether to enable batch update
+    #      - STREAMING_TIMEOUT=300  # Streaming timeout in seconds, default is 120s. Increase if experiencing empty completions
+    #      - SESSION_SECRET=random_string  # For multi-node deployment, this random string must be changed!
+    #      - SYNC_FREQUENCY=60  # Uncomment if regular database syncing is needed
+
+    depends_on:
+      - redis
+      - postgres
+    #      - mysql  # Uncomment if using MySQL
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          "wget -q -O - http://localhost:3000/api/status | grep -o '\"success\":\\s*true' || exit 1",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: always
+
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: 123456 # ⚠️ IMPORTANT: Change this password in production!
+      POSTGRES_DB: vxon
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+#    ports:
+#      - "5432:5432"  # Uncomment if you need to access PostgreSQL from outside Docker
+
+#  mysql:
+#    image: mysql:8.2
+#    container_name: mysql
+#    restart: always
+#    environment:
+#      MYSQL_ROOT_PASSWORD: 123456  # ⚠️ IMPORTANT: Change this password in production!
+#      MYSQL_DATABASE: vxon
+#    volumes:
+#      - mysql_data:/var/lib/mysql
+#    ports:
+#      - "3306:3306"  # Uncomment if you need to access MySQL from outside Docker
+
+volumes:
+  pg_data:
+#  mysql_data:
+```
+
+## 簡易設定（テスト向け）
+
+テスト目的では、Vxonサービスのみを含む以下の簡易版を使用できます：
+
+```yaml
+services:
+  vxon:
+    image: vxon/vxon:latest
+    container_name: vxon
+    restart: always
+    ports:
+      - '3000:3000'
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./data:/data
+```
+
+## 設定の詳細
+
+### Vxonサービス設定
+
+| パラメータ        | 説明                                                                    |
+| ---------------- | ------------------------------------------------------------------------------ |
+| `image`          | イメージ名、通常は`vxon/vxon:latest`で最新バージョンを取得      |
+| `container_name` | コンテナ名、カスタマイズ可能                                                   |
+| `restart`        | コンテナ再起動ポリシー、自動再起動のため`always`に設定を推奨 |
+| `command`        | 起動コマンド、起動パラメータをカスタマイズ可能                               |
+| `ports`          | ポートマッピング、デフォルトではコンテナの3000ポートをホストの3000ポートにマッピング        |
+| `volumes`        | ボリュームマッピング、データの永続化を保証                                       |
+| `environment`    | 環境変数設定、Vxonの動作を設定するために使用              |
+| `depends_on`     | 依存サービス、正しい順序での起動を保証                       |
+| `healthcheck`    | ヘルスチェック設定、サービスステータスの監視に使用                     |
+
+### 環境変数の説明
+
+Vxonはさまざまな環境変数設定に対応しています。以下はよく使用されるものです：
+
+| 環境変数 | 説明                                         | 例                               |
+| -------------------- | --------------------------------------------------- | ------------------------------------- |
+| `SQL_DSN`            | データベース接続文字列                          | `root:123456@tcp(mysql:3306)/vxon` |
+| `REDIS_CONN_STRING`  | Redis接続文字列                             | `redis://redis`                       |
+| `TZ`                 | タイムゾーン設定                                   | `Asia/Shanghai`                       |
+| `SESSION_SECRET`     | セッションシークレット（マルチノードデプロイで必須） | `your_random_string`                  |
+| `NODE_TYPE`          | ノードタイプ（master/slave）                            | `master`または`slave`                   |
+| `SYNC_FREQUENCY`     | 同期頻度（秒）                            | `60`                                  |
+
+環境変数のより完全なリストについては、[環境変数設定ガイド](/ja/docs/installation/config-maintenance/environment-variables)を参照してください。
+
+## マルチノードデプロイ設定
+
+マルチノードデプロイシナリオでは、マスターノードとスレーブノードの設定が若干異なります：
+
+### マスターノード設定
+
+```yaml
+services:
+  vxon-master:
+    image: vxon/vxon:latest
+    container_name: vxon-master
+    restart: always
+    ports:
+      - '3000:3000'
+    environment:
+      - SQL_DSN=root:123456@tcp(mysql:3306)/vxon
+      - REDIS_CONN_STRING=redis://redis
+      - SESSION_SECRET=your_unique_session_secret
+      - CRYPTO_SECRET=your_unique_crypto_secret
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./data:/data
+```
+
+### スレーブノード設定
+
+```yaml
+services:
+  vxon-slave:
+    image: vxon/vxon:latest
+    container_name: vxon-slave
+    restart: always
+    ports:
+      - '3001:3000' # ポートマッピングが異なることに注意
+    environment:
+      - SQL_DSN=root:123456@tcp(mysql:3306)/vxon
+      - REDIS_CONN_STRING=redis://redis
+      - SESSION_SECRET=your_unique_session_secret # マスターノードと同じである必要あり
+      - CRYPTO_SECRET=your_unique_crypto_secret # マスターノードと同じである必要あり
+      - NODE_TYPE=slave # スレーブノードとして設定
+      - SYNC_FREQUENCY=60
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./data-slave:/data
+```
+
+## 使用方法
+
+### インストール
+
+設定を`docker-compose.yml`として保存し、同じディレクトリで以下のコマンドを実行してください：
+
+```bash
+docker compose up -d
+```
+
+### ログの確認
+
+```bash
+docker compose logs -f
+```
+
+### サービスの停止
+
+```bash
+docker compose down
+```
+
+<Callout type="info" title="ヒント">
+  Docker Composeの使用方法の詳細については、[Docker Composeインストールガイド](/ja/docs/installation/deployment-methods/docker-compose-installation)を参照してください。
+</Callout>
