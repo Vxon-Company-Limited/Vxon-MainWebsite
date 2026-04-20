@@ -1,0 +1,86 @@
+---
+title: AionUi - 無料オープンソースデスクトップオフィスエージェント
+description: AionUiセットアップガイド — Gemini CLI、Claude Code、Codexなどに対応した無料オープンソースデスクトップオフィスエージェント。Vxonに接続してマルチモデルAIワークフローを実現。
+---
+
+<Callout type="info">
+  🚀 AionUiは、Gemini CLI、Claude Code、Codex、OpenCode、Qwen Code、Goose CLI、Auggieなど複数のAIエージェントに対応した、無料・ローカル・オープンソースのCoworkです。完全なGUIインターフェースとWebUIリモートアクセス機能を提供し、Coworkのオープンソース代替として機能します。
+</Callout>
+
+- 公式サイト：[https://www.aionui.com](https://www.aionui.com)
+- GitHubリポジトリ：[https://github.com/iOfficeAI/AionUi](https://github.com/iOfficeAI/AionUi)
+- ダウンロード：[https://github.com/iOfficeAI/AionUi/releases](https://github.com/iOfficeAI/AionUi/releases)
+
+![AionUi Logo](/assets/aionui/aionui—logo.png)
+
+## コア機能
+
+### 💬 マルチセッションチャット
+- **マルチセッション＋独立コンテキスト** - 複数のチャットセッションを同時に開き、各セッションが独立したコンテキストメモリを持つ
+- **ローカルストレージ** - すべての会話データはローカルのSQLiteデータベースに保存され、失われることはない
+
+### 🤖 マルチモデル対応
+- **マルチプラットフォーム対応** - Gemini、OpenAI、Claude、Qwenなどの主要モデルに対応し、柔軟に切り替え可能
+- **ローカルモデル対応** - Ollama、LM Studioなどのローカルモデルデプロイに対応
+
+### 🤝 マルチエージェントモード
+- **複数のAIエージェントを同時実行** - Gemini CLI、Claude Code、Codex、OpenCode、Qwen Code、Goose CLI、Auggieなど複数のAIエージェントを同時に実行可能
+- **MCP統合管理** - Model Context Protocol（MCP）を通じてすべてのエージェントを統合管理・設定し、操作を簡素化
+- **Skills設定** - 異なるエージェントに専用のSkillsを設定してエージェントの機能を拡張
+- **アシスタントカスタマイズ** - カスタムアシスタント設定に対応し、パーソナライズされたAIワークフローを作成
+- **独立設定** - 各エージェントを独立して設定・使用でき、干渉なし
+- **柔軟な切り替え** - さまざまなシナリオのニーズに合わせて、異なるエージェント間を柔軟に切り替え
+
+### 🗂️ ファイル管理
+- **ファイルツリー閲覧＋ドラッグ＆ドロップアップロード** - フォルダのようにファイルを閲覧し、ファイルやフォルダのドラッグ＆ドロップでワンクリックインポートに対応
+- **スマート整理** - AIによるフォルダの自動分類整理
+
+### 📄 プレビューパネル
+- **9種類以上のフォーマットプレビュー** - PDF、Word、Excel、PPT、コード、Markdown、画像などのフォーマットに対応
+- **リアルタイム追跡＋編集可能** - ファイルの変更を自動追跡し、Markdown、コード、HTMLのリアルタイム編集・デバッグに対応
+
+### 🎨 AI画像生成＆編集
+- **インテリジェント画像生成** - Gemini 2.5 Flash Image Preview、Nano、Bananaなど複数の画像生成モデルに対応
+- **画像認識＆編集** - AI駆動の画像分析・編集機能
+
+### 🌐 マルチチャネルアクセス
+- **WebUIリモートアクセス** - ネットワーク上の任意のデバイスからブラウザでアクセス可能、モバイルデバイスに対応
+- **Telegram連携** - Telegramボットを通じたインタラクションに対応
+- **Feishu連携** - Feishuを通じたアクセスとインタラクションに対応
+- **ローカルデータセキュリティ** - すべてのデータはローカルのSQLiteデータベースに保存、サーバーデプロイに適している
+
+## Vxon設定手順
+
+1. **VxonでAPIキーをコピー**
+   ![Copy API Key](/assets/aionui/copy_apikey.png)
+
+2. **AionUiの設定を開く**
+   - AionUiで設定ページに入る
+   - モデル設定タブを見つける
+   - 「モデルを追加」をクリック
+   ![Open Settings](/assets/aionui/add-model-1.png)
+
+3. **新しいプロバイダーを追加**
+   - 「モデルを追加」をクリック
+   - Vxonを選択
+   ![Add Vxon Provider](/assets/aionui/vxon_provider.png)
+
+4. **API情報を設定**
+   - APIアドレス：VxonサイトのURLを入力（形式：`https://<your-vxon-domain>/v1`）
+   - APIキー：VxonコンソールからコピーしたAPIキーを貼り付け
+
+5. **モデルを追加**
+   - ドロップダウンから追加するモデルを選択
+   - モデル名はVxonで設定されたモデル名と一致させる
+   - 適切なリクエストプロトコルを選択
+
+6. **使用開始**
+   - チャットページに戻る
+   - 設定したVxonモデルを選択して会話を開始
+
+
+## 関連リンク
+
+- [GitHubリポジトリ](https://github.com/iOfficeAI/AionUi)
+- [詳細な使用ガイド](https://github.com/iOfficeAI/AionUi#-detailed-usage-guide)
+- [よくある質問](https://github.com/iOfficeAI/AionUi#-support--help)
