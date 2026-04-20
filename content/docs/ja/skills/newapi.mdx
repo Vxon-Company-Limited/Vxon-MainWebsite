@@ -1,0 +1,144 @@
+---
+title: vxon
+description: vxonは、Claude Code、Codex、OpenClaw向けの公式Vxonユーザーレベルスキルです。AIコーディングワークフロー内から直接、モデルのクエリ、トークン管理、グループの表示、残高確認、Vxonの使い方に関する質問が可能。
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+<Callout type="info" title="vxon-skillsとは？">
+  **vxon-skills**は、Vxon公式のAIエディタSkillプラグインです。Skillsは、AIコーディングアシスタント（Claude Code、Codex、OpenClaw、Cursor、Windsurf、Clineなど）が**エディタ内から直接Vxonエンドポイントを呼び出す**ことを可能にする軽量な拡張プロトコルで、コーディング環境を離れることなく、モデルクエリ、トークン管理、残高確認、Vxonのデプロイ・設定・API使用に関する質問への回答を実行できます。
+
+  - GitHubリポジトリ：[github.com/Vxon/skills](https://github.com/Vxon/skills)
+
+  OpenClawでも動作するようになり、エージェントワークフローを離れることなく、モデル、トークン、グループ、残高の`/vxon`コマンドを実行したり、Vxonの使い方に関する質問ができます。
+</Callout>
+
+## Skillsを使う理由
+
+日常のAI開発で、開発者はエディタとVxon管理ダッシュボードの間を頻繁に切り替えます — 利用可能なモデルの確認、APIトークンの作成、残高の確認、グループクォータの調整など。これらのコンテキスト切り替えがコーディングフローを中断します。
+
+**vxon-skillsが解決すること：**
+
+- **コンテキスト切り替えゼロ**：Claude Code、Codex、OpenClaw、その他のAI IDEで直接自然言語コマンドを発行 — ブラウザや管理パネルは不要
+- **組み込みヘルプ**：コーディングワークフローから直接、Vxonのデプロイ、設定、グループ、API呼び出し形式について質問可能
+- **セキュリティファーストの設計**：キーは平文で表示されず、トークンのコピーと注入はセキュアチャネルを使用（`sk-`プレフィックスのキーはターミナル出力やログに表示されない）
+- **即座のセットアップ**：単一の`npx`コマンドでインストール完了、ランタイム自動検出（Bun / Node.js / Deno）
+- **クロスエディタ互換性**：Skillsプロトコルを実装するすべてのAIエディタやコーディングアシスタントで動作
+
+## 対応AIエディタ
+
+vxon-skillsは以下のAIコーディングツールで動作します：
+
+| AIエディタ / コーディングアシスタント | タイプ | 備考 |
+|------------------------------|------|-------|
+| **Claude Code** | ターミナルAIプログラミングアシスタント | Anthropic公式CLI |
+| **OpenClaw** | セルフホスト型AIアシスタントプラットフォーム | Skillsベースの`/vxon`コマンドワークフローに対応 |
+| **Cursor** | AIネイティブコードエディタ | VS Codeベース |
+| **Windsurf** | AIコードエディタ | Codeium製 |
+| **Cline** | VS Code AI拡張機能 | オープンソースAIコーディングエージェント |
+| **Codex CLI** | ターミナルAIプログラミングアシスタント | OpenAI公式CLI |
+
+> Skillsプロトコルに対応するすべてのツールでvxon-skillsを使用できます。
+
+## コマンドリファレンス
+
+以下は、vxon-skillsが提供するコマンドの完全なリストです。これらのコマンドはVxon REST APIとやり取りして、Vxonインスタンス上のリソースをクエリ・管理します。
+
+### クエリコマンド
+
+| コマンド | 説明 | ユースケース |
+|---------|-------------|----------|
+| `/vxon models` | 利用可能なAIモデルを一覧表示 | Vxonインスタンスに設定されたすべてのモデル（OpenAI、Claude、Geminiなど）を表示 |
+| `/vxon groups` | ユーザーグループを一覧表示 | アカウントのグループとクォータ・レート倍率設定を表示 |
+| `/vxon balance` | アカウント残高を表示 | 現在のユーザーの残高と使用状況をリアルタイムクエリ |
+
+### トークン管理コマンド
+
+| コマンド | 説明 | ユースケース |
+|---------|-------------|----------|
+| `/vxon tokens` | APIトークンを一覧表示 | 作成済みのすべてのトークンを表示（キーはマスク表示、例：`sk-reHR**********OspA`） |
+| `/vxon create-token <name> [--group=xxx]` | 新しいAPIトークンを作成 | 異なるアプリやプロジェクト用に独立したAPIキーを生成 |
+| `/vxon switch-group <token_id> <group>` | トークンのグループを変更 | トークンのグループを変更してモデルアクセス権限とレート倍率を調整 |
+| `/vxon copy-token <token_id>` | キーをクリップボードにコピー | 実際のキーをシステムクリップボードにセキュアにコピー（キーはターミナルに表示されない） |
+| `/vxon apply-token <token_id> <file>` | キーを設定ファイルに注入 | プレースホルダー置換でプロジェクト設定ファイル（例：`.env`）にトークンキーをセキュアに書き込み |
+
+### ヘルプコマンド
+
+| コマンド | 説明 | ユースケース |
+|---------|-------------|----------|
+| `/vxon help <question>` | Vxonについて質問 | Vxonのデプロイ、設定、API呼び出し形式などのヘルプを取得 |
+
+## インストール＆設定
+
+<Steps>
+  <Step>
+    ### vxon-skillsのインストール
+
+    `npx`によるワンラインインストール：
+
+    ```bash
+    npx skills add https://github.com/Vxon/skills --skill vxon
+    ```
+
+    GitHubリポジトリから最新のSkill定義を取得し、エディタ環境にインストールします。
+  </Step>
+  <Step>
+    ### 環境変数の設定
+
+    vxon-skillsはVxonインスタンスに接続するために3つの環境変数が必要です。シェルプロファイルに追加してください：
+
+    ```bash
+    # ~/.bashrc or ~/.zshrc
+    export VXON_BASE_URL=https://<your-vxon-domain>
+    export VXON_ACCESS_TOKEN=your-access-token
+    export VXON_USER_ID=1
+    ```
+
+    | 変数 | 説明 | 例 |
+    |----------|-------------|---------|
+    | `VXON_BASE_URL` | VxonサービスURL | `https://api.example.com` |
+    | `VXON_ACCESS_TOKEN` | 管理者またはユーザーアクセストークン | 「個人設定 → アカウント → セキュリティ → システムアクセストークン」から取得 |
+    | `VXON_USER_ID` | ユーザーID | `1`（管理者のデフォルトは1） |
+
+    プロジェクトルートに`.env`ファイルを作成することもできます。キーの漏洩を防ぐため、`.env`が`.gitignore`に含まれていることを確認してください。
+  </Step>
+  <Step>
+    ### 使用開始
+
+    インストール後、Skills対応のAIエディタで`/vxon`コマンドを入力してください。例：
+
+    - `/vxon models`と入力して利用可能なモデルを一覧表示
+    - `/vxon balance`と入力して現在の残高を確認
+    - `/vxon create-token my-app`と入力して`my-app`という名前の新しいトークンを作成
+    - `/vxon help how do I configure groups and tokens?`と入力してVxonの使い方に関する質問を直接行う
+    - OpenClawでは、エージェントワークフロー内で直接`/vxon models`、`/vxon balance`、トークンコマンドを実行可能
+  </Step>
+</Steps>
+
+## ランタイム要件
+
+vxon-skillsには以下のJavaScriptランタイムのいずれかが必要です（起動時に自動検出）：
+
+| ランタイム | バージョン | 推奨 |
+|---------|---------|----------------|
+| **Bun** | 最新 | 推奨（最速） |
+| **Node.js** | >= 18 | 広くサポート |
+| **Deno** | 最新 | オプション |
+
+## セキュリティ
+
+vxon-skillsには、APIキーを保護するための複数のセキュリティレイヤーが組み込まれています：
+
+- トークン一覧では**マスクされたキー**のみ表示（例：`sk-reHR**********OspA`） — 実際のキーはターミナル出力に表示されない
+- `copy-token`はキーをシステムクリップボードにのみコピーし、出力には表示しない
+- `apply-token`はプレースホルダー置換でキーを注入し、生のキー内容を公開しない
+- すべての`sk-`プレフィックスのキー値は、実行フロー全体を通じて厳密に保護
+
+## 詳細情報
+
+vxon-skillsは活発に開発中です — コマンドと機能はアップデートに伴い変更される場合があります。最新情報と変更履歴についてはリポジトリのREADMEを参照してください：
+
+- GitHubリポジトリ：[github.com/Vxon/skills](https://github.com/Vxon/skills)
+- Vxonウェブサイト：[www.vxon.ai](https://www.vxon.ai)
+- Vxon GitHub：[github.com/Vxon/vxon](https://github.com/Vxon/vxon)
