@@ -1,0 +1,201 @@
+---
+title: ローカル開発とデプロイ
+---
+
+このドキュメントでは、ローカル環境でVxonプロジェクトをセットアップ・開発するための詳細な手順を提供します。プロジェクトへのコード貢献やカスタム開発を行いたい開発者向けです。
+
+## 開発環境の要件
+
+ローカル開発を始める前に、以下のソフトウェアがシステムにインストールされていることを確認してください：
+
+- **Go** 1.21以上（バックエンド開発用）
+- **Node.js** 18以上（フロントエンド開発用）
+- **Bun** 最新バージョン（推奨パッケージマネージャー、npm/yarnの25倍高速）
+- **Git**（バージョン管理用）
+- **MySQL**（オプション、デフォルトではSQLiteを使用）
+- **Redis**（オプション、パフォーマンス向上用）
+- **Visual Studio Code**またはその他のコードエディタ
+
+<Callout type="info" title="Bunについて">
+  Bunは非常に高速なJavaScriptパッケージマネージャー、テストランナー、バンドラーです。従来のnpmやyarnと比較して、Bunはパッケージのインストールが25倍高速で、2024年に最も推奨されるJavaScriptパッケージ管理ツールです。
+</Callout>
+
+## プロジェクトのクローン
+
+まず、GitHubからVxonリポジトリをローカルマシンにクローンします：
+
+```bash
+git clone https://github.com/Vxon/vxon.git
+cd vxon
+```
+
+## バックエンド開発のセットアップ
+
+### Go依存関係のインストール
+
+```bash
+go mod download
+```
+
+### 開発環境の設定
+
+Vxonは`.env`ファイルによる環境変数の設定に対応しています。`.env`ファイルを作成してください（`.env.example`からコピー可能）：
+
+```bash
+cp .env.example .env
+```
+
+`.env`ファイルを編集し、必要に応じて設定を変更してください。以下は開発環境の一般的な設定です：
+
+```bash
+PORT=3000
+SQL_DSN=root:password@tcp(localhost:3306)/vxon   # MySQLを使用する場合、コメントを外して変更
+# REDIS_CONN_STRING=redis://localhost:6379         # Redisを使用する場合、コメントを外して変更
+```
+
+<Callout type="info" title="ヒント">
+  `SQL_DSN`が設定されていない場合、システムはデフォルトでSQLiteデータベースを使用し、`one-api.db`ファイルに保存されます。
+</Callout>
+
+### バックエンドサービスの実行
+
+```bash
+# 直接実行
+go run main.go
+
+# またはコンパイルして実行
+go build -o vxon
+./vxon
+```
+
+サービスはデフォルトで`http://localhost:3000`で動作します。
+
+## フロントエンド開発のセットアップ
+
+Vxonのフロントエンドコードは`web`ディレクトリにあり、Reactと[semi designコンポーネントライブラリ](https://semi.design/zh-CN)を使用して開発されています。
+
+### Bunのインストール（推奨）
+
+Bunをまだインストールしていない場合は、以下のコマンドでインストールしてください：
+
+**macOS/Linux：**
+
+```bash
+curl -fsSL https://bun.sh/install | bash
+```
+
+**Windows（WSL使用）：**
+
+```bash
+curl -fsSL https://bun.sh/install | bash
+```
+
+**macOS（Homebrew使用）：**
+
+```bash
+brew tap oven-sh/bun
+brew install bun
+```
+
+インストール後、ターミナルを再起動するか`source ~/.bashrc`（または`~/.zshrc`）を実行して、Bunコマンドを使用可能にしてください。
+
+### フロントエンド依存関係のインストール
+
+```bash
+cd web
+bun install   # bunを使用してフロントエンド依存関係をインストール
+```
+
+### 開発サーバーの実行
+
+```bash
+bun run dev   # bunを使用して開発サーバーを実行
+```
+
+フロントエンド開発サーバーはデフォルトで`http://localhost:5173`で動作し、APIリクエストをバックエンドサービスに転送するプロキシが設定されています。
+
+### フロントエンドアセットのビルド
+
+```bash
+bun run build   # bunを使用してフロントエンドアセットをビルド
+```
+
+ビルドされたファイルは`web/dist`ディレクトリに生成され、バックエンドサービスがこれらの静的アセットを自動的にロードします。
+
+7.  **プルリクエストの作成**：GitHubでPRを作成し、変更内容を説明してください。
+
+## デバッグのヒント
+
+### バックエンドのデバッグ
+
+1.  **ログの確認**：
+
+    ```bash
+    go run main.go --log-dir ./logs
+    ```
+
+2.  **Delveでデバッグ**：
+    ```bash
+    go install github.com/go-delve/delve/cmd/dlv@latest
+    dlv debug main.go
+    ```
+
+### フロントエンドのデバッグ
+
+1.  **Chrome DevToolsの使用**：
+    - Chrome開発者ツールを開く（F12）
+    - ConsoleタブとNetworkタブを確認
+
+2.  **React Developer Tools**：
+    - ChromeにReact Developer Tools拡張機能をインストール
+    - コンポーネント構造とステートの検査に使用
+
+## プロジェクト構造
+
+Vxonプロジェクトのディレクトリ構造：
+
+```
+vxon/                                 # プロジェクトルートディレクトリ
+│  .dockerignore                         # Dockerビルド時の除外ファイル設定
+│  .env.example                          # 環境変数サンプルファイル
+│  .gitignore                            # Git除外ファイル設定
+│  BT.md                                 # BT（宝塔パネル）関連ドキュメント
+│  docker-compose.yml                    # Docker Compose設定ファイル（コンテナオーケストレーション用）
+│  Dockerfile                            # Dockerイメージビルド設定
+│  go.mod                                # Goモジュール依存関係設定ファイル
+│  go.sum                                # Goモジュール依存関係チェックサムファイル
+│  LICENSE                               # プロジェクトライセンスファイル
+│  main.go                               # プロジェクトメインエントリファイル
+│  makefile                              # プロジェクトビルドスクリプト
+│  Midjourney.md                         # Midjourneyサービス関連ドキュメント
+│  one-api.service                       # systemdサービス設定ファイル
+│  README.en.md                          # 英語版プロジェクトREADME
+│  README.md                             # 中国語版プロジェクトREADME
+│  Rerank.md                             # Rerank機能関連ドキュメント
+│  Suno.md                               # Suno API関連ドキュメント
+│  VERSION                               # プロジェクトバージョン情報ファイル
+│
+├─.github                                # GitHub関連設定ディレクトリ
+│  ...
+│
+├─common                                 # 共通機能モジュールディレクトリ
+│  ...
+│
+├─controller                             # コントローラー層、HTTPリクエストを処理
+│  ...
+│
+├─relay                                  # リクエスト転送モジュールディレクトリ
+│  ...
+│
+├─web                                    # フロントエンドWebインターフェースディレクトリ
+│  ...
+```
+
+<Callout type="info" title="ヘルプが必要ですか？">
+開発中に問題が発生した場合は、以下をご利用ください：
+
+1.  [GitHub Issues](https://github.com/Vxon/vxon/issues)を確認
+2.  [QQ交流グループ](/ja/docs/support/community-interaction)に参加
+3.  [問題フィードバック](/ja/docs/support/feedback-issues)ページからIssueを提出
+
+</Callout>
