@@ -1,0 +1,101 @@
+---
+title: LunaTranslator - オープンソースギャルゲー翻訳ツール
+description: LunaTranslatorセットアップガイド — HOOK、OCR、AI翻訳に対応したオープンソースのギャルゲー・ビジュアルノベル翻訳ツール。Vxonと連携して翻訳精度を向上。
+---
+
+<Callout type="info" title="チャット設定オプション">
+  Vxonコンソールのシステム設定 -> チャット設定で、以下のショートカットオプションを追加すると、トークン管理ページからワンクリックでLunaTranslatorに入力できます：
+</Callout>
+
+    ```json
+    { "LunaTranslator": "lunatranslator://llmapi/base64?data={cheryConfig}" }
+    ```
+
+<Callout type="info">
+  LunaTranslatorは、ネイティブレベルのビジュアルノベルゲーム体験を提供することに特化した、オープンソースで無料のビジュアルノベル（ギャルゲー）翻訳ツールです。
+</Callout>
+
+- プロジェクトアドレス：[https://github.com/HIllya51/LunaTranslator](https://github.com/HIllya51/LunaTranslator)
+- プロジェクトドキュメント：[https://docs.lunatranslator.org](https://docs.lunatranslator.org/en/README.html)
+
+## 機能サポート
+
+- **HOOK** 主にHOOKを使用してゲームテキストを抽出し、ほぼすべての一般的およびニッチなビジュアルノベルに対応。
+
+- **ゲーム内翻訳** 一部のゲームでは、没入感のある体験のために翻訳をゲーム内に直接埋め込むことも可能。
+
+- **HOOKエミュレータ** NS/PSP/PSV/PS2のほとんどのゲームで、HOOKエミュレータによるゲームテキストの直接読み取りに対応。
+
+- **OCR** 高精度の内蔵OCRモデルを搭載し、多数のオンライン・オフラインOCRエンジンにも対応して、あらゆるテキストを柔軟に読み取り。
+
+- **豊富な翻訳インターフェース** 大規模言語モデル翻訳、オフライン翻訳など、ほぼすべての翻訳エンジンに対応。
+
+- **語学学習** 日本語の分かち書きとふりがな、AnkiConnect、Yomitanプラグインに対応。
+
+- **音声合成** 多数のオンライン・オフライン音声合成エンジンに対応。
+
+- **音声認識** Windows 10およびWindows 11では、Windows音声認識を使用可能。
+
+## インストール
+
+[LunaTranslatorドキュメント - ダウンロード・起動・アップデート](https://docs.lunatranslator.org/en/README.html)からダウンロードしてインストールしてください。
+
+## LunaTranslatorへのVxon連携
+
+LunaTranslatorは、ローカルにデプロイされたVxonおよびVxonを使用して構築されたサードパーティのVxonサービスとの連携に対応しています。
+
+### ワンクリック設定
+
+1.  Vxonコンソールの`システム設定` -> `チャット設定`で、以下のショートカットオプションを追加：
+
+    ```json
+    { "LunaTranslator": "lunatranslator://llmapi/base64?data={cheryConfig}" }
+    ```
+
+    ![add_config](/assets/luna_translator/add_config.png)
+
+2.  **`Vxon`** -> `コンソール` -> `トークン管理`タブで、LunaTranslatorで使用するトークンを選択し、チャットボタンの横にあるドロップダウンオプションをクリックして`LunaTranslator`を選択すると、LunaTranslatorにジャンプしてAPIアドレスとAPIキーが自動的に設定されます。
+
+    ![跳转到 LunaTranslator](/assets/luna_translator/jump_to_app.png)
+
+3.  **`LunaTranslator`** -> `設定` -> `翻訳設定` -> `大規模モデル`で、新しい大規模モデルインターフェース設定が表示されます。編集をクリックしてください。
+
+    ![设置api](/assets/luna_translator/api_setting.png)
+
+4.  **モデル**ドロップダウンボックスの横にある更新ボタンをクリックして、Vxonプラットフォームのモデルリストを取得し、モデル名を選択または入力して、OKをクリックして保存します。
+
+    ![设置模型](/assets/luna_translator/setting_model.png)
+
+5.  **new_api**大規模モデルインターフェース設定の横にあるトグルボタンが有効になっているか確認し、有効になっていない場合はインターフェースを有効にして使用を開始します。
+
+    ![开启配置](/assets/luna_translator/open_config.png)
+
+### 手動設定
+
+1.  **`Vxon`** -> `コンソール` -> `トークン管理`タブで、APIキーを取得します。
+
+    ![获取 API Key](/assets/luna_translator/copy_api_key.png)
+
+2.  **`LunaTranslator`** -> `設定` - `翻訳設定` -> `大規模モデル`で、追加を選択します。
+
+    ![添加 API](/assets/luna_translator/add_api.png)
+
+3.  **大規模モデル汎用インターフェース**テンプレートをコピーして、新しいインターフェースを追加します。
+
+    ![添加 API2](/assets/luna_translator/add_api_2.png)
+
+4.  **新しく追加したインターフェース**に、対応するAPIアドレスとAPIキーを入力します。
+
+    ![设置 API1](/assets/luna_translator/setting_api.png)
+
+    ![设置 API2](/assets/luna_translator/setting_api2.png)
+
+5.  **モデル**ドロップダウンボックスの横にある更新ボタンをクリックして、Vxonプラットフォームのモデルリストを取得し、モデル名を選択または入力して、OKをクリックして保存します。
+
+    ![设置 API3](/assets/luna_translator/setting_api3.png)
+
+6.  **Vxon**の横にあるトグルボタンをクリックしてインターフェースを有効にし、使用を開始します。
+
+    ![打开API](/assets/luna_translator/open_api.png)
+
+詳しい使用方法については、LunaTranslator公式ドキュメントを参照してください：[LunaTranslatorドキュメント - 大規模モデル翻訳インターフェース](https://docs.lunatranslator.org/en/guochandamoxing.html)
