@@ -1,0 +1,80 @@
+---
+title: Memoh - コンテナ化AIエージェントプラットフォーム
+description: Memoh連携ガイド — セルフホスト型コンテナ化AIエージェントプラットフォームをVxonに接続し、Telegram、Discord、Lark、QQ、WeChatなど向けの長期記憶付きAIボットを作成。
+---
+
+<Callout type="info">
+  Memohは、オープンソースのセルフホスト型AIエージェントプラットフォームで、各ボットが独自の隔離されたコンテナ内で永続的なメモリと専用ファイルシステムを持って動作します。Telegram、Discord、Lark（Feishu）、QQ、Matrix、WeCom、WeChat、Email、内蔵Web UIの9つのチャネルに対応し、MCPツール呼び出し、ブラウザ自動化、スケジュールタスクなどの豊富なエージェント機能を備えています。
+</Callout>
+
+- ウェブサイト：[https://memoh.sh](https://memoh.sh)
+- ドキュメント：[https://docs.memoh.ai](https://docs.memoh.ai)
+- GitHub：[https://github.com/memohai/Memoh](https://github.com/memohai/Memoh)
+
+## 主な機能
+
+- **コンテナ隔離**：各ボットが独自のcontainerdコンテナ内で専用ファイルシステムとネットワークを持って動作し、スナップショットとデータのインポート/エクスポートに対応
+- **メモリエンジン**：LLM駆動のファクト抽出、ハイブリッド検索（dense + sparse + BM25）、24時間コンテキストロード、メモリの圧縮と再構築
+- **マルチチャネル対応**：Telegram、Discord、Lark（Feishu）、QQ、Matrix、WeCom、WeChat、Email、Web UI
+- **MCP対応**：完全なMCPプロトコル対応（HTTP / SSE / Stdio / OAuth）、ボットごとの独立したMCP接続管理
+- **ブラウザ自動化**：Playwright搭載の内蔵ヘッドレスブラウザ、ウェブ閲覧、フォーム入力、スクリーンショットなどに対応
+- **Webダッシュボード**：Vue 3 + Tailwind CSSで構築されたモダンな管理インターフェース、ストリーミングチャット、ツール呼び出しの可視化、ファイル管理などの機能を搭載
+
+## クイックインストール
+
+MemohはDockerでデプロイします。ワンクリックインストール（Docker必須）：
+
+```bash
+curl -fsSL https://memoh.sh | sudo sh
+```
+
+または手動でインストール：
+
+```bash
+git clone --depth 1 https://github.com/memohai/Memoh.git
+cd Memoh
+cp conf/app.docker.toml config.toml
+# config.toml設定ファイルを編集
+sudo docker compose up -d
+```
+
+起動後、`http://localhost:8082`にアクセスしてください。デフォルトの認証情報：`admin` / `admin123`。
+
+## Vxon連携
+
+MemohはOpenAI互換のモデルプロバイダーに対応しており、Vxonを使用してさまざまなAIモデルサービスを一元管理・アクセスできます。
+
+### 設定手順
+
+#### Vxon APIキーの取得
+
+Vxonに登録・ログイン後、上部ナビゲーションバーの「コンソール」をクリックし、「トークン管理」をクリックして、「トークン追加」ボタンをクリックして新しいAPIキーを作成します。適切な権限を選択し、「作成」をクリックします。
+
+作成後、コピーボタンをクリックして生成されたAPIキーをコピーします。
+
+![copy-api-key](/assets/memoh/copy_api_key.png)
+
+#### Memohでモデルプロバイダーを追加
+
+Memoh Webダッシュボードにログインし、プロバイダー管理ページに移動して、Vxonをクリックします。
+
+![switch-to-vxon-provider](/assets/memoh/switch_to_vxon_provider.png)
+
+設定ページで以下の情報を入力します：
+
+- **API Base URL**：VxonのエンドポイントURLを入力（例：`https://api.example.com/v1`、ローカルデプロイの場合は`http://localhost:3000/v1`）
+- **APIキー**：VxonからコピーしたAPIキーを貼り付け
+
+保存をクリックしてプロバイダー設定を完了します。
+
+#### モデルのインポート
+
+プロバイダーの設定後、モデル管理ページに移動して、自動インポートをクリックするか、必要なモデルを手動で追加します。
+
+#### ボットにモデルを設定
+
+ボット設定ページに移動し、モデル設定セクションを見つけて、デフォルトのチャットモデルをVxonプロバイダー経由で追加したモデルに切り替え、保存をクリックします。
+
+![set_chat_model](/assets/memoh/set_chat_model.png)
+
+これで、VxonをMemohのモデルプロバイダーとして正常に設定できました。Memohの任意のチャネル（Telegram、Discord、Larkなど）を通じてAIボットとチャットでき、すべてのリクエストはVxon経由でルーティングされます。
