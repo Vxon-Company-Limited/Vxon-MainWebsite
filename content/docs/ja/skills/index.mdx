@@ -1,0 +1,50 @@
+---
+title: Skills
+description: Claude Code、Codex、OpenClaw向けの公式Vxon Skillプラグイン。AIコーディングワークフロー内から直接、モデル、トークン、グループ、残高の管理やVxonの使い方に関する質問が可能。
+---
+
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { User, Shield } from 'lucide-react';
+
+## 概要
+
+**Skills**は、AIエディタ（Claude Code、Codex、OpenClaw、Cursor、Windsurfなど）がコーディング環境内から直接Vxonとやり取りできるようにする軽量な拡張プロトコルです。ブラウザや管理パネルは不要です。
+
+Vxon Skillsは、Claude Code、Codex、OpenClaw、その他のSkills対応ツールで、モデルクエリ、トークン管理、残高確認、Vxonの使い方に関する質問に対応しています。
+
+Vxonは現在、以下のSkillsを提供しています：
+
+<Cards>
+  <Card
+    icon={<User />}
+    title="vxon"
+    description="ユーザーレベルSkill — Claude Code、Codex、OpenClawでモデルのクエリ、トークン管理、グループの表示、残高確認、Vxonの使い方に関する質問が可能。"
+    href="/ja/docs/skills/vxon"
+  />
+  <Card
+    icon={<Shield />}
+    title="vxon-admin（近日公開）"
+    description="管理者レベルSkill — チャネル管理、ユーザー管理、システム設定など。Vxon管理者向け。"
+    href="/ja/docs/skills/vxon-admin"
+  />
+</Cards>
+
+## 対応AIエディタ
+
+すべてのSkillsは以下のAIコーディングツールで動作します：
+
+| AIエディタ / コーディングアシスタント | タイプ | 備考 |
+|------------------------------|------|-------|
+| **Claude Code** | ターミナルAIプログラミングアシスタント | Anthropic公式CLI |
+| **OpenClaw** | セルフホスト型AIアシスタントプラットフォーム | Skillsベースの`/vxon`コマンドワークフローに対応 |
+| **Cursor** | AIネイティブコードエディタ | VS Codeベース |
+| **Windsurf** | AIコードエディタ | Codeium製 |
+| **Cline** | VS Code AI拡張機能 | オープンソースAIコーディングエージェント |
+| **Codex CLI** | ターミナルAIプログラミングアシスタント | OpenAI公式CLI |
+
+> Skillsプロトコルに対応するすべてのツールでVxon Skillsを使用できます。
+
+## 詳細情報
+
+- GitHubリポジトリ：[github.com/Vxon/skills](https://github.com/Vxon/skills)
+- Vxonウェブサイト：[www.vxon.ai](https://www.vxon.ai)
