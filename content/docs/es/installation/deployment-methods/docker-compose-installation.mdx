@@ -1,0 +1,144 @@
+---
+title: Despliegue con Docker Compose
+---
+
+Este documento proporciona pasos detallados para desplegar Vxon usando Docker Compose.
+
+## Requisitos previos
+
+- Docker y Docker Compose instalados
+- Sistema operativo recomendado: Linux (Ubuntu/CentOS/Debian, etc.)
+
+## Desplegar con Docker Compose
+
+### Método uno: Clonar el proyecto con Git (Recomendado)
+
+Si tiene acceso normal a GitHub, se recomienda este método. El proyecto ya incluye un archivo de configuración `docker-compose.yml` completo:
+
+```shell
+# Descargar código fuente del proyecto
+git clone https://github.com/Vxon/vxon.git
+
+# Entrar al directorio del proyecto
+cd vxon
+
+# Editar el archivo docker-compose.yml según sea necesario
+# Usar editor nano
+nano docker-compose.yml
+# O usar editor vim
+# vim docker-compose.yml
+```
+
+<Callout type="info" title="Consejo">
+  El archivo `docker-compose.yml` incluido con el proyecto ya tiene configurados
+  todos los servicios necesarios (incluyendo MySQL y Redis). Solo necesita modificar
+  parámetros como puertos y contraseñas según su situación real para
+  usarlo.
+</Callout>
+
+### Método dos: Crear archivo de configuración manualmente
+
+Si no puede acceder a GitHub o clonar el repositorio, puede crear el archivo de configuración manualmente:
+
+1. Cree un directorio para el despliegue de Vxon:
+
+```shell
+mkdir vxon
+cd vxon
+```
+
+2. Cree el archivo `docker-compose.yml` en este directorio
+
+   Puede consultar los ejemplos de configuración en el documento [Guía de configuración de Docker Compose](/es/docs/installation/config-maintenance/docker-compose-yml) y elegir según sus necesidades:
+   - Para entornos de producción, se recomienda una configuración completa (incluyendo MySQL y Redis).
+   - Para entornos de prueba, se puede usar una configuración simplificada.
+
+3. Use un editor de texto para crear el archivo:
+
+```shell
+# Usar editor nano
+nano docker-compose.yml
+
+# O usar editor vim
+vim docker-compose.yml
+```
+
+Copie el contenido de configuración seleccionado en este archivo y personalícelo según sea necesario.
+
+## Iniciar servicios
+
+Una vez que el archivo de configuración esté listo, ya sea que lo haya clonado con Git o creado manualmente, puede usar el siguiente comando para iniciar los servicios:
+
+```shell
+# Iniciar servicios usando Docker Compose
+docker compose up -d
+```
+
+Este comando descargará automáticamente las imágenes necesarias e iniciará los servicios en segundo plano.
+
+## Ver logs
+
+- **Logs en tiempo real de todos los servicios**
+
+```bash
+docker compose logs -f
+```
+
+- **Logs de un servicio específico** (Ejemplos: `vxon`, `mysql`, `redis`)
+
+```bash
+docker compose logs -f vxon
+docker compose logs -f mysql
+docker compose logs -f redis
+```
+
+- **Ver solo las últimas N líneas**
+
+```bash
+docker compose logs --tail=100 vxon
+```
+
+- **Ver logs de un período reciente**
+
+```bash
+docker compose logs --since=10m vxon
+```
+
+- **Mostrar marcas de tiempo**
+
+```bash
+docker compose logs -f -t vxon
+```
+
+- **Depuración en modo primer plano (salida de logs en tiempo real al iniciar)**
+
+```bash
+docker compose up
+# O solo iniciar y seguir un servicio específico
+docker compose up vxon
+```
+
+Presione Ctrl+C para salir del modo primer plano (esto detendrá el servicio correspondiente). Para operación en segundo plano, use `-d`.
+
+- **Ver lista/estado de servicios**
+
+```bash
+docker compose ps
+```
+
+- **Ver logs usando nombre del contenedor** (cuando `container_name` está configurado, ej. `vxon` en la configuración)
+
+```bash
+docker logs -f vxon
+```
+
+## Detener servicios
+
+```shell
+# Detener servicios
+docker compose down
+```
+
+## Acceder al sistema
+
+Después de que los servicios se inicien correctamente, acceder a `http://IP_del_servidor:3000` redirigirá automáticamente a la página de inicialización. Siga las instrucciones en pantalla para configurar manualmente la cuenta y contraseña de administrador (solo requerido para la primera instalación). Después de la inicialización, puede iniciar sesión en el sistema usando la cuenta de administrador que configuró.
