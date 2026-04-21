@@ -1,0 +1,104 @@
+---
+title: LunaTranslator - Traductor de código abierto para GalGame
+description: Guía de configuración de LunaTranslator — traductor de código abierto para GalGame y novelas visuales con HOOK, OCR y traducción impulsada por IA. Integre con Vxon para mayor precisión.
+---
+
+<Callout type="info" title="Opciones de configuración de chat">
+  En la Configuración del sistema -> Configuración de chat de la consola de Vxon, puede agregar
+  la siguiente opción de acceso rápido para el autocompletado con un clic en LunaTranslator desde
+  la página de gestión de tokens:
+</Callout>
+
+    ```json
+    { "LunaTranslator": "lunatranslator://llmapi/base64?data={cheryConfig}" }
+    ```
+
+<Callout type="info">
+  LunaTranslator es un traductor de novelas visuales (GalGame) de código abierto y gratuito,
+  dedicado a proporcionar una experiencia de juego de novelas visuales a nivel nativo.
+</Callout>
+
+- Dirección del proyecto: [https://github.com/HIllya51/LunaTranslator](https://github.com/HIllya51/LunaTranslator)
+- Documentación del proyecto: [https://docs.lunatranslator.org](https://docs.lunatranslator.org/en/README.html)
+
+## Funciones compatibles
+
+- **HOOK** Utiliza principalmente HOOK para extraer texto del juego, adaptándose a casi todas las novelas visuales comunes y de nicho.
+
+- **Traducción dentro del juego** Algunos juegos también pueden tener traducciones integradas directamente en el juego para una experiencia inmersiva.
+
+- **HOOK de emulador** Para la mayoría de los juegos en NS/PSP/PSV/PS2, se admite HOOK de emulador para leer directamente el texto del juego.
+
+- **OCR** Modelos OCR de alta precisión integrados, y admite muchos otros motores OCR en línea y sin conexión para lectura flexible de cualquier texto.
+
+- **Interfaces de traducción enriquecidas** Compatible con casi todos los motores de traducción, incluyendo traducción con modelos de lenguaje de gran escala, traducción sin conexión, etc.
+
+- **Aprendizaje de idiomas** Compatible con segmentación de palabras en japonés y furigana kana, AnkiConnect y el plugin Yomitan.
+
+- **Síntesis de voz** Compatible con una gran cantidad de motores de síntesis de voz en línea y sin conexión.
+
+- **Reconocimiento de voz** En Windows 10 y Windows 11, se puede utilizar el reconocimiento de voz de Windows.
+
+## Instalación
+
+Descargue e instale desde [Documentación de LunaTranslator - Descarga, inicio y actualización](https://docs.lunatranslator.org/en/README.html)
+
+## Integración de Vxon en LunaTranslator
+
+LunaTranslator admite la integración con Vxon desplegado localmente y servicios de Vxon de terceros construidos con Vxon.
+
+### Configuración con un clic
+
+1.  En la `Configuración del sistema` -> `Configuración de chat` de la consola de Vxon, agregue la siguiente opción de acceso rápido:
+
+    ```json
+    { "LunaTranslator": "lunatranslator://llmapi/base64?data={cheryConfig}" }
+    ```
+
+    ![add_config](/assets/luna_translator/add_config.png)
+
+2.  En **`Vxon`** -> `Consola` -> pestaña `Gestión de tokens`, seleccione el token a utilizar en LunaTranslator, haga clic en la opción desplegable junto al botón de chat, seleccione `LunaTranslator`, y se redirigirá a LunaTranslator configurando automáticamente la dirección de la API y la clave de API.
+
+    ![跳转到 LunaTranslator](/assets/luna_translator/jump_to_app.png)
+
+3.  En **`LunaTranslator`** -> `Configuración` -> `Configuración de traducción` -> `Modelos de gran escala`, aparecerá una nueva configuración de interfaz de modelo de gran escala; haga clic en Editar.
+
+    ![设置api](/assets/luna_translator/api_setting.png)
+
+4.  Haga clic en el botón de actualizar junto al menú desplegable de **modelo** para obtener la lista de modelos de la plataforma Vxon, seleccione o ingrese el nombre del modelo, luego haga clic en Aceptar para guardar.
+
+    ![设置模型](/assets/luna_translator/setting_model.png)
+
+5.  Verifique si el botón de alternancia junto a la configuración de interfaz de modelo de gran escala **new_api** está activado; si no está habilitado, active la interfaz para comenzar a usarla.
+
+    ![开启配置](/assets/luna_translator/open_config.png)
+
+### Configuración manual
+
+1.  En **`Vxon`** -> `Consola` -> pestaña `Gestión de tokens`, obtenga la clave de API.
+
+    ![获取 API Key](/assets/luna_translator/copy_api_key.png)
+
+2.  En **`LunaTranslator`** -> `Configuración` - `Configuración de traducción` -> `Modelos de gran escala`, seleccione Agregar.
+
+    ![添加 API](/assets/luna_translator/add_api.png)
+
+3.  Copie la plantilla de **Interfaz general de modelos de gran escala** y agregue una nueva interfaz.
+
+    ![添加 API2](/assets/luna_translator/add_api_2.png)
+
+4.  En la **interfaz recién agregada**, complete la dirección de API y la clave de API correspondientes.
+
+    ![设置 API1](/assets/luna_translator/setting_api.png)
+
+    ![设置 API2](/assets/luna_translator/setting_api2.png)
+
+5.  Haga clic en el botón de actualizar junto al menú desplegable de **modelo** para obtener la lista de modelos de la plataforma Vxon, seleccione o ingrese el nombre del modelo, luego haga clic en Aceptar para guardar.
+
+    ![设置 API3](/assets/luna_translator/setting_api3.png)
+
+6.  Haga clic en el botón de alternancia junto a **Vxon** para habilitar la interfaz y comenzar a usarla.
+
+    ![打开API](/assets/luna_translator/open_api.png)
+
+Para más métodos de uso, consulte la documentación oficial de LunaTranslator: [Documentación de LunaTranslator - Interfaz de traducción con modelos de gran escala](https://docs.lunatranslator.org/en/guochandamoxing.html)
