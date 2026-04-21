@@ -1,0 +1,223 @@
+---
+title: Guía de configuración de Docker Compose
+---
+
+Este documento detalla las opciones de configuración de Docker Compose para Vxon, aplicable a diversos escenarios de despliegue.
+
+## Estructura de configuración básica
+
+El archivo de configuración de Docker Compose `docker-compose.yml` define cómo se despliegan el servicio Vxon y sus servicios dependientes (como MySQL, Redis).
+
+## Configuración estándar (Recomendada para producción)
+
+A continuación se muestra la configuración estándar de Docker Compose, adecuada para la mayoría de los entornos de producción:
+
+```yaml
+# New-API Docker Compose Configuration
+#
+# Quick Start:
+#   1. docker-compose up -d
+#   2. Access at http://localhost:3000
+#
+# Using MySQL instead of PostgreSQL:
+#   1. Comment out the postgres service and SQL_DSN line 15
+#   2. Uncomment the mysql service and SQL_DSN line 16
+#   3. Uncomment mysql in depends_on (line 28)
+#   4. Uncomment mysql_data in volumes section (line 64)
+#
+# ⚠️  IMPORTANT: Change all default passwords before deploying to production!
+
+version: '3.4' # For compatibility with older Docker versions
+
+services:
+  vxon:
+    image: vxon/vxon:latest
+    container_name: vxon
+    restart: always
+    command: --log-dir /app/logs
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./data:/data
+      - ./logs:/app/logs
+    environment:
+      - SQL_DSN=postgresql://root:123456@postgres:5432/vxon # ⚠️ IMPORTANT: Change the password in production!
+      #      - SQL_DSN=root:123456@tcp(mysql:3306)/vxon  # Point to the mysql service, uncomment if using MySQL
+      - REDIS_CONN_STRING=redis://redis
+      - TZ=Asia/Shanghai
+      - ERROR_LOG_ENABLED=true # Whether to enable error logging
+      - BATCH_UPDATE_ENABLED=true # Whether to enable batch update
+    #      - STREAMING_TIMEOUT=300  # Streaming timeout in seconds, default is 120s. Increase if experiencing empty completions
+    #      - SESSION_SECRET=random_string  # For multi-node deployment, this random string must be changed!
+    #      - SYNC_FREQUENCY=60  # Uncomment if regular database syncing is needed
+
+    depends_on:
+      - redis
+      - postgres
+    #      - mysql  # Uncomment if using MySQL
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          "wget -q -O - http://localhost:3000/api/status | grep -o '\"success\":\\s*true' || exit 1",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: always
+
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: 123456 # ⚠️ IMPORTANT: Change this password in production!
+      POSTGRES_DB: vxon
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+#    ports:
+#      - "5432:5432"  # Uncomment if you need to access PostgreSQL from outside Docker
+
+#  mysql:
+#    image: mysql:8.2
+#    container_name: mysql
+#    restart: always
+#    environment:
+#      MYSQL_ROOT_PASSWORD: 123456  # ⚠️ IMPORTANT: Change this password in production!
+#      MYSQL_DATABASE: vxon
+#    volumes:
+#      - mysql_data:/var/lib/mysql
+#    ports:
+#      - "3306:3306"  # Uncomment if you need to access MySQL from outside Docker
+
+volumes:
+  pg_data:
+#  mysql_data:
+```
+
+## Configuración simplificada (Adecuada para pruebas)
+
+Para propósitos de prueba, puede usar la siguiente versión simplificada, que solo incluye el servicio Vxon en sí:
+
+```yaml
+services:
+  vxon:
+    image: vxon/vxon:latest
+    container_name: vxon
+    restart: always
+    ports:
+      - '3000:3000'
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./data:/data
+```
+
+## Detalles de configuración
+
+### Configuración del servicio Vxon
+
+| Parámetro        | Descripción                                                                    |
+| ---------------- | ------------------------------------------------------------------------------ |
+| `image`          | Nombre de la imagen, generalmente `vxon/vxon:latest` para obtener la última versión |
+| `container_name` | Nombre del contenedor, personalizable                                          |
+| `restart`        | Política de reinicio del contenedor, se recomienda establecer en `always` para reinicio automático |
+| `command`        | Comando de inicio, parámetros de inicio personalizables                        |
+| `ports`          | Mapeo de puertos, por defecto mapea el puerto 3000 del contenedor al puerto 3000 del host |
+| `volumes`        | Mapeo de volúmenes, asegura la persistencia de datos                           |
+| `environment`    | Configuración de variables de entorno, usada para configurar el comportamiento de Vxon |
+| `depends_on`     | Servicios dependientes, asegura el inicio en el orden correcto                 |
+| `healthcheck`    | Configuración de verificación de salud, usada para monitorear el estado del servicio |
+
+### Descripción de variables de entorno
+
+Vxon admite diversas configuraciones de variables de entorno. Aquí hay algunas de uso común:
+
+| Variable de entorno | Descripción                                         | Ejemplo                               |
+| -------------------- | --------------------------------------------------- | ------------------------------------- |
+| `SQL_DSN`            | Cadena de conexión a la base de datos               | `root:123456@tcp(mysql:3306)/vxon` |
+| `REDIS_CONN_STRING`  | Cadena de conexión a Redis                          | `redis://redis`                       |
+| `TZ`                 | Configuración de zona horaria                       | `Asia/Shanghai`                       |
+| `SESSION_SECRET`     | Secreto de sesión (requerido para despliegue multinodo) | `your_random_string`                  |
+| `NODE_TYPE`          | Tipo de nodo (master/slave)                         | `master` o `slave`                    |
+| `SYNC_FREQUENCY`     | Frecuencia de sincronización (segundos)             | `60`                                  |
+
+Para una lista más completa de variables de entorno, consulte la [Guía de configuración de variables de entorno](/es/docs/installation/config-maintenance/environment-variables).
+
+## Configuración de despliegue multinodo
+
+Para escenarios de despliegue multinodo, la configuración de los nodos maestro y esclavo difiere ligeramente:
+
+### Configuración del nodo maestro
+
+```yaml
+services:
+  vxon-master:
+    image: vxon/vxon:latest
+    container_name: vxon-master
+    restart: always
+    ports:
+      - '3000:3000'
+    environment:
+      - SQL_DSN=root:123456@tcp(mysql:3306)/vxon
+      - REDIS_CONN_STRING=redis://redis
+      - SESSION_SECRET=your_unique_session_secret
+      - CRYPTO_SECRET=your_unique_crypto_secret
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./data:/data
+```
+
+### Configuración del nodo esclavo
+
+```yaml
+services:
+  vxon-slave:
+    image: vxon/vxon:latest
+    container_name: vxon-slave
+    restart: always
+    ports:
+      - '3001:3000' # Note the different port mapping
+    environment:
+      - SQL_DSN=root:123456@tcp(mysql:3306)/vxon
+      - REDIS_CONN_STRING=redis://redis
+      - SESSION_SECRET=your_unique_session_secret # Must be the same as the master node
+      - CRYPTO_SECRET=your_unique_crypto_secret # Must be the same as the master node
+      - NODE_TYPE=slave # Set as slave node
+      - SYNC_FREQUENCY=60
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./data-slave:/data
+```
+
+## Uso
+
+### Instalación
+
+Guarde la configuración como `docker-compose.yml` y luego ejecute el siguiente comando en el mismo directorio:
+
+```bash
+docker compose up -d
+```
+
+### Ver logs
+
+```bash
+docker compose logs -f
+```
+
+### Detener servicios
+
+```bash
+docker compose down
+```
+
+<Callout type="info" title="Consejo">
+  Para más información sobre el uso de Docker Compose, consulte la [Guía de
+  instalación con Docker
+  Compose](/es/docs/installation/deployment-methods/docker-compose-installation).
+</Callout>
