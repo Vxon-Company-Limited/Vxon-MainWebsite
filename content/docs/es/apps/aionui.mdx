@@ -1,0 +1,86 @@
+---
+title: AionUi - Agente de escritorio gratuito y de código abierto
+description: Guía de configuración de AionUi — agente de escritorio gratuito y de código abierto que admite Gemini CLI, Claude Code, Codex y más. Conéctese a Vxon para flujos de trabajo de IA con múltiples modelos.
+---
+
+<Callout type="info">
+  🚀 AionUi es un Cowork gratuito, local y de código abierto que admite múltiples agentes de IA como Gemini CLI, Claude Code, Codex, OpenCode, Qwen Code, Goose CLI, Auggie y más. Proporciona una interfaz GUI completa y funcionalidad de acceso remoto WebUI, sirviendo como alternativa de código abierto a Cowork.
+</Callout>
+
+- Sitio web oficial: [https://www.aionui.com](https://www.aionui.com)
+- Repositorio de GitHub: [https://github.com/iOfficeAI/AionUi](https://github.com/iOfficeAI/AionUi)
+- Dirección de descarga: [https://github.com/iOfficeAI/AionUi/releases](https://github.com/iOfficeAI/AionUi/releases)
+
+![AionUi Logo](/assets/aionui/aionui—logo.png)
+
+## Características principales
+
+### 💬 Chat multisesión
+- **Multisesión + Contexto independiente** - Abra múltiples sesiones de chat simultáneamente, cada sesión tiene memoria de contexto independiente
+- **Almacenamiento local** - Todos los datos de conversación se guardan en una base de datos SQLite local y no se perderán
+
+### 🤖 Soporte multimodelo
+- **Soporte multiplataforma** - Compatible con modelos principales como Gemini, OpenAI, Claude, Qwen, con cambio flexible
+- **Soporte de modelos locales** - Compatible con despliegue de modelos locales como Ollama, LM Studio
+
+### 🤝 Modo multiagente
+- **Ejecute múltiples agentes de IA simultáneamente** - Puede ejecutar múltiples agentes de IA simultáneamente (como Gemini CLI, Claude Code, Codex, OpenCode, Qwen Code, Goose CLI, Auggie, etc.)
+- **Gestión unificada de MCP** - Gestión y configuración unificada de todos los agentes a través del Model Context Protocol (MCP), simplificando las operaciones
+- **Configuración de Skills** - Soporte para configurar Skills dedicados para diferentes agentes y ampliar las capacidades del agente
+- **Personalización de asistentes** - Soporte para configuración personalizada de asistentes para crear flujos de trabajo de IA personalizados
+- **Configuración independiente** - Cada agente puede configurarse y usarse de forma independiente sin interferencias
+- **Cambio flexible** - Cambie de forma flexible entre diferentes agentes para satisfacer diversas necesidades
+
+### 🗂️ Gestión de archivos
+- **Exploración de árbol de archivos + Carga por arrastrar y soltar** - Explore archivos como carpetas, admite arrastrar y soltar archivos o carpetas para importación con un clic
+- **Organización inteligente** - Deje que la IA ayude a organizar carpetas con clasificación automática
+
+### 📄 Panel de vista previa
+- **Vista previa de más de 9 formatos** - Compatible con PDF, Word, Excel, PPT, código, Markdown, imágenes y otros formatos
+- **Seguimiento en tiempo real + Editable** - Rastrea automáticamente los cambios en archivos, admite edición y depuración en tiempo real de Markdown, código, HTML
+
+### 🎨 Generación y edición de imágenes con IA
+- **Generación inteligente de imágenes** - Compatible con múltiples modelos de generación de imágenes como Gemini 2.5 Flash Image Preview, Nano, Banana
+- **Reconocimiento y edición de imágenes** - Funciones de análisis y edición de imágenes impulsadas por IA
+
+### 🌐 Acceso multicanal
+- **Acceso remoto WebUI** - Acceda desde cualquier dispositivo en la red a través del navegador, compatible con dispositivos móviles
+- **Integración con Telegram** - Soporte para interacción a través de bot de Telegram
+- **Integración con Feishu** - Soporte para acceso e interacción a través de Feishu
+- **Seguridad de datos local** - Todos los datos almacenados en base de datos SQLite local, adecuado para despliegue en servidor
+
+## Pasos de configuración de Vxon
+
+1. **Copiar la clave de API en Vxon**
+   ![Copiar clave de API](/assets/aionui/copy_apikey.png)
+
+2. **Abrir la configuración de AionUi**
+   - Ingrese a la página de configuración en AionUi
+   - Encuentre la pestaña de Configuración de modelos
+   - Haga clic en "Agregar modelo"
+   ![Abrir configuración](/assets/aionui/add-model-1.png)
+
+3. **Agregar nuevo proveedor**
+   - Haga clic en "Agregar modelo"
+   - Seleccione Vxon
+   ![Agregar proveedor Vxon](/assets/aionui/vxon_provider.png)
+
+4. **Configurar información de la API**
+   - Dirección de la API: Ingrese la dirección de su sitio Vxon (formato: `https://<your-vxon-domain>/v1`)
+   - Clave de API: Pegue la clave de API copiada de la consola de Vxon
+
+5. **Agregar modelos**
+   - Seleccione el modelo a agregar del menú desplegable
+   - El nombre del modelo debe coincidir con el nombre del modelo configurado en Vxon
+   - Seleccione el protocolo de solicitud apropiado
+
+6. **Comenzar a usar**
+   - Vuelva a la página de chat
+   - Seleccione el modelo de Vxon configurado para iniciar una conversación
+
+
+## Enlaces relacionados
+
+- [Repositorio de GitHub](https://github.com/iOfficeAI/AionUi)
+- [Guía de uso completa](https://github.com/iOfficeAI/AionUi#-detailed-usage-guide)
+- [Preguntas frecuentes](https://github.com/iOfficeAI/AionUi#-support--help)
