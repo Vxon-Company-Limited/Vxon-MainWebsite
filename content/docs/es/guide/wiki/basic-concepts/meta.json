@@ -1,0 +1,10 @@
+{
+  "title": "Conceptos básicos",
+  "icon": "BookText",
+  "pages": [
+    "project-introduction",
+    "features-introduction",
+    "technical-architecture",
+    "analytics-setup"
+  ]
+}
