@@ -1,0 +1,57 @@
+---
+title: AstrBot - Chatbot Agent
+description: Guía de configuración de AstrBot — integre esta plataforma de chatbot Agent de código abierto con Vxon para potenciar QQ, Feishu, DingTalk, WeChat Work y más con capacidades de IA.
+---
+
+<Callout type="info">
+  AstrBot es una plataforma de chatbot Agent de código abierto todo en uno que integra
+  de forma transparente las capacidades de modelos de gran escala en software de mensajería
+  instantánea convencional como QQ, Feishu, DingTalk y WeChat Work, construyendo una
+  infraestructura de IA conversacional confiable y escalable para individuos, desarrolladores
+  y equipos. Ya sea un compañero de IA personal, servicio al cliente inteligente, asistente
+  de automatización o base de conocimientos empresarial, AstrBot puede construir rápidamente
+  aplicaciones de IA listas para producción dentro del flujo de trabajo de su plataforma
+  de mensajería instantánea.
+</Callout>
+
+- Sitio web oficial: [https://astrbot.app](https://astrbot.app)
+- Documentación oficial: [https://docs.astrbot.app](https://docs.astrbot.app)
+- Página del proyecto: [https://github.com/astrbotdevs/astrbot](https://github.com/astrbotdevs/astrbot)
+
+## Método de integración con Vxon
+
+AstrBot admite la integración de Vxon como proveedor de modelos, permitiendo a los usuarios acceder y utilizar diversos servicios de modelos de IA a través de Vxon.
+
+### Pasos de configuración
+
+#### Obtener la clave de API de Vxon
+
+Después de registrarse e iniciar sesión en Vxon, haga clic en 'Consola' en la barra de navegación superior, haga clic en 'Gestión de tokens', luego haga clic en el botón 'Agregar token' para crear una nueva clave de API, seleccione los permisos apropiados y luego haga clic en 'Crear'.
+
+![create-api-key](/assets/astrbot/image.png)
+
+Después de la creación exitosa, haga clic en el botón 'Copiar clave' para copiar la clave de API generada.
+
+![copy-api-key](/assets/astrbot/image-1.png)
+
+#### Configurar el proveedor de servicio Vxon en AstrBot
+
+Abra el panel de administración de AstrBot, vaya a la página 'Proveedores de modelos', luego haga clic en el botón 'Agregar proveedor de modelos'.
+
+Vxon es perfectamente compatible con las interfaces OpenAI Chat Completion y Responses. Haga clic en 'OpenAI' para ingresar a la página de configuración del proveedor OpenAI.
+
+En el cuadro de diálogo emergente, establezca la URL base de la API a la dirección de interfaz de Vxon. Si ha desplegado Vxon localmente, ingrese la dirección local, por ejemplo, `http://localhost:3000/v1`. Si está utilizando servicios de Vxon proporcionados por un proveedor de servicios externo, ingrese la URL correspondiente, por ejemplo, `https://api.example.com/v1`.
+
+Luego, ingrese la clave de API en el campo 'API Key' y haga clic en el botón 'Guardar'.
+
+![astrbot-provider-config](/assets/astrbot/image-2.png)
+
+Luego haga clic en Guardar para completar la configuración del proveedor Vxon.
+
+#### Aplicar proveedor de servicio
+
+Vaya a la página 'Archivo de configuración', encuentre la sección 'Modelos', cambie 'Modelo de chat predeterminado' al proveedor Vxon que acaba de crear y haga clic en el botón 'Guardar'.
+
+![apply](/assets/astrbot/image-3.png)
+
+En este punto, ha configurado exitosamente Vxon como proveedor de modelos de AstrBot. Ahora puede acceder y utilizar diversos servicios de modelos de IA proporcionados por Vxon a través de AstrBot.
