@@ -1,0 +1,191 @@
+---
+title: Guia de configuracion de herramientas de analisis
+---
+
+### Descripcion general
+
+Vxon ahora soporta la integracion con plataformas de analisis populares para ayudarle a rastrear el comportamiento de los usuarios y el rendimiento del sitio web:
+
+- **Google Analytics 4 (GA4)**: La version mas reciente de la plataforma de analisis de Google
+- **Umami Analytics**: Una herramienta de analisis de codigo abierto enfocada en la privacidad
+
+Ambas herramientas de analisis pueden habilitarse simultaneamente sin conflictos.
+
+### Funcionalidades
+
+✅ Integracion sin codigo - configurada unicamente mediante variables de entorno  
+✅ Inyeccion automatica de scripts en la interfaz web  
+✅ Compatible con despliegues Docker e independientes  
+✅ Implementacion enfocada en la privacidad  
+✅ No requiere modificacion del codigo del frontend
+
+---
+
+### Configuracion de Google Analytics 4
+
+#### 1. Obtener su ID de medicion
+
+1. Visite [Google Analytics](https://analytics.google.com/)
+2. Cree una nueva propiedad o seleccione una existente
+3. Vaya a **Administrador** → **Flujos de datos**
+4. Cree o seleccione un flujo de datos web
+5. Copie su **ID de medicion** (formato: `G-XXXXXXXXXX`)
+
+#### 2. Configurar variables de entorno
+
+**Usando Docker Compose:**
+
+Edite el archivo `docker-compose.yml` y descomente la linea de Google Analytics:
+
+```yaml
+environment:
+  - GOOGLE_ANALYTICS_ID=G-XXXXXXXXXX # Reemplace con su ID de medicion real
+```
+
+**Despliegue independiente:**
+
+Agregue al archivo `.env` o configure como variable de entorno:
+
+```bash
+export GOOGLE_ANALYTICS_ID=G-XXXXXXXXXX
+```
+
+**Usando Docker Run:**
+
+```bash
+docker run -d \
+  -e GOOGLE_ANALYTICS_ID=G-XXXXXXXXXX \
+  ...其他选项...
+  vxon/vxon:latest
+```
+
+#### 3. Reiniciar la aplicacion
+
+```bash
+# Docker Compose
+docker-compose down && docker-compose up -d
+
+# Despliegue independiente
+# Reinicie directamente su aplicacion
+```
+
+---
+
+### Configuracion de Umami Analytics
+
+#### 1. Obtener credenciales de Umami
+
+**Opcion A: Usando Umami Cloud**
+
+1. Registrese en [Umami Cloud](https://cloud.umami.is/)
+2. Agregue un nuevo sitio web
+3. Copie su **Website ID** (formato UUID)
+
+**Opcion B: Umami autoalojado**
+
+1. Despliegue su propia [instancia de Umami](https://umami.is/docs/install)
+2. Cree un sitio web en el panel de control
+3. Copie su **Website ID** y la **URL del script**
+
+#### 2. Configurar variables de entorno
+
+**Usando Docker Compose:**
+
+Edite el archivo `docker-compose.yml`:
+
+```yaml
+environment:
+  - UMAMI_WEBSITE_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+  # Opcional: Solo requerido para instancias autoalojadas
+  - UMAMI_SCRIPT_URL=https://<su-dominio-umami>/script.js
+```
+
+**Despliegue independiente:**
+
+Agregue al archivo `.env`:
+
+```bash
+export UMAMI_WEBSITE_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+export UMAMI_SCRIPT_URL=https://<su-dominio-umami>/script.js  # Opcional
+```
+
+**Nota:** Si usa Umami Cloud, no necesita configurar `UMAMI_SCRIPT_URL`, ya que utiliza la URL oficial por defecto.
+
+#### 3. Reiniciar la aplicacion
+
+Igual que con Google Analytics - reinicie la aplicacion para aplicar los cambios.
+
+---
+
+### Uso simultaneo de ambas herramientas de analisis
+
+Puede habilitar Google Analytics y Umami simultaneamente:
+
+```yaml
+environment:
+  - GOOGLE_ANALYTICS_ID=G-ABC123XYZ
+  - UMAMI_WEBSITE_ID=a1b2c3d4-e5f6-g7h8-i9j0-k1l2m3n4o5p6
+  - UMAMI_SCRIPT_URL=https://analytics.umami.is/script.js
+```
+
+---
+
+### Verificacion
+
+Despues de reiniciar la aplicacion:
+
+1. Abra la interfaz web en su navegador
+2. Abra las herramientas de desarrollo del navegador (F12) → pestana **Red**
+3. Actualice la pagina
+4. Busque las siguientes solicitudes:
+   - Google Analytics: `https://www.googletagmanager.com/gtag/js`
+   - Umami: La URL del script que configuro
+
+Tambien puede ver el codigo fuente de la pagina y buscar los scripts inyectados en la seccion `<head>`.
+
+---
+
+### Solucion de problemas
+
+**¿Las herramientas de analisis no funcionan?**
+
+1. ✅ Verifique que las variables de entorno esten configuradas correctamente
+2. ✅ Reinicie la aplicacion despues de cambiar las variables
+3. ✅ Revise la consola del navegador en busca de errores
+4. ✅ Asegurese de que el formato del ID de medicion/Website ID sea correcto
+5. ✅ Verifique si los bloqueadores de anuncios estan interfiriendo
+
+**Usuarios de Docker:**
+
+```bash
+# Verificar si las variables de entorno estan configuradas
+docker exec vxon env | grep -E "GOOGLE_ANALYTICS|UMAMI"
+```
+
+---
+
+### Consideraciones de privacidad
+
+- Google Analytics recopila datos de usuarios segun la [Politica de privacidad de Google](https://policies.google.com/privacy)
+- Umami esta enfocado en la privacidad y no recopila datos personales
+- Si utiliza herramientas de analisis, considere agregar una politica de privacidad a su sitio web
+- Ambas herramientas cumplen con el RGPD cuando se configuran correctamente
+
+---
+
+## Referencia de variables de entorno
+
+| Variable              | Requerida | Valor por defecto                      | Descripcion                                                          |
+| --------------------- | --------- | -------------------------------------- | -------------------------------------------------------------------- |
+| `GOOGLE_ANALYTICS_ID` | No        | -                                      | ID de medicion de Google Analytics 4 (formato: G-XXXXXXXXXX)         |
+| `UMAMI_WEBSITE_ID`    | No        | -                                      | Website ID de Umami (formato UUID)                                   |
+| `UMAMI_SCRIPT_URL`    | No        | `https://analytics.umami.is/script.js` | URL del script de Umami (solo requerido para instancias autoalojadas)|
+
+---
+
+## Enlaces relacionados
+
+- [Google Analytics](https://analytics.google.com/)
+- [Umami Analytics](https://umami.is/)
+- [Documentacion de Umami](https://umami.is/docs)
+- [Privacidad de Google Analytics](https://support.google.com/analytics/answer/6004245)
