@@ -1,0 +1,183 @@
+---
+title: OpenClaw - Plataforma de asistente inteligente de IA autoalojada
+description: Tutorial de OpenClaw — Instale OpenClaw, integre con Vxon y configure rápidamente un asistente de IA autoalojado. Un proyecto de código abierto que admite integración multicanal como Telegram, Discord, WhatsApp.
+---
+
+<Callout type="info" title="Introducción del proyecto">
+  OpenClaw es una plataforma de asistente personal de IA de código abierto y autoalojada
+  que conecta aplicaciones de mensajería con agentes de IA
+  que se ejecutan en su propio hardware. Diseñada para desarrolladores y usuarios avanzados, le permite tener un asistente de IA autónomo sin renunciar al control de sus datos.
+
+  - Página oficial: [https://openclaw.ai](https://openclaw.ai)
+  - Documentación del proyecto: [https://docs.openclaw.ai](https://docs.openclaw.ai)
+  - GitHub: [https://github.com/openclaw/openclaw](https://github.com/openclaw/openclaw)
+</Callout>
+
+OpenClaw es completamente de código abierto. Puede explorar el código fuente, enviar issues o contribuir en el [repositorio de GitHub de OpenClaw](https://github.com/openclaw/openclaw). Este tutorial cubre los pasos completos para la instalación, configuración e integración de OpenClaw con Vxon.
+
+## 🌟 Características principales
+
+### Integración multicanal
+
+- **Integración multicanal**: Compatible con diversos canales de mensajería como Telegram, Discord, WhatsApp, iMessage, y puede extenderse a más plataformas mediante plugins.
+- **Gateway único**: Gestión unificada de todos los canales a través de un único proceso Gateway.
+- **Soporte de voz**: Compatible con interacción por voz en macOS/iOS/Android.
+- **Interfaz Canvas**: Capaz de renderizar interfaces Canvas interactivas.
+
+### Autoalojamiento y seguridad de datos
+
+- **Completamente autoalojado**: Se ejecuta en su propia máquina o servidor.
+- **Código abierto y transparente**: Licencia de código abierto MIT, código completamente transparente.
+- **Localización de datos**: El contexto y las habilidades se almacenan en su computadora local, no en la nube.
+
+### Capacidades de agente inteligente
+
+- **Operación continua**: Compatible con operación persistente en segundo plano con memoria a largo plazo.
+- **Tareas programadas**: Compatible con tareas programadas basadas en cron.
+- **Aislamiento de sesiones**: Aísla sesiones por agente/espacio de trabajo/remitente.
+- **Enrutamiento multiagente**: Compatible con trabajo colaborativo entre múltiples agentes.
+- **Llamada a herramientas**: Soporte nativo para llamada a herramientas y ejecución de código.
+
+## 📦 Preparación previa a la integración
+
+<Callout type="info" title="Información de preparación">
+  - Node.js 22 o superior
+  - Una dirección de Vxon disponible (generalmente terminando en `/v1`)
+  - Una clave de API de Vxon disponible
+</Callout>
+
+Antes de integrar con Vxon, se recomienda primero poner en funcionamiento el Gateway y la interfaz de control según el proceso oficial actualmente recomendado de OpenClaw. Esto facilita distinguir si OpenClaw no se ha iniciado o si la configuración del proveedor de modelos es incorrecta al solucionar problemas posteriormente.
+
+### 1. Instalar OpenClaw (macOS/Linux)
+
+```bash
+curl -fsSL https://openclaw.ai/install.sh | bash
+```
+
+Para otros métodos de instalación, consulte la documentación oficial de OpenClaw: [Primeros pasos](https://docs.openclaw.ai/start/getting-started).
+
+### 2. Ejecutar el asistente de configuración inicial
+
+```bash
+openclaw onboard --install-daemon
+```
+
+Este asistente completa la autenticación básica, la configuración del Gateway y la inicialización opcional de canales. El objetivo aquí es poner OpenClaw en funcionamiento primero, y luego cambiar el modelo predeterminado a Vxon más adelante.
+
+### 3. Verificar el Gateway y la interfaz de control
+
+```bash
+openclaw gateway status
+```
+
+```bash
+openclaw dashboard
+```
+
+Si su navegador puede abrir la interfaz de control, significa que el funcionamiento básico de OpenClaw es normal. En esta etapa, no es necesario configurar canales de mensajería como Telegram, Discord o Feishu todavía.
+
+### 4. Localizar el archivo de configuración
+
+El archivo de configuración de OpenClaw generalmente se encuentra en `~/.openclaw/openclaw.json`. Puede continuar modificándolo basándose en lo que genera el asistente de configuración inicial.
+
+<Callout type="tip" title="Variables de entorno relacionadas con rutas">
+  Si ejecuta OpenClaw bajo una cuenta de servicio dedicada, o desea personalizar el directorio de configuración/estado, puede usar:
+
+  - `OPENCLAW_HOME`
+  - `OPENCLAW_STATE_DIR`
+  - `OPENCLAW_CONFIG_PATH`
+
+  Para explicaciones detalladas, consulte la documentación oficial de variables de entorno: [Variables de entorno](https://docs.openclaw.ai/help/environment).
+</Callout>
+
+## 🚀 Uso de Vxon como proveedor de modelos
+
+OpenClaw admite la integración de gateways de modelos personalizados o compatibles con OpenAI a través de `models.providers`. Para Vxon, el enfoque más común es agregarlo como proveedor personalizado en la configuración, y luego apuntar el modelo predeterminado a `vxon/MODEL_ID`.
+
+### Enfoque de integración
+
+1. Declare un proveedor `vxon` bajo `models.providers`.
+2. Apunte `baseUrl` a su dirección de Vxon, asegurándose de que incluya `/v1`.
+3. Establezca `api` en `openai-completions`.
+4. Liste los IDs de modelo que desea que OpenClaw use en `models`.
+5. Cambie el modelo predeterminado a `vxon/...` en `agents.defaults.model.primary`.
+
+### Práctica recomendada: Almacenar claves de API en variables de entorno
+
+Primero, proporcione su clave de Vxon en el shell actual, entorno de servicio o un archivo `.env` legible por OpenClaw:
+
+```bash
+export VXON_API_KEY="sk-your-vxon-key"
+```
+
+Luego, agregue o modifique el siguiente fragmento en `openclaw.json`:
+
+```json5
+{
+  models: {
+    mode: "merge",
+    providers: {
+      vxon: {
+        baseUrl: "https://<your-vxon-domain>/v1",
+        apiKey: "${VXON_API_KEY}",
+        api: "openai-completions",
+        models: [
+          { id: "gemini-2.5-flash", name: "Gemini 2.5 Flash" },
+          { id: "kimi-k2.5", name: "Kimi K2.5" },
+        ],
+      },
+    },
+  },
+
+  agents: {
+    defaults: {
+      model: {
+        primary: "vxon/gemini-2.5-flash",
+        fallbacks: ["vxon/kimi-k2.5"],
+      },
+      models: {
+        "vxon/gemini-2.5-flash": { alias: "flash" },
+        "vxon/kimi-k2.5": { alias: "kimi" },
+      },
+    },
+  },
+}
+```
+
+Esta no es una configuración completa para copiar literalmente, sino la parte más crítica para integrar Vxon. Siempre que el `provider`, el ID del modelo y las referencias del modelo predeterminado coincidan correctamente, OpenClaw podrá llamar a los recursos de modelo que expone a través de Vxon.
+
+### Explicación de la configuración clave
+
+| Elemento de configuración | Descripción |
+| --- | --- |
+| `models.mode` | Se recomienda establecer en `merge` para agregar `vxon` mientras se conservan los proveedores integrados de OpenClaw. |
+| `models.providers.vxon.baseUrl` | Su dirección de Vxon, generalmente necesita incluir `/v1`. |
+| `models.providers.vxon.apiKey` | Clave de Vxon, se recomienda inyectar mediante `${VXON_API_KEY}`. |
+| `models.providers.vxon.api` | Para gateways compatibles con OpenAI como Vxon, use `openai-completions`. |
+| `models.providers.vxon.models` | Los IDs de modelo listados aquí deben coincidir con los nombres de modelo reales expuestos por su Vxon. |
+| `agents.defaults.model.primary` | Modelo principal predeterminado, el formato debe ser `provider/model-id`. |
+| `agents.defaults.model.fallbacks` | Lista de modelos de respaldo, cambia automáticamente si el modelo principal falla. |
+| `agents.defaults.models` | Opcional, se usa para crear alias para modelos, conveniente para referenciar en la UI o conversaciones. |
+
+### Verificar la integración exitosa
+
+Después de completar la configuración, regrese o reabra la interfaz de control:
+
+```bash
+openclaw dashboard
+```
+
+Si puede iniciar conversaciones normalmente en OpenClaw y el modelo predeterminado se ha convertido en `vxon/...`, entonces la integración fue exitosa. También puede usar:
+
+```bash
+openclaw models list
+```
+
+para confirmar que los modelos con el prefijo `vxon/` aparecen en la lista seleccionable.
+
+### Problemas comunes
+
+- `baseUrl` sin `/v1`: Este es uno de los errores de integración más comunes.
+- ID de modelo incorrecto: `primary` y `fallbacks` deben corresponder al `id` en `models.providers.vxon.models`.
+- Clave solo efectiva en la terminal actual: Si el Gateway se ejecuta como servicio en segundo plano, asegúrese de que el proceso del servicio también pueda leer `VXON_API_KEY`.
+- Para solución de problemas en primer plano: Puede usar el método oficial de ejecución en primer plano `openclaw gateway --port 18789` para observar logs y errores.
