@@ -1,0 +1,95 @@
+---
+title: Configuración de Pagos
+---
+
+Aquí puede configurar los ajustes relacionados con la función de recarga.
+
+![Payment Settings](/assets/guide/payment-setting.png)
+
+![Stripe](/assets/guide/stripe.png)
+
+## Pasarelas de Pago Compatibles
+
+- **EPay**
+  - Campos requeridos: `Dirección de API`, `ID de Comerciante (PID)`, `Clave de Comerciante (KEY)`
+  - Los parámetros de callback de la plataforma incluyen una firma, que el sistema verificará y acreditará automáticamente.
+- **Stripe (Opcional)**
+  - Campos requeridos: `API Key` `WebHook Signing Secret` `Product Price ID`
+
+## Qué es EPay
+
+`EPay` es un término general para el modelo de "pasarela/interfaz de cobro agregado de terceros", no un sitio web o empresa específica. Puede referirse a servicios comerciales de pago agregado, o implementaciones de pasarela autoalojadas/de código abierto que siguen el "estilo de protocolo EPay".
+
+- **Función Principal**: Agrega canales como WeChat Pay, Alipay y tarjetas bancarias, proporcionando a los comerciantes interfaces unificadas de creación de pedidos, verificación de firma y callback.
+- **Aviso de Cumplimiento**: La pasarela en sí no equivale a una institución de pago con licencia; la compensación de fondos, la liquidación y el cumplimiento dependen de los canales con licencia que integra. Por favor, cumpla con los requisitos regulatorios y de control de riesgos locales.
+
+## Plantilla de Configuración de Métodos de Recarga
+
+En "Métodos de Recarga", puede configurar según la siguiente estructura:
+
+```json
+[
+  {
+    "color": "rgba(var(--semi-blue-5), 1)",
+    "name": "支付宝",
+    "type": "alipay"
+  },
+  {
+    "color": "rgba(var(--semi-green-5), 1)",
+    "name": "微信",
+    "type": "wxpay"
+  },
+  {
+    "color": "rgba(var(--semi-green-5), 1)",
+    "name": "Stripe",
+    "type": "stripe",
+    "min_topup": "50"
+  },
+  {
+    "name": "自定义1",
+    "color": "black",
+    "type": "custom1",
+    "min_topup": "50"
+  }
+]
+```
+
+### Descripción de Campos
+
+- name: Texto de visualización. Se muestra en el botón "Seleccionar Método de Pago" (por ejemplo, "Alipay/WeChat/Stripe/Custom1").
+- color: Color del tema o color del borde para botones/insignias. Admite cualquier valor de color CSS, se recomienda usar tokens de diseño existentes (por ejemplo, `rgba(var(--semi-blue-5), 1)`).
+- type: Identificador de canal, utilizado para el enrutamiento del backend y la creación de pedidos.
+  - `stripe` → Utiliza la pasarela de Stripe.
+  - Otros (por ejemplo, `alipay`, `wxpay`, `custom1`, etc.) → Utiliza la pasarela estilo EPay y pasa este valor como parámetro de canal.
+  - La lógica detallada se puede encontrar en el controlador del backend `controller/topup.go` (Referencia: [controller/topup.go](https://github.com/Vxon/vxon/blob/main/controller/topup.go)).
+- min_topup: Monto mínimo de recarga (unidad consistente con la moneda de la página). Si el monto ingresado es menor que este valor, la página mostrará "El monto mínimo de recarga para este método de pago es X" y restringirá el inicio del pago; el backend también realizará la validación.
+- Orden: Se renderiza de izquierda a derecha según el orden del array.
+
+## Configuración de Montos de Recarga
+
+### Opciones Personalizadas de Monto de Recarga
+
+Establezca las opciones de monto de recarga disponibles para que los usuarios elijan, por ejemplo:
+
+```json
+[10, 20, 50, 100, 200, 500]
+```
+
+Estos valores se mostrarán en el área "Seleccionar Cuota de Recarga", y los usuarios pueden hacer clic directamente para seleccionar el monto de recarga correspondiente.
+
+### Configuración de Descuentos en Montos de Recarga
+
+Establezca descuentos correspondientes a diferentes montos de recarga, donde la clave es el monto de recarga y el valor es la tasa de descuento, por ejemplo:
+
+```json
+{
+  "100": 0.95,
+  "200": 0.9,
+  "500": 0.85
+}
+```
+
+- Clave: Monto de recarga (formato de cadena)
+- Valor: Tasa de descuento (decimal entre 0-1, por ejemplo, 0.95 significa el 95% del precio, es decir, un 5% de descuento)
+- El sistema calculará automáticamente el monto real de pago y los ahorros según la configuración.
+- La lógica de implementación detallada se puede encontrar en el controlador del backend [controller/topup.go](https://github.com/Vxon/vxon/blob/main/controller/topup.go)
