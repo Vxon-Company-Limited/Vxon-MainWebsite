@@ -1,0 +1,43 @@
+---
+title: Descripción del sistema de autenticación (Auth)
+description: Descripción de los métodos de autenticación y niveles de permisos de la interfaz de gestión del backend
+---
+
+## Descripción
+
+Las interfaces de gestión del backend adoptan un mecanismo de autenticación multinivel, comúnmente: **Public**, **User**, **Admin**, **Root**.
+
+## Métodos de autenticación (elige uno)
+
+### Session
+
+Obtener Session a través de la interfaz de inicio de sesión:
+
+- `POST /api/user/login`
+
+### Access Token (recomendado)
+
+Incluir en el encabezado de la solicitud:
+
+```text
+Authorization: Bearer {token}
+```
+
+Los tokens se pueden generar en "Configuración personal - Configuración de seguridad - Tokens de acceso al sistema".
+
+## Encabezados de solicitud requeridos
+
+Algunas interfaces requieren incluir un encabezado de identificación de usuario:
+
+```text
+New-Api-User: {user_id}
+```
+
+Donde `{user_id}` debe coincidir con el usuario actualmente conectado.
+
+## Niveles de permisos
+
+- **Public**: No requiere autenticación
+- **User**: Requiere inicio de sesión o Access Token
+- **Admin**: Requiere privilegios de administrador
+- **Root**: Privilegio máximo
