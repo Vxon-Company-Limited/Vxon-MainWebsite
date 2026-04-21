@@ -1,0 +1,239 @@
+---
+title: Configuración de Tarifas
+---
+
+La configuración de tarifas es una configuración central del sistema de facturación de Vxon, que permite un control flexible sobre los estándares de facturación para varios modelos y grupos de usuarios mediante la configuración de diferentes tarifas.
+
+## Descripción General del Sistema de Tarifas
+
+Vxon utiliza un sistema de tarifas de tres niveles para calcular el consumo de cuota de los usuarios:
+
+1.  Tarifa del Modelo - Define el multiplicador de facturación base para diferentes modelos de IA
+2.  Tarifa de Completado - Aplica ajustes de facturación adicionales a los tokens de salida
+3.  Tarifa de Grupo - Establece multiplicadores de facturación diferenciados para diferentes grupos de usuarios
+
+### Relación entre Cuota y Tarifas
+
+En el sistema Vxon, las tarifas son parámetros clave para calcular el consumo de cuota. La cuota es una unidad de facturación interna del sistema, y todas las llamadas a la API se convierten finalmente en puntos de cuota para su deducción.
+
+### Conversión de Unidades de Cuota:
+
+- 1 USD = 500,000 puntos de cuota
+- Los puntos de cuota son la unidad básica para la facturación interna del sistema
+- Los saldos de usuarios y los registros de consumo se basan en puntos de cuota
+
+### Fórmulas de Cálculo de Cuota
+
+#### Modelos de Pago por Uso (Basados en Consumo de Tokens)
+
+```
+配额消耗 = (输入token数 + 输出token数 × 补全倍率) × 模型倍率 × 分组倍率
+```
+
+#### Modelos de Facturación por Llamada (Precio Fijo)
+
+```
+配额消耗 = 模型固定价格 × 分组倍率 × 配额单位(500,000)
+```
+
+#### Modelos de Audio (Manejo especial, procesado internamente por Vxon de forma automática)
+
+```
+配额消耗 = (文本输入token + 文本输出token × 补全倍率 + 音频输入token × 音频倍率 + 音频输出token × 音频倍率 × 音频补全倍率) × 模型倍率 × 分组倍率
+```
+
+#### Mecanismo de Pre-consumo y Post-consumo
+
+Vxon adopta un mecanismo de facturación dual de pre-consumo y post-consumo:
+
+1.  **Fase de pre-consumo**: Antes de una llamada a la API, el consumo de cuota se calcula basándose en el conteo estimado de tokens y se deduce por adelantado.
+2.  **Fase de post-consumo**: Después de completar una llamada a la API, el consumo de cuota se recalcula basándose en el conteo real de tokens.
+3.  **Ajuste de diferencia**: Si el consumo real difiere del pre-consumo, el sistema ajusta automáticamente el saldo de cuota del usuario.
+
+```
+预消费配额 = 预估token数 × 模型倍率 × 分组倍率
+实际配额 = 实际token数 × 模型倍率 × 分组倍率
+配额调整 = 实际配额 - 预消费配额
+```
+
+## Configuración de Tarifas de Modelo
+
+Las tarifas de modelo definen los multiplicadores de facturación base para diferentes modelos de IA, y el sistema preestablece tarifas predeterminadas para varios modelos.
+
+### Ejemplos Comunes de Tarifas de Modelo
+
+| Nombre del Modelo | Tarifa del Modelo | Tarifa de Completado | Precio Oficial (Entrada) | Precio Oficial (Salida) |
+| ------------- | ----------- | ---------------- | ---------------------- | ----------------------- |
+| gpt-4o        | 1.25        | 4                | $2.5/1M Tokens         | $10/1M Tokens           |
+| gpt-3.5-turbo | 0.25        | 1.33             | $0.5/1M Tokens         | $1.5/1M Tokens          |
+| gpt-4o-mini   | 0.075       | 4                | $0.15/1M Tokens        | $0.6/1M Tokens          |
+| o1            | 7.5         | 4                | $15/1M Tokens          | $60/1M Tokens           |
+
+Explicación del Significado de las Tarifas:
+
+- Tarifa del Modelo: Un multiplicador relativo a la unidad de facturación base, que refleja las diferencias de costo entre modelos
+- Tarifa de Completado: El multiplicador de facturación para tokens de salida en relación con los tokens de entrada, que refleja las diferencias de costo de salida
+- Tarifas más altas consumen más cuota; tarifas más bajas consumen menos cuota
+
+### Métodos de Configuración
+
+1.  Configuración en Formato JSON: Edite directamente la configuración JSON de tarifas de modelo
+2.  Editor Visual: Configure las tarifas mediante una interfaz gráfica
+
+![倍率1](/assets/guide/rate-setting-1.png)
+
+## Configuración de Tarifas de Completado
+
+Las tarifas de completado se utilizan para la facturación adicional de tokens de salida, principalmente para equilibrar las diferencias de costo de entrada y salida entre varios modelos.
+
+### Tarifas de Completado Predeterminadas
+
+| Tipo de Modelo | Precio Oficial (Entrada) | Precio Oficial (Salida) | Tarifa de Completado | Descripción |
+| ------------- | ---------------------- | ----------------------- | ---------------- | ------------------ |
+| gpt-4o        | 2.5$/1M Tokens         | 10$/1M Tokens           | 4                | Salida es 4x entrada |
+| gpt-3.5-turbo | 0.5$/1M Tokens         | 1$/1M Tokens            | 2                | Salida es 2x entrada |
+| gpt-image-1   | 5$/1M Tokens           | 40$/1M Tokens           | 8                | Salida es 8x entrada |
+| gpt-4o-mini   | 0.15$/1M Tokens        | 0.6$/1M Tokens          | 4                | Salida es 4x entrada |
+| Otros Modelos | 1                      | 1                       | 1                | Salida es 1x entrada |
+
+### Instrucciones de Configuración
+
+- Las tarifas de completado afectan principalmente la facturación de tokens de salida
+- Establecer en 1 significa que la facturación de tokens de salida es igual a la de tokens de entrada
+- Mayor que 1 significa mayor facturación para tokens de salida, menor que 1 significa menor facturación para tokens de salida
+
+## Configuración de Tarifas de Grupo
+
+Las tarifas de grupo permiten establecer multiplicadores de facturación diferenciados para diferentes grupos de usuarios, habilitando estrategias de precios flexibles.
+
+### Configuración de Tarifas de Grupo
+
+```json
+{
+  "vip": 0.5,
+  "premium": 0.8,
+  "standard": 1.0,
+  "trial": 2.0
+}
+```
+
+### Prioridad de Tarifas de Grupo
+
+1.  Tarifa Específica del Usuario: Tarifa personal establecida para un usuario específico
+2.  Tarifa de Grupo: La tarifa del grupo al que pertenece el usuario
+3.  Tarifa Predeterminada: Tarifa predeterminada del sistema (generalmente 1.0)
+
+![倍率2](/assets/guide/rate-setting-2.png)
+
+## Configuración Visual de Tarifas
+
+El editor visual proporciona una interfaz intuitiva de gestión de tarifas, que admite:
+
+- Edición por lotes de tarifas de modelo
+- Vista previa en tiempo real de configuraciones de tarifas
+- Detección de conflictos y avisos
+- Sincronización con un clic de tarifas upstream
+
+![倍率3](/assets/guide/rate-setting-3.png)
+
+## Modelos Sin Configuración de Tarifas
+
+Para modelos sin configuración de tarifas, el sistema:
+
+1.  Modo de uso propio: Usa la tarifa predeterminada de 37.5
+2.  Modo comercial: Muestra el error "Tarifa o precio no configurado"
+3.  Detección automática: Muestra los modelos no configurados en la interfaz de gestión
+
+![倍率4](/assets/guide/rate-setting-4.png)
+
+## Sincronización de Tarifas Upstream
+
+El sistema admite la sincronización automática de configuraciones de tarifas desde canales upstream:
+
+- Recuperar automáticamente las tarifas de modelos upstream
+- Actualizar por lotes las configuraciones de tarifas locales
+- Mantenerse sincronizado con los precios upstream
+- Admite ajuste manual y sobrescritura
+
+![倍率5](/assets/guide/rate-setting-5.png)
+
+## Preguntas Frecuentes
+
+### P: ¿Cómo configurar tarifas para nuevos modelos?
+
+R: Puede agregar nuevos modelos a través del editor visual o directamente en la configuración JSON. Se recomienda establecer una tarifa conservadora primero y ajustarla según el uso real.
+
+### P: ¿Cómo se aplican las tarifas de grupo?
+
+R: Las tarifas de grupo se multiplican por las tarifas de modelo, afectando finalmente el cálculo del consumo de cuota del usuario. La tarifa efectiva de un usuario = Tarifa del Modelo × Tarifa de Grupo.
+
+### P: ¿Cuál es el propósito de la tarifa de completado?
+
+R: La tarifa de completado se utiliza principalmente para equilibrar las diferencias de costo entre tokens de entrada y salida. Para algunos modelos, el costo de salida es significativamente mayor que el costo de entrada, lo que requiere ajuste mediante la tarifa de completado.
+
+### P: ¿Cómo configurar tarifas por lotes para modelos similares?
+
+R: Puede realizar operaciones por lotes a través del editor visual, o agregar directamente configuraciones de tarifas para modelos similares en masa dentro de la configuración JSON.
+
+## Ejemplos de Cálculo de Cuota
+
+### Ejemplo 1: Conversación de Usuario Estándar con GPT-4
+
+#### Parámetros del Escenario:
+
+- Tokens de entrada: 1,000
+- Tokens de salida: 500
+- Tarifa del Modelo: 15
+- Tarifa de Completado: 2
+- Tarifa de Grupo: 1.0 (Usuario estándar)
+
+#### Proceso de Cálculo:
+
+```
+配额消耗 = (1,000 + 500 × 2) × 15 × 1.0
+         = (1,000 + 1,000) × 15
+         = 2,000 × 15
+         = 30,000 配额点数
+```
+
+Costo Equivalente en USD: 30,000 ÷ 500,000 = $0.06
+
+### Ejemplo 2: Conversación de Usuario VIP con GPT-3.5
+
+#### Parámetros del Escenario:
+
+- Tokens de entrada: 2,000
+- Tokens de salida: 1,000
+- Tarifa del Modelo: 0.25
+- Tarifa de Completado: 1.33
+- Tarifa de Grupo: 0.5 (Usuario VIP con 50% de descuento)
+
+#### Proceso de Cálculo:
+
+```
+配额消耗 = (2,000 + 1,000 × 1.33) × 0.25 × 0.5
+         = (2,000 + 1,330) × 0.125
+         = 3,330 × 0.125
+         = 416.25 配额点数
+```
+
+Costo Equivalente en USD: 416.25 ÷ 500,000 = $0.00083
+
+### Ejemplo 3: Modelo de Facturación por Llamada (por ejemplo, Midjourney)
+
+#### Parámetros del Escenario:
+
+- Precio Fijo del Modelo: $0.02
+- Tarifa de Grupo: 1.0 (Usuario estándar)
+- Unidad de Cuota: 500,000
+
+#### Proceso de Cálculo:
+
+```
+配额消耗 = 0.02 × 1.0 × 500,000
+         = 10,000 配额点数
+```
+
+Costo Equivalente en USD: 10,000 ÷ 500,000 = $0.02
+
+Para más reglas de facturación, consulte [Preguntas Frecuentes](/es/docs/support/faq)
