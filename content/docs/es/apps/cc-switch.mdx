@@ -1,0 +1,110 @@
+---
+title: CC Switch - Herramienta de gestión todo en uno para CLI de IA
+description: Tutorial de CC Switch — herramienta multiplataforma para gestión unificada de configuraciones de proveedores de Claude Code, Codex y Gemini CLI, servidores MCP y prompts del sistema. Importación con un clic desde Vxon.
+---
+
+<Callout type="info" title="Opción de configuración de chat">
+  En la consola de Vxon, en Configuración del sistema -> Configuración de chat, puede agregar el siguiente acceso rápido para habilitar el autocompletado con un clic para CC Switch desde la página de gestión de tokens:
+</Callout>
+
+    ```json
+    { "CC Switch": "ccswitch" }
+    ```
+
+<Callout type="info">
+  🔀 CC Switch es una herramienta de gestión todo en uno para CLI de IA, de código abierto y multiplataforma. Admite
+  cambio de proveedor con un clic para Claude Code, Codex y Gemini CLI, gestión unificada de servidores MCP,
+  gestión de prompts del sistema y gestión de extensiones de Skills — permitiéndole cambiar libremente entre
+  múltiples asistentes de codificación con IA sin editar manualmente archivos de configuración.
+</Callout>
+
+- Repositorio de GitHub: [https://github.com/farion1231/cc-switch](https://github.com/farion1231/cc-switch)
+- Descarga: [GitHub Releases](https://github.com/farion1231/cc-switch/releases)
+
+## Características principales
+
+### 🔌 Gestión de proveedores
+- **Cambio con un clic** — Cambie entre configuraciones de API de Claude Code, Codex y Gemini al instante, sin editar manualmente variables de entorno ni archivos de configuración
+- **Soporte multi-endpoint** — Configure múltiples endpoints por proveedor con gestión de claves de API y pruebas de velocidad de latencia
+- **Configuración de modelos en 4 niveles** — Selección granular de modelos en los niveles Haiku / Sonnet / Opus / Personalizado
+
+### 🛠️ Gestión de servidores MCP
+- **Gestión unificada entre aplicaciones** — Gestione servidores MCP para Claude / Codex / Gemini desde un solo panel
+- **Tres tipos de transporte** — Compatible con stdio, HTTP y SSE (Server-Sent Events)
+- **Sincronización automática** — Importación/exportación unificada con sincronización bidireccional
+
+### 💬 Gestión de prompts
+- **Prompts del sistema con múltiples presets** — Presets ilimitados con cambio rápido
+- **Soporte entre aplicaciones** — Claude (`CLAUDE.md`), Codex (`AGENTS.md`), Gemini (`GEMINI.md`)
+- **Editor Markdown** — CodeMirror 6 con vista previa en vivo
+
+### 🌐 Soporte multiplataforma
+- **Aplicación de escritorio** — Instaladores nativos para Windows, macOS y Linux
+- **Versión web** — Interfaz accesible por navegador para servidores headless / entornos SSH
+- **Versión CLI** — Modos interactivo con menú y de línea de comandos
+
+## Integración con Vxon
+
+CC Switch admite el protocolo Deep Link `ccswitch://`, permitiendo la importación de configuración de proveedor con un clic desde la página de gestión de tokens de Vxon.
+
+### Pasos de configuración
+
+1. **En la página de gestión de tokens de Vxon, haga clic en el menú desplegable del token correspondiente**
+   Seleccione la opción **CC Switch** del menú. El sistema lanzará automáticamente CC Switch y abrirá el diálogo de configuración.
+
+2. **Complete la configuración en el diálogo**
+   ![Diálogo de configuración de CC Switch](/assets/cc_switch/fill_dialog.png)
+
+   Descripción de los campos:
+   - **Aplicación**: Cambie el tipo de aplicación en la parte superior — **Claude** / **Codex** / **Gemini**, seleccione la aplicación de destino según sea necesario
+   - **Nombre**: Ingrese un nombre para esta configuración (ej. `Mi Claude`) para identificar y cambiar fácilmente en CC Switch después
+   - **Modelo principal** (obligatorio) — El modelo principal a usar por defecto
+   - **Modelo Haiku** — Modelo ligero y rápido
+   - **Modelo Sonnet** — Modelo equilibrado
+   - **Modelo Opus** — Modelo más capaz
+
+   Todos los modelos son selecciones desplegables; los campos no seleccionados muestran "Seleccione un modelo".
+
+3. **Finalizar**
+   Haga clic en **"Abrir CC Switch"** para importar la configuración en CC Switch y comenzar a usarlo; haga clic en **"Cancelar"** para descartar.
+
+## Instalación
+
+### macOS (Homebrew recomendado)
+
+```shell
+brew tap farion1231/ccswitch
+brew install --cask cc-switch
+```
+
+### Windows
+
+Descargue el instalador `.msi` o el `.zip` portátil desde [Releases](https://github.com/farion1231/cc-switch/releases).
+
+### Linux
+
+Descargue el paquete `.deb` o `.AppImage` desde [Releases](https://github.com/farion1231/cc-switch/releases).
+
+Usuarios de ArchLinux:
+
+```shell
+paru -S cc-switch-bin
+```
+
+### Versión web (servidores headless / SSH)
+
+```shell
+wget https://github.com/farion1231/cc-switch/releases/latest/download/cc-switch-web-linux-x64.tar.gz
+tar -xzf cc-switch-web-linux-x64.tar.gz
+cd cc-switch-web/
+./cc-switch-web
+```
+
+Puerto predeterminado `17666`, acceda a través del navegador en `http://localhost:17666`.
+
+## Enlaces relacionados
+
+- [Repositorio de GitHub](https://github.com/farion1231/cc-switch)
+- [Registro de cambios](https://github.com/farion1231/cc-switch/blob/main/CHANGELOG.md)
+- [Repositorio de la versión web](https://github.com/cp-yu/cc-switch-web)
+- [Repositorio de la versión CLI](https://github.com/thomas-jack/cc-switch-cli)
