@@ -1,0 +1,128 @@
+---
+title: Despliegue con panel 1Panel
+---
+
+Este documento proporciona un tutorial gráfico para desplegar Vxon usando el panel 1Panel.
+
+## Requisitos previos
+
+| Elemento | Requisito |
+| --- | --- |
+| Panel 1Panel | Última versión estable |
+| Sistema operativo recomendado | Linux (Ubuntu/CentOS/Debian, etc.) |
+| Configuración del servidor | Al menos 1 núcleo y 2GB de RAM |
+
+## Paso 1: Instalar el panel 1Panel
+
+<Callout type="info" title="Instalar el panel 1Panel">
+  Para información sobre la instalación, despliegue y funcionalidades básicas de 1Panel, consulte la [Documentación oficial de 1Panel](https://1panel.cn/docs/)
+
+  Después de completar la instalación y despliegue de 1Panel, abra su navegador en la URL indicada para acceder al panel 1Panel.
+</Callout>
+
+![1panel](/assets/1panel/1panel.jpg)
+
+## Paso 2: Instalar Vxon
+
+### Buscar aplicaciones
+
+<Callout type="info" title="Buscar aplicaciones">
+  Vaya a la lista de aplicaciones en la tienda de aplicaciones, encuentre la aplicación Vxon en la categoría [AI] e instálela.
+</Callout>
+
+![1panel-vxon](/assets/1panel/1panel-vxon.jpg)
+
+### Configurar parámetros
+
+<Callout type="info" title="Instalar aplicación">
+  Configure los parámetros de la aplicación Vxon en la página de instalación:
+</Callout>
+
+- **Nombre**: El nombre de la aplicación Vxon a crear
+- **Versión**: Seleccione la versión de Vxon
+- **Puerto**: El puerto de servicio de la aplicación Vxon
+- **Zona horaria**: Ingrese la zona horaria donde se encuentra el servidor (predeterminado Asia/Shanghai)
+- **Configuración avanzada**: Asegúrese de marcar el acceso al puerto externo
+
+![vxon-setting](/assets/1panel/vxon-setting.jpg)
+
+### Confirmar instalación
+
+<Callout type="info" title="Confirmar instalación">
+  Haga clic en Confirmar para iniciar la instalación. La página redirigirá automáticamente a la lista de aplicaciones instaladas. Espere a que el estado de la aplicación Vxon cambie a Iniciado.
+</Callout>
+
+![vxon-start](/assets/1panel/vxon-start.jpg)
+
+## Paso 3: Configurar variables de entorno (Importante)
+
+Después de la instalación, se recomienda configurar las siguientes variables de entorno clave:
+
+### Variables de entorno requeridas
+
+| Variable | Descripción | Requerida |
+| --- | --- | --- |
+| `SESSION_SECRET` | Secreto de sesión, debe ser consistente para despliegue multinodo | **Requerida** |
+| `CRYPTO_SECRET` | Secreto de cifrado, requerido al usar Redis | Condicional |
+
+### Método de configuración
+
+1. En la lista de aplicaciones de 1Panel, haga clic en el botón **Parámetros** de la aplicación Vxon
+2. Agregue en la sección de variables de entorno:
+   - `SESSION_SECRET=su_clave_secreta_aleatoria`
+   - `CRYPTO_SECRET=su_clave_secreta_de_cifrado` (opcional)
+3. Haga clic en **Confirmar** para guardar la configuración
+4. Reinicie la aplicación para que la configuración surta efecto
+
+### Generar secretos aleatorios
+
+```bash
+# Generar SESSION_SECRET
+openssl rand -hex 16
+
+# O usar comando de Linux
+head -c 16 /dev/urandom | xxd -p
+```
+
+## Paso 4: Acceder a Vxon
+
+<Callout type="info" title="Acceder a la aplicación">
+  - En la página `Instaladas`, haga clic en `Ir` para entrar a la página WebUI de Vxon
+  - Antes de usar, se recomienda configurar la `Dirección de acceso predeterminada` en la página de `Configuración del panel`
+</Callout>
+
+![vxon-visit](/assets/1panel/vxon-visit.jpg)
+
+La primera visita le guiará automáticamente a la página de inicialización. Siga las instrucciones en pantalla para configurar una cuenta y contraseña de administrador.
+
+## Problemas comunes
+
+### No se puede acceder a la interfaz de la aplicación
+
+1. Verifique si el estado de la aplicación es "Iniciado"
+2. Confirme que el puerto está correctamente mapeado y abierto
+3. Verifique el firewall del servidor y el grupo de seguridad del servidor en la nube
+
+### Sesión inválida después de iniciar sesión
+
+Asegúrese de que la variable de entorno `SESSION_SECRET` esté configurada y no esté vacía.
+
+### Cómo actualizar la versión
+
+1. Inicie sesión en el panel 1Panel, vaya a **Tienda de aplicaciones** → **Página de actualizables**
+2. Encuentre la aplicación Vxon, haga clic en el botón **Actualizar**
+3. Seleccione la versión de destino, haga clic en **Confirmar**
+
+### Cómo persistir datos
+
+Las aplicaciones de 1Panel almacenan datos en volúmenes Docker por defecto. Para personalizar la ubicación de almacenamiento:
+
+1. En la configuración de parámetros de la aplicación, configure el mapeo de directorios
+2. Asegúrese de que el directorio `/data` esté mapeado a almacenamiento persistente
+
+## Enlaces relacionados
+
+- [Configuración de variables de entorno](/docs/installation/config-maintenance/environment-variables)
+- [Despliegue con Docker Compose](/docs/installation/deployment-methods/docker-compose-installation)
+- [Preguntas frecuentes](/docs/support/faq)
+- [Repositorio de GitHub](https://github.com/Vxon/vxon)
