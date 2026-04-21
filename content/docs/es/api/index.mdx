@@ -1,0 +1,226 @@
+---
+title: Referencia de API
+description: Documentación completa de la API de Vxon
+---
+
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import {
+  List,
+  MessageSquare,
+  FileText,
+  Database,
+  Search,
+  ShieldCheck,
+  Headphones,
+  Radio,
+  Image,
+  Video,
+  FileQuestion,
+  Server,
+  SlidersHorizontal,
+  UserCheck,
+  Users,
+  KeyRound,
+  Link2,
+  Network,
+  Blocks,
+  Key,
+  Ticket,
+  CreditCard,
+  ScrollText,
+  ChartBar,
+  ListTodo,
+  FolderKanban,
+  Store,
+  ShieldAlert,
+} from 'lucide-react';
+
+## Descripción general
+
+Vxon proporciona un conjunto completo de interfaces API RESTful, clasificadas en dos tipos principales: **APIs de modelos de IA** y **APIs de gestión**. Puedes usar estas interfaces para invocar capacidades de IA y realizar funciones de gestión del sistema.
+
+<Callout title="Depuración en línea">
+  Puedes visitar [Apifox Playground](https://apifox.vxon.ai/) para probar y depurar las interfaces API en línea, o consultar la documentación de API a continuación.
+</Callout>
+
+## APIs de modelos de IA
+
+Las APIs de modelos de IA proporcionan llamadas para diversas capacidades de IA, compatibles con el formato de API de OpenAI.
+
+<Cards>
+  <Card
+    icon={<List />}
+    title="Lista de modelos"
+    description="Obtener la lista de modelos disponibles."
+    href="/es/docs/api/ai-model/models/list/listmodels"
+  />
+  <Card
+    icon={<MessageSquare />}
+    title="Chat"
+    description="API de completado de conversación."
+    href="/es/docs/api/ai-model/chat/openai/createchatcompletion"
+  />
+  <Card
+    icon={<FileText />}
+    title="Completions"
+    description="API de completado de texto tradicional."
+    href="/es/docs/api/ai-model/completions/createcompletion"
+  />
+  <Card
+    icon={<Database />}
+    title="Embeddings"
+    description="API de generación de vectores de embedding de texto."
+    href="/es/docs/api/ai-model/embeddings/createembedding"
+  />
+  <Card
+    icon={<Search />}
+    title="Rerank"
+    description="API de reordenamiento de documentos."
+    href="/es/docs/api/ai-model/rerank/creatererank"
+  />
+  <Card
+    icon={<ShieldCheck />}
+    title="Moderaciones"
+    description="API de moderación de seguridad de contenido."
+    href="/es/docs/api/ai-model/moderations/createmoderation"
+  />
+  <Card
+    icon={<Headphones />}
+    title="Audio"
+    description="API de reconocimiento y síntesis de voz."
+    href="/es/docs/api/ai-model/audio/openai/createspeech"
+  />
+  <Card
+    icon={<Radio />}
+    title="Audio en tiempo real"
+    description="API de streaming de audio en tiempo real."
+    href="/es/docs/api/ai-model/realtime/createrealtimesession"
+  />
+  <Card
+    icon={<Image />}
+    title="Imágenes"
+    description="API de generación de imágenes con IA."
+    href="/es/docs/api/ai-model/images/openai/post-v1-images-generations"
+  />
+  <Card
+    icon={<Video />}
+    title="Videos"
+    description="API de generación de videos con IA."
+    href="/es/docs/api/ai-model/videos/sora/createvideo"
+  />
+  <Card
+    icon={<FileQuestion />}
+    title="No implementado"
+    description="API de marcador de posición, aún no implementada."
+    href="/es/docs/api/ai-model/unimplemented/files/listfiles"
+  />
+</Cards>
+
+## APIs de gestión
+
+Las APIs de gestión se utilizan para operaciones de backend como configuración del sistema, gestión de usuarios y gestión comercial.
+
+<Cards>
+  <Card
+    icon={<Server />}
+    title="Sistema"
+    description="API de información y estado del sistema."
+    href="/es/docs/api/management/system/status-get"
+  />
+  <Card
+    icon={<SlidersHorizontal />}
+    title="Configuración del sistema"
+    description="API de gestión de configuración del sistema."
+    href="/es/docs/api/management/system-settings/option-get"
+  />
+  <Card
+    icon={<UserCheck />}
+    title="Autenticación de usuarios"
+    description="APIs de inicio de sesión, registro y gestión de contraseñas."
+    href="/es/docs/api/management/user-auth/user-login-post"
+  />
+  <Card
+    icon={<Users />}
+    title="Gestión de usuarios"
+    description="API de gestión de información de usuarios."
+    href="/es/docs/api/management/user-management/user-self-get"
+  />
+  <Card
+    icon={<KeyRound />}
+    title="Autenticación de dos factores"
+    description="API de autenticación de dos factores (2FA)."
+    href="/es/docs/api/management/two-factor-auth/user-2fa-status-get"
+  />
+  <Card
+    icon={<Link2 />}
+    title="OAuth"
+    description="API de inicio de sesión OAuth de terceros."
+    href="/es/docs/api/management/oauth/oauth-github-get"
+  />
+  <Card
+    icon={<Network />}
+    title="Gestión de canales"
+    description="API de gestión de configuración de canales API."
+    href="/es/docs/api/management/channel-management/channel-get"
+  />
+  <Card
+    icon={<Blocks />}
+    title="Gestión de modelos"
+    description="API de gestión de configuración de modelos."
+    href="/es/docs/api/management/model-management/models-get"
+  />
+  <Card
+    icon={<Key />}
+    title="Gestión de tokens"
+    description="API de gestión de tokens API."
+    href="/es/docs/api/management/token-management/token-get"
+  />
+  <Card
+    icon={<Ticket />}
+    title="Códigos de canje"
+    description="API de gestión de códigos de canje."
+    href="/es/docs/api/management/redemption/redemption-get"
+  />
+  <Card
+    icon={<CreditCard />}
+    title="Pagos"
+    description="API de pagos y recargas."
+    href="/es/docs/api/management/payment/user-topup-info-get"
+  />
+  <Card
+    icon={<ScrollText />}
+    title="Registros"
+    description="API de consulta de registros de uso."
+    href="/es/docs/api/management/logs/log-get"
+  />
+  <Card
+    icon={<ChartBar />}
+    title="Estadísticas"
+    description="API de estadísticas de datos."
+    href="/es/docs/api/management/statistics/data-get"
+  />
+  <Card
+    icon={<ListTodo />}
+    title="Tareas"
+    description="API de gestión de tareas asíncronas."
+    href="/es/docs/api/management/tasks/task-get"
+  />
+  <Card
+    icon={<FolderKanban />}
+    title="Grupos"
+    description="API de gestión de grupos de usuarios."
+    href="/es/docs/api/management/groups/group-get"
+  />
+  <Card
+    icon={<Store />}
+    title="Proveedores"
+    description="API de gestión de proveedores."
+    href="/es/docs/api/management/vendors/vendors-get"
+  />
+  <Card
+    icon={<ShieldAlert />}
+    title="Verificación de seguridad"
+    description="APIs relacionadas con verificación de seguridad."
+    href="/es/docs/api/management/security-verification/verify-status-get"
+  />
+</Cards>
