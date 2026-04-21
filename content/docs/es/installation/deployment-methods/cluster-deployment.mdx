@@ -1,0 +1,257 @@
+---
+title: Despliegue en clúster
+---
+
+Este documento proporciona pasos de configuración detallados y mejores prácticas para el despliegue en clúster de Vxon, ayudándole a construir un sistema distribuido de alta disponibilidad y balanceo de carga.
+
+## Requisitos previos
+
+- Múltiples servidores (al menos dos, arquitectura maestro-esclavo)
+- Docker y Docker Compose instalados
+- Base de datos MySQL compartida (los nodos maestro y esclavo deben acceder a la misma base de datos)
+- Servicio Redis compartido (para sincronización de datos y caché entre nodos)
+- Opcional: Balanceador de carga (ej. Nginx, HAProxy o servicio de balanceo de carga del proveedor de nube)
+
+## Descripción general de la arquitectura del clúster
+
+El clúster de Vxon adopta un diseño de arquitectura maestro-esclavo:
+
+1.  **Nodo maestro**: Responsable de manejar todas las operaciones de escritura y algunas operaciones de lectura
+2.  **Nodos esclavos**: Principalmente responsables de manejar operaciones de lectura, mejorando el rendimiento general del sistema
+
+![集群架构](/assets/cluster-architecture.svg)
+
+## Configuraciones clave del despliegue en clúster
+
+La clave del despliegue en clúster es que todos los nodos deben:
+
+1.  **Compartir la misma base de datos**: Todos los nodos acceden a la misma base de datos MySQL
+2.  **Compartir el mismo Redis**: Usado para caché y comunicación entre nodos
+3.  **Usar las mismas claves**: `SESSION_SECRET` y `CRYPTO_SECRET` deben ser idénticos en todos los nodos
+4.  **Configurar correctamente el tipo de nodo**: Nodo maestro como `master`, nodos esclavos como `slave`
+
+## Pasos de despliegue
+
+### Paso uno: Preparar base de datos y Redis compartidos
+
+Primero, necesita preparar servicios compartidos de base de datos MySQL y Redis. Esto puede ser:
+
+- Servicios de MySQL y Redis de alta disponibilidad desplegados por separado
+- Servicios de base de datos y caché gestionados proporcionados por proveedores de nube
+- MySQL y Redis ejecutándose en servidores independientes
+
+Para bases de datos MySQL, puede elegir entre las siguientes soluciones de arquitectura:
+
+| Tipo de arquitectura                      | Composición de componentes                                   | Cómo funciona                                                                                    | Método de configuración de la aplicación   |
+| :---------------------------------------- | :----------------------------------------------------------- | :----------------------------------------------------------------------------------------------- | :----------------------------------------- |
+| **Arquitectura de replicación maestro-esclavo** | 1 Maestro<br />N Esclavos                                    | El maestro maneja escrituras<br />Los esclavos manejan lecturas<br />Datos sincronizados automáticamente | Configure la dirección del maestro como `SQL_DSN` |
+| **Arquitectura de clúster de base de datos** | Múltiples nodos pares<br />Capa proxy (ProxySQL/MySQL Router) | Todos los nodos pueden leer/escribir<br />Balanceo de carga a través de la capa proxy<br />Conmutación automática por error | Configure la dirección de la capa proxy como `SQL_DSN` |
+
+<Callout type="warn" title="Nota importante">
+  Independientemente de la arquitectura elegida, la configuración `SQL_DSN`
+  de la aplicación solo requiere una dirección de entrada unificada.
+</Callout>
+
+Asegúrese de que estos servicios sean accesibles por todos los nodos y tengan suficiente rendimiento y confiabilidad.
+### Paso dos: Configurar el nodo maestro
+
+Cree un archivo `docker-compose.yml` en el servidor del nodo maestro:
+
+```yaml
+services:
+  vxon-master:
+    image: vxon/vxon:latest
+    container_name: vxon-master
+    restart: always
+    ports:
+      - '3000:3000'
+    environment:
+      - SQL_DSN=root:password@tcp(your-db-host:3306)/vxon
+      - REDIS_CONN_STRING=redis://default:password@your-redis-host:6379
+      - SESSION_SECRET=your_unique_session_secret
+      - CRYPTO_SECRET=your_unique_crypto_secret
+      - TZ=Asia/Shanghai
+      # 以下是可选配置
+      - SYNC_FREQUENCY=60 # 同步频率，单位秒
+      # - FRONTEND_BASE_URL=https://<your-vxon-domain> # 前端基础 URL，用于邮件通知等功能
+    volumes:
+      - ./data:/data
+      - ./logs:/app/logs
+```
+
+<Callout type="warn" title="Consejo de seguridad">
+  Reemplace los valores de ejemplo en la configuración anterior con contraseñas
+  fuertes y cadenas de claves generadas aleatoriamente.
+</Callout>
+
+Inicie el nodo maestro:
+
+```bash
+docker compose up -d
+```
+
+### Paso tres: Configurar los nodos esclavos
+
+Cree un archivo `docker-compose.yml` en cada servidor de nodo esclavo:
+
+```yaml
+services:
+  vxon-slave:
+    image: vxon/vxon:latest
+    container_name: vxon-slave
+    restart: always
+    ports:
+      - '3000:3000' # 可以与主节点使用相同端口，因为它们在不同服务器上
+    environment:
+      - SQL_DSN=root:password@tcp(your-db-host:3306)/vxon # 与主节点相同
+      - REDIS_CONN_STRING=redis://default:password@your-redis-host:6379 # 与主节点相同
+      - SESSION_SECRET=your_unique_session_secret # 必须与主节点相同
+      - CRYPTO_SECRET=your_unique_crypto_secret # 必须与主节点相同
+      - NODE_TYPE=slave # 关键配置，指定为从节点
+      - SYNC_FREQUENCY=60 # 从节点与主节点同步频率，单位秒
+      - TZ=Asia/Shanghai
+      # 以下是可选配置
+      # - FRONTEND_BASE_URL=https://<your-vxon-domain> # 需与主节点相同
+    volumes:
+      - ./data:/data
+      - ./logs:/app/logs
+```
+
+Inicie el nodo esclavo:
+
+```bash
+docker compose up -d
+```
+
+Repita este paso para cada servidor de nodo esclavo.
+
+### Paso cuatro: Configurar el balanceador de carga
+
+Para lograr una distribución equilibrada del tráfico, necesita configurar un balanceador de carga. A continuación se muestra un ejemplo de configuración usando Nginx como balanceador de carga:
+
+```nginx
+upstream new_api_cluster {
+    server master-node-ip:3000 weight=3;
+    server slave-node1-ip:3000 weight=5;
+    server slave-node2-ip:3000 weight=5;
+    # 可添加更多从节点
+}
+
+server {
+    listen 80;
+    server_name <your-vxon-domain>;
+
+    location / {
+        proxy_pass http://new_api_cluster;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+```
+
+Esta configuración establece el peso del nodo maestro en 3 y los pesos de los nodos esclavos en 5, lo que significa que los nodos esclavos manejarán más solicitudes. Puede ajustar estos pesos según sus necesidades reales.
+## Opciones de configuración avanzada
+
+### Configuración de sincronización de datos
+
+La sincronización de datos entre nodos del clúster depende de las siguientes variables de entorno:
+
+| Variable de entorno      | Descripción                              | Valor recomendado |
+| :---------------------- | :--------------------------------------- | :---------------- |
+| `SYNC_FREQUENCY`        | Frecuencia de sincronización de nodos (segundos) | `60`              |
+| `BATCH_UPDATE_ENABLED`  | Habilitar actualizaciones por lotes      | `true`            |
+| `BATCH_UPDATE_INTERVAL` | Intervalo de actualización por lotes (segundos) | `5`               |
+
+### Configuración de alta disponibilidad de Redis
+
+Para mejorar la disponibilidad de Redis, puede configurar el modo Redis Cluster o Sentinel:
+
+```yaml
+environment:
+  - REDIS_CONN_STRING=redis://your-redis-host:6379
+  - REDIS_PASSWORD=your_redis_password
+  - REDIS_MASTER_NAME=mymaster # 哨兵模式下的主节点名称
+  - REDIS_CONN_POOL_SIZE=10 # Redis 连接池大小
+```
+
+### Configuración de seguridad de sesión
+
+Asegúrese de que todos los nodos del clúster usen las mismas claves de sesión y cifrado:
+
+```yaml
+environment:
+  - SESSION_SECRET=your_unique_session_secret # 所有节点必须相同
+  - CRYPTO_SECRET=your_unique_crypto_secret # 所有节点必须相同
+```
+
+## Monitoreo y mantenimiento
+
+### Verificaciones de salud
+
+Configure verificaciones de salud regulares para monitorear el estado de los nodos:
+
+```yaml
+healthcheck:
+  test:
+    [
+      'CMD-SHELL',
+      "wget -q -O - http://localhost:3000/api/status | grep -o '\"success\":\\s*true' | awk -F: '{print $$2}'",
+    ]
+  interval: 30s
+  timeout: 10s
+  retries: 3
+```
+
+### Gestión de logs
+
+Para clústeres a gran escala, se recomienda un sistema de gestión de logs centralizado:
+
+```yaml
+environment:
+  - LOG_SQL_DSN=root:password@tcp(log-db-host:3306)/new_api_logs # 独立的日志数据库
+```
+
+## Guía de escalado
+
+A medida que su negocio crece, puede necesitar expandir el tamaño de su clúster. Los pasos de escalado son los siguientes:
+
+1.  **Preparar nuevos servidores**: Instalar Docker y Docker Compose
+2.  **Configurar nodos esclavos**: Configure nuevos nodos esclavos según las instrucciones del "Paso tres: Configurar los nodos esclavos"
+3.  **Actualizar la configuración del balanceador de carga**: Agregue los nuevos nodos a la configuración del balanceador de carga
+4.  **Probar nuevos nodos**: Asegúrese de que los nuevos nodos funcionen correctamente y participen en el balanceo de carga
+
+## Mejores prácticas
+
+1.  **Respaldar la base de datos regularmente**: Incluso en un entorno de clúster, la base de datos debe respaldarse regularmente
+2.  **Monitorear el uso de recursos**: Monitoree de cerca el uso de CPU, memoria y disco
+3.  **Adoptar una estrategia de actualización progresiva**: Al actualizar, actualice primero los nodos esclavos y luego el nodo maestro después de confirmar la estabilidad
+4.  **Configurar un sistema de alertas**: Monitoree el estado de los nodos y notifique rápidamente a los administradores cuando ocurran problemas
+5.  **Despliegue geográficamente distribuido**: Si es posible, despliegue nodos en diferentes ubicaciones geográficas para mejorar la disponibilidad
+
+## Solución de problemas
+
+### Los nodos no pueden sincronizar datos
+
+- Verifique si la conexión a Redis es normal
+- Confirme que SESSION_SECRET y CRYPTO_SECRET son idénticos en todos los nodos
+- Verifique que la configuración de conexión a la base de datos sea correcta
+
+### Desequilibrio de carga
+
+- Verifique la configuración del balanceador de carga y los ajustes de peso
+- Monitoree el uso de recursos de cada nodo para asegurar que ningún nodo esté sobrecargado
+- Puede ser necesario ajustar los pesos de los nodos o agregar más nodos
+
+### Problemas de pérdida de sesión
+
+- Asegúrese de que todos los nodos usen el mismo SESSION_SECRET
+- Verifique que Redis esté configurado correctamente y sea accesible
+- Verifique si el cliente está manejando las cookies correctamente
+
+## Documentación relacionada
+
+- [Guía de configuración de variables de entorno](/es/docs/installation/config-maintenance/environment-variables) - Contiene todas las variables de entorno relevantes para despliegue multinodo
+- [Guía de actualización del sistema](/es/docs/installation/config-maintenance/system-update) - Estrategia de actualización del sistema en un entorno multinodo
+- [Instrucciones de configuración de Docker Compose](/es/docs/installation/config-maintenance/docker-compose-yml) - Usado para escribir archivos de configuración de nodos del clúster
