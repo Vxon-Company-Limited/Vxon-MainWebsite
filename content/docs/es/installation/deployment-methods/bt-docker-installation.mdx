@@ -1,0 +1,158 @@
+---
+title: Despliegue con panel Baota
+---
+
+Este documento proporciona un tutorial gráfico para desplegar Vxon usando la función Docker del panel Baota.
+
+## Requisitos previos
+
+| Elemento | Requisito |
+| --- | --- |
+| Panel Baota | Versión 9.2.0 o superior |
+| Sistema operativo recomendado | CentOS 7+, Ubuntu 18.04+, Debian 10+ |
+| Configuración del servidor | Al menos 1 núcleo y 2GB de RAM |
+
+## Paso 1: Instalar el panel Baota
+
+1. Vaya al [Sitio web oficial del panel Baota](https://www.bt.cn/new/download.html) para descargar el script de instalación adecuado para su sistema
+2. Ejecute el script de instalación para instalar el panel Baota
+3. Después de la instalación, use la dirección, nombre de usuario y contraseña proporcionados para iniciar sesión en el panel Baota
+
+## Paso 2: Instalar Docker
+
+1. Después de iniciar sesión en el panel Baota, encuentre y haga clic en **Docker** en la barra lateral izquierda
+2. La primera vez que ingrese, se le pedirá instalar el servicio Docker. Haga clic en **Instalar ahora**
+3. Siga las instrucciones para completar la instalación del servicio Docker
+
+## Paso 3: Instalar Vxon
+
+### Método uno: Usando la tienda de aplicaciones de Baota (Recomendado)
+
+1. En la función Docker del panel Baota, haga clic en **Tienda de aplicaciones**
+2. Busque y encuentre **New-API**
+3. Haga clic en **Instalar**
+4. Configure las siguientes opciones básicas:
+   - **Nombre del contenedor**: Personalizable, predeterminado `vxon`
+   - **Mapeo de puertos**: Predeterminado `3000:3000`
+   - **Variables de entorno**:
+     - `SESSION_SECRET`: Secreto de sesión (**Requerido**, debe ser consistente para despliegue multinodo)
+     - `CRYPTO_SECRET`: Secreto de cifrado (Requerido al usar Redis)
+   - **Mapeo de directorios**: Asegúrese de que el directorio `/data` esté mapeado a un directorio del host
+5. Haga clic en **Confirmar** para iniciar la instalación
+6. Después de completar la instalación, acceda a `http://ip-de-su-servidor:3000`
+
+### Método dos: Usando Docker Compose
+
+Adecuado para escenarios que requieren más configuración personalizada.
+
+1. Cree un directorio de sitio web en el panel Baota, como `/www/wwwroot/vxon`
+2. Cree un archivo `docker-compose.yml`:
+
+```yaml
+version: '3'
+services:
+  vxon:
+    image: vxon/vxon:latest
+    container_name: vxon
+    restart: always
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./data:/data
+    environment:
+      - SESSION_SECRET=your_session_secret_here  # Replace with random string
+      - TZ=Asia/Shanghai
+```
+
+3. Ingrese al directorio a través de la terminal SSH e inicie:
+
+```bash
+cd /www/wwwroot/vxon
+docker-compose up -d
+```
+
+### Método tres: Usando imagen personalizada
+
+<Callout type="warn" title="Uso avanzado">
+  Se recomienda encarecidamente instalar a través de la "Tienda de aplicaciones". Esta sección es para usuarios avanzados familiarizados con Docker.
+</Callout>
+
+1. En la función Docker del panel Baota, haga clic en **Gestión de imágenes**
+2. Haga clic en **Obtener imagen** → **Descargar imagen**
+3. Ingrese el nombre de la imagen: `vxon/vxon:latest`
+4. Haga clic en **Enviar** y espere a que se complete la descarga de la imagen
+5. Después de completar la descarga, vaya a **Lista de contenedores** y haga clic en **Crear contenedor**
+6. Complete la siguiente información:
+   - **Nombre del contenedor**: `vxon` (personalizable)
+   - **Imagen**: Seleccione la imagen `vxon/vxon:latest` que acaba de descargar
+   - **Mapeo de puertos**: Agregue `3000:3000`
+   - **Mapeo de directorios**: Agregue `/su/ruta/host:/data` (reemplace con su ruta de host)
+   - **Variables de entorno**: Agregue según sea necesario
+7. Haga clic en **Enviar** para completar la instalación
+
+## Variables de entorno
+
+### Variables de entorno requeridas
+
+| Variable | Descripción | Requerida |
+| --- | --- | --- |
+| `SESSION_SECRET` | Secreto de sesión, debe ser consistente para despliegue multinodo | **Requerida** |
+| `CRYPTO_SECRET` | Secreto de cifrado, requerido al usar Redis | Condicional |
+| `SQL_DSN` | Cadena de conexión a la base de datos (al usar base de datos externa) | Opcional |
+| `REDIS_CONN_STRING` | Cadena de conexión a Redis | Opcional |
+
+### Generar secretos aleatorios
+
+```bash
+# Generar SESSION_SECRET
+openssl rand -hex 16
+
+# O usar comando de Linux
+head -c 16 /dev/urandom | xxd -p
+```
+
+## Acceso e inicialización
+
+Después de la instalación, acceda a `http://ip-del-servidor:3000`
+
+La primera visita le guiará automáticamente a la página de inicialización. Siga las instrucciones en pantalla para configurar una cuenta y contraseña de administrador.
+
+## Problemas comunes
+
+### No se puede acceder al puerto 3000
+
+1. Verifique si el firewall del servidor permite el puerto 3000
+2. En **Seguridad** del panel Baota, permita el puerto 3000
+3. Verifique si el grupo de seguridad del servidor en la nube permite el puerto
+
+### Sesión inválida después de iniciar sesión
+
+Asegúrese de que la variable de entorno `SESSION_SECRET` esté configurada y no esté vacía.
+
+### Cómo persistir datos
+
+Use el mapeo de volúmenes Docker para el directorio de datos:
+
+```yaml
+volumes:
+  - ./data:/data
+```
+
+### Cómo actualizar la versión
+
+```bash
+# Descargar la última imagen
+docker pull vxon/vxon:latest
+
+# Reiniciar con Docker Compose
+docker-compose down && docker-compose up -d
+
+# O reiniciar el contenedor a través de la gestión de contenedores de Baota
+```
+
+## Enlaces relacionados
+
+- [Configuración de variables de entorno](/docs/installation/config-maintenance/environment-variables)
+- [Despliegue con Docker Compose](/docs/installation/deployment-methods/docker-compose-installation)
+- [Preguntas frecuentes](/docs/support/faq)
+- [Repositorio de GitHub](https://github.com/Vxon/vxon)
