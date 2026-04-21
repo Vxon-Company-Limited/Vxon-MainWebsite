@@ -1,0 +1,116 @@
+---
+title: Preguntas frecuentes
+---
+
+import { Accordions, Accordion } from 'fumadocs-ui/components/accordion';
+
+## 💰 Problemas relacionados con cuotas
+
+<Accordions>
+  <Accordion title="¿Qué es la cuota? ¿Cómo se calcula?">
+    La fórmula de cálculo de cuota es la siguiente:
+
+    ```
+    Cuota = Ratio de grupo * Ratio de modelo * (Cantidad de tokens de prompt + Cantidad de tokens de completado * Ratio de completado)
+    ```
+
+    **Explicación del ratio de completado:**
+    - GPT3.5: Fijo en 1.33
+    - GPT4: Fijo en 2 (consistente con el oficial)
+
+    **Notas:**
+    - En modo no streaming, la API oficial devuelve el total de tokens consumidos, pero los ratios de consumo para prompt y completado son diferentes.
+    - El ratio predeterminado de Vxon es consistente con el ratio oficial y ha sido ajustado.
+  </Accordion>
+
+  <Accordion title="¿Por qué indica cuota insuficiente cuando la cuota de la cuenta es suficiente?">
+    Esto se debe a que la cuota del token y la cuota de la cuenta son independientes:
+
+    - La cuota del token solo se usa para establecer el límite máximo de uso.
+    - Los usuarios pueden establecer libremente la cuota del token.
+    - Verifique si la cuota de su token es suficiente.
+  </Accordion>
+</Accordions>
+
+## 🔧 Problemas de configuración de canales
+
+<Accordions>
+  <Accordion title="¿Qué son el peso y la prioridad en los canales?">
+    El peso y la prioridad son dos parámetros importantes que controlan el orden y la distribución del uso de canales:
+
+    - **Prioridad**: Un número mayor indica mayor prioridad; los canales con mayor prioridad se usarán primero.
+    - **Peso**: Entre canales con la misma prioridad, las solicitudes se distribuyen según la proporción de peso.
+
+    **Por ejemplo:**
+    - Los canales con prioridad 2 se usarán antes que los canales con prioridad 1.
+    - Para dos canales con la misma prioridad 1, si la proporción de peso es 2:1, las solicitudes se distribuirán en proporción 2:1.
+  </Accordion>
+
+  <Accordion title="Mensaje: ¿No hay canales disponibles?">
+    Verifique las siguientes configuraciones:
+
+    1. Configuración de grupo de usuarios
+    2. Configuración de grupo de canales
+    3. Configuración de modelo de canal
+  </Accordion>
+
+  <Accordion title="Error de prueba de canal: invalid character '<' looking for beginning of value">
+    Este error indica que el valor de retorno no es JSON válido, sino una página HTML.
+
+    La razón más probable es: La IP de su sitio de despliegue o nodo proxy ha sido bloqueada por CloudFlare.
+  </Accordion>
+
+  <Accordion title="Error de prueba de canal: Ratio o precio no configurado, contacte al administrador para configurarlo.">
+    Verifique si el ratio o precio ha sido configurado en "Configuración del sistema - Configuración de operaciones - Configuración de ratio de modelo".
+
+    O habilite el "Modo de uso propio" en "Configuración del sistema - Configuración de operaciones".
+  </Accordion>
+</Accordions>
+
+## 🌐 Problemas de despliegue y conexión
+
+<Accordions>
+  <Accordion title="Error de ChatGPT Next Web: Failed to fetch">
+    Verifique lo siguiente:
+
+    1. No establezca `BASE_URL` durante el despliegue.
+    2. Confirme que la dirección de la API y la clave de API estén correctamente completadas.
+    3. Verifique si HTTPS está habilitado (los navegadores bloquearán solicitudes HTTP bajo dominios HTTPS).
+  </Accordion>
+
+  <Accordion title="Error: La carga del grupo actual está saturada, intente de nuevo más tarde.">
+    Esto indica que un canal upstream encontró un error 429 (Demasiadas solicitudes).
+  </Accordion>
+</Accordions>
+
+## 📦 Problemas de base de datos y actualización
+
+<Accordions>
+  <Accordion title="¿Se perderán mis datos después de actualizar?">
+    Varía según el tipo de base de datos:
+
+    - **MySQL**: Los datos no se perderán.
+    - **SQLite**: Necesita montar un volumen según el comando de despliegue para persistir el archivo de base de datos `one-api.db`, de lo contrario los datos se perderán después de reiniciar el contenedor.
+  </Accordion>
+
+  <Accordion title="¿Es necesario cambiar la base de datos antes de actualizar?">
+    Generalmente, no. El sistema se ajustará automáticamente durante la inicialización.
+
+    Si se requiere un manejo especial, se explicará en el registro de actualización y se proporcionarán los scripts correspondientes.
+  </Accordion>
+
+  <Accordion title="Error después de modificar manualmente la base de datos: ¿La consistencia de la base de datos ha sido corrompida, contacte al administrador?">
+    Este error indica que se detectaron registros de ID de canal inválidos en la tabla `ability`. Razones comunes:
+
+    - Los canales inválidos en la tabla `ability` no se limpiaron sincrónicamente al eliminar registros de la tabla `channel`.
+    - Cada modelo soportado por un canal necesita tener un registro correspondiente en la tabla `ability`.
+  </Accordion>
+</Accordions>
+
+## ❓ ¿No encuentra su pregunta?
+
+Si su pregunta no se responde aquí, le invitamos a:
+
+1. Consultar la [Documentación de instalación y despliegue](/es/docs/installation)
+2. [Enviar un issue en GitHub](/es/docs/support/feedback-issues)
+3. Unirse al [grupo de comunicación QQ para obtener ayuda](/es/docs/support/community-interaction)
