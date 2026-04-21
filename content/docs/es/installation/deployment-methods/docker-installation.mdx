@@ -1,0 +1,54 @@
+---
+title: Despliegue con Docker
+---
+
+Este documento proporciona pasos detallados para desplegar Vxon usando Docker.
+
+<Callout type="warn" title="Altamente recomendado">
+  Recomendamos encarecidamente usar el [método de instalación con Docker
+  Compose](/es/docs/installation/deployment-methods/docker-compose-installation)
+  en lugar de iniciar contenedores Docker manualmente. El método Docker Compose
+  ofrece mejor gestión de configuración, orquestación de servicios y experiencia
+  de despliegue.
+</Callout>
+
+## Requisitos básicos
+
+- Entorno Docker instalado
+- Puerto: Se usa el puerto predeterminado 3000
+
+## Desplegar directamente usando imagen Docker
+
+### Usando base de datos SQLite (No recomendado)
+
+```shell
+docker run --name vxon -d --restart always \
+  -p 3000:3000 \
+  -e TZ=Asia/Shanghai \
+  -v /your/data/path:/data \
+  vxon/vxon:latest
+```
+
+<Callout type="warn" title="Nota">
+  Reemplace `/your/data/path` con la ruta local deseada para el
+  almacenamiento de datos.
+</Callout>
+
+### Usando base de datos MySQL
+
+```shell
+docker run --name vxon -d --restart always \
+  -p 3000:3000 \
+  -e SQL_DSN="用户名:密码@tcp(数据库地址:3306)/数据库名" \
+  -e TZ=Asia/Shanghai \
+  -v /your/data/path:/data \
+  vxon/vxon:latest
+```
+
+<Callout type="warn" title="Nota">
+  Reemplace la información de conexión a la base de datos en los parámetros.
+</Callout>
+
+## Acceder al sistema
+
+Después del despliegue, acceder a `http://IP_del_servidor:3000` le redirigirá automáticamente a la página de inicialización. Siga las instrucciones en pantalla para configurar manualmente la cuenta y contraseña de administrador (solo requerido para la primera instalación), y al completar, puede iniciar sesión en el sistema con la cuenta de administrador recién configurada.
