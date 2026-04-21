@@ -1,0 +1,84 @@
+---
+title: Instalación y despliegue
+description: Elija el método de despliegue que le convenga
+---
+
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import {
+  Container,
+  Boxes,
+  Server,
+  Network,
+  Code2,
+  Settings,
+  RefreshCw,
+  FileCode,
+} from 'lucide-react';
+
+## Descripción general
+
+Vxon admite múltiples métodos de despliegue. Puede elegir la solución más adecuada según su experiencia técnica y escenario de uso.
+
+## Métodos de despliegue
+
+<Cards>
+  <Card
+    icon={<Boxes />}
+    title="Despliegue con Docker Compose"
+    description="Orqueste múltiples servicios usando Docker Compose, adecuado para entornos de producción."
+    href="/es/docs/installation/deployment-methods/docker-compose-installation"
+  />
+  <Card
+    icon={<Container />}
+    title="Despliegue con contenedor Docker único"
+    description="Despliegue rápido usando imagen Docker, adecuado para uso personal."
+    href="/es/docs/installation/deployment-methods/docker-installation"
+  />
+  <Card
+    icon={<Server />}
+    title="Despliegue con 1Panel"
+    description="Despliegue rápido a través de la interfaz gráfica de 1Panel."
+    href="/es/docs/installation/deployment-methods/1panel-installation"
+  />
+  <Card
+    icon={<Server />}
+    title="Despliegue con panel Baota"
+    description="Despliegue rápido a través de la interfaz gráfica del panel Baota."
+    href="/es/docs/installation/deployment-methods/bt-docker-installation"
+  />
+  <Card
+    icon={<Network />}
+    title="Modo de despliegue en clúster"
+    description="Despliegue distribuido multinodo para alta disponibilidad y balanceo de carga."
+    href="/es/docs/installation/deployment-methods/cluster-deployment"
+  />
+  <Card
+    icon={<Code2 />}
+    title="Despliegue de desarrollo local"
+    description="Adecuado para desarrolladores que contribuyen código y personalizan funcionalidades."
+    href="/es/docs/installation/deployment-methods/local-development"
+  />
+</Cards>
+
+## Configuración y mantenimiento
+
+<Cards>
+  <Card
+    icon={<FileCode />}
+    title="Configuración de docker-compose.yml"
+    description="Explicación detallada de los parámetros del archivo de configuración de Docker Compose."
+    href="/es/docs/installation/config-maintenance/docker-compose-yml"
+  />
+  <Card
+    icon={<Settings />}
+    title="Configuración de variables de entorno"
+    description="Guía completa de configuración de variables de entorno y mejores prácticas."
+    href="/es/docs/installation/config-maintenance/environment-variables"
+  />
+  <Card
+    icon={<RefreshCw />}
+    title="Actualización del sistema"
+    description="Aprenda cómo actualizar Vxon de forma segura a la última versión."
+    href="/es/docs/installation/config-maintenance/system-update"
+  />
+</Cards>
