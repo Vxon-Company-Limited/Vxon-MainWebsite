@@ -1,0 +1,43 @@
+---
+title: Descripcion de funcionalidades
+---
+
+1.  🎨 Interfaz de usuario completamente nueva (algunas interfaces aun estan pendientes de actualizacion)
+2.  🌍 Soporte multiidioma (en mejora continua)
+3.  🎨 Soporte para la API de [Midjourney-Proxy(Plus)](https://github.com/novicezk/midjourney-proxy)
+4.  💰 Soporte para recarga en linea, configurable en Configuracion del sistema:
+    - - [x] Epay
+5.  🔍 Soporte para consultar el uso de Quota por clave:
+    - En conjunto con el proyecto [neko-api-key-tool](https://github.com/Vxon/neko-api-key-tool), se puede consultar el uso por clave.
+6.  📑 La paginacion permite seleccionar el numero de elementos mostrados por pagina
+7.  🔄 Soporte para almacenamiento en base de datos SQLite, listo para usar, ligero y conveniente
+8.  💵 Soporte para facturacion de modelos por cantidad de uso, configurable en Configuracion del sistema - Configuracion de operaciones
+9.  ⚖️ Soporte para seleccion de canal con **ponderacion aleatoria**
+10. 📈 Panel de datos (Consola)
+11. 🔒 Modelos configurables que un Token puede invocar
+12. 🤖 Soporte para inicio de sesion autorizado mediante Telegram:
+    1.  Configuracion del sistema - Configurar inicio de sesion y registro - Permitir inicio de sesion via Telegram
+    2.  Ingrese el comando /setdomain a [@Botfather](https://t.me/botfather)
+    3.  Seleccione su bot, luego ingrese http(s)://su_direccion_web/login
+    4.  El nombre del Bot de Telegram es la cadena del nombre de usuario del bot sin el @
+13. 🎵 Soporte para la API de [Suno API](https://github.com/Suno-API/Suno-API)
+14. 🔄 Soporte para modelos Rerank, actualmente compatible con Cohere y Jina, e integrable con Dify
+15. ⚡ **[OpenAI Realtime API](https://platform.openai.com/docs/guides/realtime/integration)** - Soporte para la Realtime API de OpenAI, compatible con canales Azure
+16. Soporte para usar la ruta /chat2link para acceder a la interfaz de chat
+17. 🧠 Soporte para configurar el esfuerzo de razonamiento mediante sufijo en el nombre del modelo:
+    1.  Modelos de la serie o de OpenAI
+        - - Agregar sufijo `-high` para establecer esfuerzo de razonamiento alto (ej.: `o3-mini-high`)
+        - - Agregar sufijo `-medium` para establecer esfuerzo de razonamiento medio (ej.: `o3-mini-medium`)
+        - - Agregar sufijo `-low` para establecer esfuerzo de razonamiento bajo (ej.: `o3-mini-low`)
+    2.  Modelos thinking de Claude
+        - - Agregar sufijo `-thinking` para habilitar el modo thinking (ej.: `claude-3-7-sonnet-20250219-thinking`)
+18. 🔄 Thinking to Content, permite configurar la opcion `thinking_to_content` en `Canal - Editar - Configuracion extra del canal`, por defecto `false`. Cuando esta habilitado, convierte el contenido de razonamiento `reasoning_content` en una etiqueta `<think>` y lo agrega al contenido devuelto.
+19. 🔄 Limitacion de tasa por modelo, permite configurar limites de tasa por modelo en `Configuracion del sistema - Configuracion de limites de tasa`, incluyendo limite total de solicitudes y limite de solicitudes exitosas.
+20. 💰 Soporte para facturacion de cache. Cuando esta habilitado, la facturacion puede aplicarse a un ratio configurado al producirse un acierto de cache:
+    1.  Configure la opcion de Ratio de Cache de Prompt en `Configuracion del sistema - Configuracion de operaciones`
+    2.  Configure el Ratio de Cache de Prompt en el canal, rango 0-1. Por ejemplo, establecerlo en 0.5 significa facturar al 50% cuando hay acierto de cache.
+    3.  Canales compatibles:
+        - - [x] OpenAI
+        - - [x] Azure
+        - - [x] DeepSeek
+        - - [ ] Claude
