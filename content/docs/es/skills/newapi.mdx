@@ -1,0 +1,143 @@
+---
+title: vxon
+description: vxon es el Skill oficial de nivel de usuario de Vxon para Claude Code, Codex y OpenClaw. Consulte modelos, gestione tokens, vea grupos, verifique saldo y haga preguntas sobre el uso de Vxon directamente dentro de su flujo de trabajo de codificación con IA.
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+<Callout type="info" title="¿Qué es vxon-skills?">
+  **vxon-skills** es el plugin oficial de Skills para editores de IA de Vxon. Los Skills son un protocolo de extensión ligero que permite a los asistentes de codificación con IA — como Claude Code, Codex, OpenClaw, Cursor, Windsurf y Cline — **llamar a los endpoints de Vxon directamente desde el editor**, realizando consultas de modelos, gestión de tokens, verificación de saldo y respondiendo preguntas sobre despliegue, configuración y uso de la API de Vxon sin salir de su entorno de codificación.
+
+  - Repositorio de GitHub: [github.com/Vxon/skills](https://github.com/Vxon/skills)
+
+  Ahora también funciona dentro de OpenClaw, por lo que puede ejecutar comandos `/vxon` para modelos, tokens, grupos y saldo, y hacer preguntas sobre el uso de Vxon sin salir de su flujo de trabajo de agente.
+</Callout>
+
+## Por qué usar Skills
+
+Durante el desarrollo diario con IA, los desarrolladores cambian frecuentemente entre su editor y el panel de gestión de Vxon — verificando modelos disponibles, creando tokens de API, inspeccionando saldo, ajustando cuotas de grupo. Estos cambios de contexto interrumpen el flujo de codificación.
+
+**Lo que resuelve vxon-skills:**
+
+- **Cero cambio de contexto**: Emita comandos en lenguaje natural directamente en Claude Code, Codex, OpenClaw u otros IDEs de IA — sin necesidad de navegador ni panel de administración
+- **Ayuda integrada**: Pregunte sobre despliegue, configuración, grupos y formatos de llamada de API de Vxon directamente desde su flujo de trabajo de codificación
+- **Diseño con seguridad primero**: Las claves nunca se muestran en texto plano; la copia e inyección de tokens usan canales seguros (las claves con prefijo `sk-` nunca aparecen en la salida de terminal ni en los logs)
+- **Configuración instantánea**: Un solo comando `npx` maneja la instalación; detección automática del runtime (Bun / Node.js / Deno)
+- **Compatibilidad entre editores**: Funciona con cualquier editor de IA o asistente de codificación que implemente el protocolo Skills
+
+## Editores de IA compatibles
+
+vxon-skills funciona con las siguientes herramientas de codificación con IA:
+
+| Editor de IA / Asistente de codificación | Tipo | Notas |
+|------------------------------|------|-------|
+| **Claude Code** | Asistente de programación de terminal con IA | CLI oficial de Anthropic |
+| **OpenClaw** | Plataforma de asistente de IA autoalojada | Compatible con flujos de trabajo de comandos `/vxon` basados en Skills |
+| **Cursor** | Editor de código nativo de IA | Basado en VS Code |
+| **Windsurf** | Editor de código con IA | Por Codeium |
+| **Cline** | Extensión de IA para VS Code | Agente de codificación con IA de código abierto |
+| **Codex CLI** | Asistente de programación de terminal con IA | CLI oficial de OpenAI |
+
+> Cualquier herramienta que admita el protocolo Skills puede usar vxon-skills.
+## Referencia de comandos
+
+A continuación se muestra la lista completa de comandos proporcionados por vxon-skills. Estos comandos interactúan con la API REST de Vxon para consultar y gestionar recursos en su instancia de Vxon.
+
+### Comandos de consulta
+
+| Comando | Descripción | Caso de uso |
+|---------|-------------|----------|
+| `/vxon models` | Listar modelos de IA disponibles | Ver todos los modelos configurados en su instancia de Vxon (OpenAI, Claude, Gemini, etc.) |
+| `/vxon groups` | Listar grupos de usuarios | Ver los grupos de su cuenta con configuraciones de cuota y multiplicador de ratio |
+| `/vxon balance` | Mostrar saldo de la cuenta | Consulta en tiempo real del saldo y uso del usuario actual |
+
+### Comandos de gestión de tokens
+
+| Comando | Descripción | Caso de uso |
+|---------|-------------|----------|
+| `/vxon tokens` | Listar tokens de API | Ver todos los tokens creados (claves mostradas enmascaradas, ej. `sk-reHR**********OspA`) |
+| `/vxon create-token <name> [--group=xxx]` | Crear nuevo token de API | Generar claves de API independientes para diferentes aplicaciones o proyectos |
+| `/vxon switch-group <token_id> <group>` | Cambiar grupo del token | Modificar el grupo del token para ajustar permisos de acceso a modelos y multiplicadores de ratio |
+| `/vxon copy-token <token_id>` | Copiar clave al portapapeles | Copiar de forma segura la clave real al portapapeles del sistema (la clave nunca se muestra en la terminal) |
+| `/vxon apply-token <token_id> <file>` | Inyectar clave en archivo de configuración | Escribir de forma segura la clave del token en archivos de configuración del proyecto (ej. `.env`) mediante reemplazo de marcadores de posición |
+
+### Comando de ayuda
+
+| Comando | Descripción | Caso de uso |
+|---------|-------------|----------|
+| `/vxon help <question>` | Preguntar sobre Vxon | Obtener ayuda sobre despliegue, configuración, formatos de llamada de API de Vxon y más |
+
+## Instalación y configuración
+
+<Steps>
+  <Step>
+    ### Instalar vxon-skills
+
+    Instalación en una línea mediante `npx`:
+
+    ```bash
+    npx skills add https://github.com/Vxon/skills --skill vxon
+    ```
+
+    Esto obtiene la última definición de Skill del repositorio de GitHub y la instala en su entorno de editor.
+  </Step>
+  <Step>
+    ### Configurar variables de entorno
+
+    vxon-skills requiere tres variables de entorno para conectarse a su instancia de Vxon. Agréguelas a su perfil de shell:
+
+    ```bash
+    # ~/.bashrc or ~/.zshrc
+    export VXON_BASE_URL=https://<your-vxon-domain>
+    export VXON_ACCESS_TOKEN=your-access-token
+    export VXON_USER_ID=1
+    ```
+
+    | Variable | Descripción | Ejemplo |
+    |----------|-------------|---------|
+    | `VXON_BASE_URL` | URL del servicio Vxon | `https://api.example.com` |
+    | `VXON_ACCESS_TOKEN` | Token de acceso de administrador o usuario | Desde "Configuración personal → Cuenta → Seguridad → Token de acceso al sistema" |
+    | `VXON_USER_ID` | ID de usuario | `1` (el valor predeterminado del administrador es 1) |
+
+    También puede crear un archivo `.env` en la raíz de su proyecto. Asegúrese de que `.env` esté listado en `.gitignore` para prevenir fugas de claves.
+  </Step>
+  <Step>
+    ### Comenzar a usar
+
+    Una vez instalado, escriba comandos `/vxon` en cualquier editor de IA compatible con Skills. Por ejemplo:
+
+    - Escriba `/vxon models` para listar los modelos disponibles
+    - Escriba `/vxon balance` para verificar su saldo actual
+    - Escriba `/vxon create-token my-app` para crear un nuevo token llamado `my-app`
+    - Escriba `/vxon help how do I configure groups and tokens?` para hacer preguntas sobre el uso de Vxon directamente
+    - En OpenClaw, también puede ejecutar `/vxon models`, `/vxon balance` y comandos de tokens directamente en su flujo de trabajo de agente
+  </Step>
+</Steps>
+
+## Requisitos de runtime
+
+vxon-skills requiere uno de los siguientes runtimes de JavaScript (detectado automáticamente al inicio):
+
+| Runtime | Versión | Recomendación |
+|---------|---------|----------------|
+| **Bun** | Última | Recomendado (más rápido) |
+| **Node.js** | >= 18 | Ampliamente soportado |
+| **Deno** | Última | Opcional |
+
+## Seguridad
+
+vxon-skills tiene múltiples capas de seguridad integradas para proteger sus claves de API:
+
+- Los listados de tokens solo muestran **claves enmascaradas** (ej. `sk-reHR**********OspA`) — las claves reales nunca aparecen en la salida de terminal
+- `copy-token` copia la clave al portapapeles del sistema únicamente, sin mostrarla en ninguna salida
+- `apply-token` usa reemplazo de marcadores de posición para inyectar claves, sin exponer el contenido de la clave en bruto
+- Todos los valores de clave con prefijo `sk-` están estrictamente protegidos durante todo el flujo de ejecución
+
+## Más información
+
+vxon-skills está en desarrollo activo — los comandos y funcionalidades pueden cambiar con las actualizaciones. Consulte el README del repositorio para la información más reciente y el registro de cambios:
+
+- Repositorio de GitHub: [github.com/Vxon/skills](https://github.com/Vxon/skills)
+- Sitio web de Vxon: [www.vxon.ai](https://www.vxon.ai)
+- GitHub de Vxon: [github.com/Vxon/vxon](https://github.com/Vxon/vxon)
