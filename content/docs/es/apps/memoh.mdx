@@ -1,0 +1,84 @@
+---
+title: Memoh - Plataforma de agentes de IA en contenedores
+description: Guía de integración de Memoh — Conecte la plataforma de agentes de IA en contenedores autoalojada a Vxon, creando bots de IA con memoria a largo plazo para Telegram, Discord, Lark, QQ, WeChat y más.
+---
+
+<Callout type="info">
+  Memoh es una plataforma de agentes de IA de código abierto y autoalojada donde cada bot se ejecuta en
+  su propio contenedor aislado con memoria persistente y un sistema de archivos dedicado.
+  Admite 9 canales incluyendo Telegram, Discord, Lark (Feishu), QQ, Matrix,
+  WeCom, WeChat, Email y una interfaz Web UI integrada, junto con llamadas a herramientas MCP,
+  automatización de navegador, tareas programadas y otras capacidades avanzadas de agentes.
+</Callout>
+
+- Sitio web: [https://memoh.sh](https://memoh.sh)
+- Documentación: [https://docs.memoh.ai](https://docs.memoh.ai)
+- GitHub: [https://github.com/memohai/Memoh](https://github.com/memohai/Memoh)
+
+## Características principales
+
+- **Aislamiento en contenedores**: Cada bot se ejecuta en su propio contenedor containerd con sistema de archivos y red dedicados, compatible con snapshots e importación/exportación de datos
+- **Motor de memoria**: Extracción de hechos impulsada por LLM, recuperación híbrida (densa + dispersa + BM25), carga de contexto de 24 horas, compactación y reconstrucción de memoria
+- **Soporte multicanal**: Telegram, Discord, Lark (Feishu), QQ, Matrix, WeCom, WeChat, Email, Web UI
+- **Soporte MCP**: Soporte completo del protocolo MCP (HTTP / SSE / Stdio / OAuth), con gestión de conexiones MCP independiente por bot
+- **Automatización de navegador**: Navegador headless integrado impulsado por Playwright, compatible con navegación web, llenado de formularios, capturas de pantalla y más
+- **Panel web**: Interfaz de gestión moderna construida con Vue 3 + Tailwind CSS, con chat en streaming, visualización de llamadas a herramientas, gestión de archivos y más
+
+## Instalación rápida
+
+Memoh se despliega a través de Docker. Instalación con un clic (requiere Docker):
+
+```bash
+curl -fsSL https://memoh.sh | sudo sh
+```
+
+O instale manualmente:
+
+```bash
+git clone --depth 1 https://github.com/memohai/Memoh.git
+cd Memoh
+cp conf/app.docker.toml config.toml
+# Edite el archivo de configuración config.toml
+sudo docker compose up -d
+```
+
+Después del inicio, visite `http://localhost:8082`. Credenciales predeterminadas: `admin` / `admin123`.
+
+## Integración con Vxon
+
+Memoh admite cualquier proveedor de modelos compatible con OpenAI, lo que le permite usar Vxon para gestionar y acceder de forma centralizada a diversos servicios de modelos de IA.
+
+### Pasos de configuración
+
+#### Obtener una clave de API de Vxon
+
+Después de registrarse e iniciar sesión en Vxon, haga clic en "Consola" en la barra de navegación superior, luego haga clic en "Gestión de tokens" y haga clic en el botón "Agregar token" para crear una nueva clave de API. Seleccione los permisos apropiados y haga clic en "Crear".
+
+Una vez creada, haga clic en el botón de copiar para copiar la clave de API generada.
+
+![copy-api-key](/assets/memoh/copy_api_key.png)
+
+#### Agregar un proveedor de modelos en Memoh
+
+Inicie sesión en el panel web de Memoh, vaya a la página de gestión de proveedores y haga clic en Vxon.
+
+![switch-to-vxon-provider](/assets/memoh/switch_to_vxon_provider.png)
+
+Complete la siguiente información en la página de configuración:
+
+- **URL base de la API**: Ingrese la URL del endpoint de Vxon, ej. `https://api.example.com/v1` (use `http://localhost:3000/v1` para despliegues locales)
+- **Clave de API**: Pegue la clave de API copiada de Vxon
+
+Haga clic en Guardar para completar la configuración del proveedor.
+
+#### Importar modelos
+
+Después de configurar el proveedor, vaya a la página de gestión de modelos y haga clic en importación automática o agregue manualmente los modelos que necesite.
+
+#### Configurar un modelo para su bot
+
+Vaya a la página de configuración del bot, encuentre la sección de configuración de modelos, cambie el modelo de chat predeterminado al agregado a través del proveedor Vxon y haga clic en Guardar.
+
+![set_chat_model](/assets/memoh/set_chat_model.png)
+
+Ahora ha configurado exitosamente Vxon como proveedor de modelos para Memoh. Puede chatear con bots de IA a través de cualquiera de los canales de Memoh (Telegram, Discord, Lark, etc.), y todas las solicitudes se enrutarán a través de Vxon.
