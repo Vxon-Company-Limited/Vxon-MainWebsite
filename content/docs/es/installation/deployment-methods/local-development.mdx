@@ -1,0 +1,251 @@
+---
+title: Desarrollo y despliegue local
+---
+
+Este documento proporciona pasos detallados para configurar y desarrollar el proyecto Vxon en un entorno local, adecuado para desarrolladores que deseen contribuir al proyecto o realizar desarrollo personalizado.
+
+## Requisitos del entorno de desarrollo
+
+Antes de comenzar el desarrollo local, asegúrese de que el siguiente software esté instalado en su sistema:
+
+- **Go** 1.21 o superior (para desarrollo backend)
+- **Node.js** 18 o superior (para desarrollo frontend)
+- **Bun** última versión (gestor de paquetes recomendado, 25 veces más rápido que npm/yarn)
+- **Git** (para control de versiones)
+- **MySQL** (opcional, se usa SQLite por defecto)
+- **Redis** (opcional, para mejora de rendimiento)
+- **Visual Studio Code** u otro editor de código
+
+<Callout type="info" title="Acerca de Bun">
+  Bun es un gestor de paquetes, ejecutor de pruebas y empaquetador de JavaScript
+  increíblemente rápido. Comparado con npm o yarn tradicionales, Bun instala paquetes 25 veces
+  más rápido y es la herramienta de gestión de paquetes JavaScript más recomendada para
+  2024.
+</Callout>
+
+## Clonar el proyecto
+
+Primero, clone el repositorio de Vxon desde GitHub a su máquina local:
+
+```bash
+git clone https://github.com/Vxon/vxon.git
+cd vxon
+```
+
+## Configuración del desarrollo backend
+
+### Instalar dependencias de Go
+
+```bash
+go mod download
+```
+
+### Configurar el entorno de desarrollo
+
+Vxon admite la configuración de variables de entorno a través de un archivo `.env`. Cree un archivo `.env` (puede copiar desde `.env.example`):
+
+```bash
+cp .env.example .env
+```
+
+Edite el archivo `.env` y modifique la configuración según sea necesario. Las siguientes son configuraciones comunes para el entorno de desarrollo:
+
+```bash
+PORT=3000
+SQL_DSN=root:password@tcp(localhost:3306)/vxon   # If using MySQL, uncomment and modify
+# REDIS_CONN_STRING=redis://localhost:6379         # If using Redis, uncomment and modify
+```
+<Callout type="info" title="Nota">
+  Si `SQL_DSN` no está configurado, el sistema usará por defecto una base de datos
+  SQLite, almacenada en el archivo `one-api.db`.
+</Callout>
+
+### Ejecutar el servicio backend
+
+```bash
+# Ejecutar directamente
+go run main.go
+
+# O compilar y ejecutar
+go build -o vxon
+./vxon
+```
+
+El servicio se ejecuta en `http://localhost:3000` por defecto.
+
+## Configuración del desarrollo frontend
+
+El código frontend de Vxon se encuentra en el directorio `web` y está desarrollado usando React y la [biblioteca de componentes semi design](https://semi.design/zh-CN).
+
+### Instalar Bun (Recomendado)
+
+Si aún no ha instalado Bun, use los siguientes comandos para instalarlo:
+
+**macOS/Linux:**
+
+```bash
+curl -fsSL https://bun.sh/install | bash
+```
+
+**Windows (usando WSL):**
+
+```bash
+curl -fsSL https://bun.sh/install | bash
+```
+
+**macOS (usando Homebrew):**
+
+```bash
+brew tap oven-sh/bun
+brew install bun
+```
+
+Después de la instalación, reinicie su terminal o ejecute `source ~/.bashrc` (o `~/.zshrc`) para que el comando Bun esté disponible.
+
+### Instalar dependencias del frontend
+
+```bash
+cd web
+bun install   # Instalar dependencias del frontend usando bun
+```
+
+### Ejecutar servidor de desarrollo
+
+```bash
+bun run dev   # Ejecutar servidor de desarrollo usando bun
+```
+
+El servidor de desarrollo frontend se ejecuta en `http://localhost:5173` por defecto y está configurado con un proxy que reenvía las solicitudes de API al servicio backend.
+
+### Compilar recursos del frontend
+
+```bash
+bun run build   # Compilar recursos del frontend usando bun
+```
+
+Los archivos compilados se generarán en el directorio `web/dist`, y el servicio backend cargará automáticamente estos recursos estáticos.
+
+7.  **Crear un Pull Request**: Cree un PR en GitHub, describiendo sus cambios.
+
+## Consejos de depuración
+
+### Depuración del backend
+
+1.  **Ver logs**:
+
+    ```bash
+    go run main.go --log-dir ./logs
+    ```
+
+2.  **Depurar con Delve**:
+    ```bash
+    go install github.com/go-delve/delve/cmd/dlv@latest
+    dlv debug main.go
+    ```
+
+### Depuración del frontend
+
+1.  **Usar Chrome DevTools**:
+    - Abra las herramientas de desarrollo de Chrome (F12)
+    - Verifique las pestañas de Consola y Red
+
+2.  **React Developer Tools**:
+    - Instale la extensión React Developer Tools en Chrome
+    - Úsela para inspeccionar la estructura y el estado de los componentes
+## Estructura del proyecto
+
+La estructura de directorios del proyecto Vxon:
+
+```
+vxon/                                 # Directorio raíz del proyecto
+│  .dockerignore                         # Configuración de archivos a ignorar durante la compilación Docker
+│  .env.example                          # Archivo de ejemplo de variables de entorno
+│  .gitignore                            # Configuración de archivos ignorados por Git
+│  BT.md                                 # Documentación relacionada con BT (posiblemente panel Baota)
+│  docker-compose.yml                    # Archivo de configuración de Docker Compose para orquestación de contenedores
+│  Dockerfile                            # Configuración de compilación de imagen Docker
+│  go.mod                                # Archivo de configuración de dependencias del módulo Go
+│  go.sum                                # Archivo de sumas de verificación de dependencias del módulo Go
+│  LICENSE                               # Archivo de licencia del proyecto
+│  main.go                               # Archivo de entrada principal del proyecto
+│  makefile                              # Script de compilación del proyecto
+│  Midjourney.md                         # Documentación relacionada con el servicio Midjourney
+│  one-api.service                       # Archivo de configuración del servicio systemd
+│  README.en.md                          # README del proyecto en inglés
+│  README.md                             # README del proyecto en chino
+│  Rerank.md                             # Documentación relacionada con la función Rerank
+│  Suno.md                               # Documentación relacionada con la API de Suno
+│  VERSION                               # Archivo de información de versión del proyecto
+│
+├─.github                                # Directorio de configuración de GitHub
+│  │  FUNDING.yml                        # Archivo de configuración de financiamiento de GitHub
+│  │
+│  ├─ISSUE_TEMPLATE                      # Directorio de plantillas de Issues de GitHub
+│  │      bug_report.md                  # Plantilla de reporte de errores
+│  │      config.yml                     # Archivo de configuración de Issues
+│  │      feature_request.md             # Plantilla de solicitud de funcionalidades
+│  │
+│  └─workflows                           # Directorio de configuración de flujos de trabajo de GitHub Actions
+│          docker-image-amd64.yml        # Flujo de compilación de imagen Docker para arquitectura AMD64
+│          docker-image-arm64.yml        # Flujo de compilación de imagen Docker para arquitectura ARM64
+│          linux-release.yml             # Flujo de publicación para plataforma Linux
+│          macos-release.yml             # Flujo de publicación para plataforma macOS
+│          windows-release.yml           # Flujo de publicación para plataforma Windows
+│
+├─bin                                    # Directorio de archivos binarios y scripts
+│      migration_v0.2-v0.3.sql           # Script de migración de base de datos v0.2 a v0.3
+│      migration_v0.3 to v0.4.sql        # Script de migración de base de datos v0.3 a v0.4
+│      time_test.sh                      # Script de prueba de tiempo
+│
+├─common                                 # Directorio de módulos funcionales comunes
+│      constants.go                      # Definición de constantes comunes
+│      crypto.go                         # Funciones relacionadas con criptografía
+│      ...
+│
+├─controller                             # Capa de controladores, maneja solicitudes HTTP
+│      billing.go                        # Controlador de facturación
+│      channel.go                        # Controlador de gestión de canales
+│      ...
+│
+├─relay                                  # Directorio del módulo de retransmisión de solicitudes
+│  │  relay-text.go                      # Retransmisión de solicitudes de texto
+│  │  ...
+│  │
+│  ├─channel                             # Directorio de canales de retransmisión
+│  │  ├─openai                           # Canal OpenAI
+│  │  ├─claude                           # Canal Claude AI
+│  │  ├─gemini                           # Canal Google Gemini AI
+│  │  └─...                              # Otros canales de proveedores de IA
+│  │
+│  └─helper                              # Funciones auxiliares de retransmisión
+│
+├─router                                 # Directorio de configuración de rutas
+│      api-router.go                     # Configuración de rutas de API
+│      main.go                           # Configuración de rutas principales
+│      ...
+│
+├─service                                # Directorio de capa de servicios
+│      channel.go                        # Servicio de canales
+│      quota.go                          # Servicio de gestión de cuotas
+│      ...
+│
+└─web                                    # Directorio de interfaz web frontend
+    │  package.json                      # Configuración de dependencias del frontend
+    │  vite.config.js                    # Configuración de compilación Vite
+    │
+    └─src                                # Directorio de código fuente del frontend
+        │  App.js                        # Componente principal de la aplicación
+        │
+        ├─components                     # Directorio de componentes
+        ├─pages                          # Directorio de componentes de página
+        └─i18n                           # Directorio de internacionalización
+```
+
+<Callout type="info" title="¿Necesita ayuda?">
+Si encuentra problemas durante el desarrollo, puede:
+
+1.  Consultar [GitHub Issues](https://github.com/Vxon/vxon/issues)
+2.  Unirse al [grupo de comunicación QQ](/es/docs/support/community-interaction)
+3.  Enviar problemas a través de la página de [Comentarios de problemas](/es/docs/support/feedback-issues)
+
+</Callout>
