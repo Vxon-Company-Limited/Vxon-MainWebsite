@@ -1,0 +1,131 @@
+---
+title: Guia de configuracion de analisis de rendimiento
+---
+
+### Descripcion general
+
+Vxon proporciona dos tipos de capacidades de analisis de rendimiento:
+
+- **pprof (Integrado)**: Adecuado para diagnostico temporal y analisis offline
+- **Pyroscope (Opcional)**: Adecuado para analisis continuo en linea y visualizacion de graficos de llama
+
+Ambos pueden habilitarse simultaneamente sin conflictos.
+
+### Funcionalidades
+
+✅ Integracion sin codigo - configurada unicamente mediante variables de entorno  
+✅ Compatible con despliegues Docker e independientes  
+✅ Soporte para coexistencia de diagnostico temporal y analisis continuo  
+✅ Autenticacion opcional y diferenciacion de instancias
+
+---
+
+### Configuracion de pprof (Integrado)
+
+#### 1. Configurar variables de entorno
+
+**Usando Docker Compose:**
+
+```yaml
+environment:
+  - ENABLE_PPROF=true
+```
+
+**Despliegue independiente:**
+
+```bash
+export ENABLE_PPROF=true
+```
+
+#### 2. Reiniciar la aplicacion
+
+Reinicie la aplicacion para aplicar los cambios.
+
+#### 3. Verificacion
+
+Si la ruta no se ha modificado, generalmente se puede acceder en `/debug/pprof/` (sujeto al despliegue real).
+
+---
+
+### Configuracion de Pyroscope
+
+#### 1. Preparar el servicio Pyroscope
+
+Asegurese de que el servicio Pyroscope sea accesible y registre su direccion (ej.: `http://localhost:4040`).
+
+#### 2. Configurar variables de entorno
+
+**Usando Docker Compose:**
+
+```yaml
+environment:
+  - PYROSCOPE_URL=http://localhost:4040
+  - PYROSCOPE_APP_NAME=vxon
+  - PYROSCOPE_BASIC_AUTH_USER=your-user
+  - PYROSCOPE_BASIC_AUTH_PASSWORD=your-password
+  - PYROSCOPE_MUTEX_RATE=5
+  - PYROSCOPE_BLOCK_RATE=5
+  - HOSTNAME=your-hostname
+```
+
+**Despliegue independiente:**
+
+```bash
+export PYROSCOPE_URL=http://localhost:4040
+export PYROSCOPE_APP_NAME=vxon
+export PYROSCOPE_BASIC_AUTH_USER=your-user
+export PYROSCOPE_BASIC_AUTH_PASSWORD=your-password
+export PYROSCOPE_MUTEX_RATE=5
+export PYROSCOPE_BLOCK_RATE=5
+export HOSTNAME=your-hostname
+```
+
+#### 3. Reiniciar la aplicacion
+
+Reinicie la aplicacion para aplicar los cambios.
+
+#### 4. Verificacion
+
+1. Abra la interfaz de Pyroscope
+2. Seleccione la aplicacion correspondiente a `PYROSCOPE_APP_NAME`
+3. Si se configuro `HOSTNAME`, las fuentes pueden diferenciarse por dimension de instancia
+
+---
+
+### Solucion de problemas
+
+**¿El analisis de rendimiento no funciona?**
+
+1. ✅ Verifique que las variables de entorno esten configuradas correctamente
+2. ✅ Reinicie la aplicacion despues de cambiar las variables
+3. ✅ Compruebe la conectividad de red y la configuracion de autenticacion
+4. ✅ Confirme la consistencia del nombre de `PYROSCOPE_APP_NAME`
+
+**Usuarios de Docker:**
+
+```bash
+# Verificar variables de entorno
+docker exec vxon env | grep -E "PPROF|PYROSCOPE"
+```
+
+---
+
+## Referencia de variables de entorno
+
+| Variable                          | Requerida | Valor por defecto | Descripcion                              |
+| --------------------------------- | --------- | ----------------- | ---------------------------------------- |
+| `ENABLE_PPROF`                    | No        | `false`           | Habilitar analisis de rendimiento pprof  |
+| `PYROSCOPE_URL`                   | No        | -                 | Direccion del servicio Pyroscope         |
+| `PYROSCOPE_APP_NAME`              | No        | -                 | Identificador de aplicacion en Pyroscope |
+| `PYROSCOPE_BASIC_AUTH_USER`       | No        | -                 | Usuario de Basic Auth de Pyroscope       |
+| `PYROSCOPE_BASIC_AUTH_PASSWORD`   | No        | -                 | Contrasena de Basic Auth de Pyroscope    |
+| `PYROSCOPE_MUTEX_RATE`            | No        | -                 | Tasa de muestreo de mutex               |
+| `PYROSCOPE_BLOCK_RATE`            | No        | -                 | Tasa de muestreo de bloqueo             |
+| `HOSTNAME`                        | No        | -                 | Identificador de instancia (opcional)    |
+
+---
+
+## Enlaces relacionados
+
+- [Pyroscope](https://pyroscope.io/)
+- [Documentacion de Pyroscope](https://pyroscope.io/docs/)
