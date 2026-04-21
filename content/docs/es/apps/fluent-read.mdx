@@ -1,0 +1,79 @@
+---
+title: FluentRead - Plugin de traducción de código abierto
+description: Guía de configuración de FluentRead — plugin de traducción de navegador de código abierto con más de 20 motores y soporte de modelos de IA. Conéctese a Vxon para lectura bilingüe inmersiva.
+---
+
+<Callout type="info" title="Opciones de configuración de chat">
+  En la Configuración del sistema -> Configuración de chat de la consola de Vxon, puede agregar
+  las siguientes opciones de acceso rápido para el autocompletado con un clic en FluentRead desde
+  la página de gestión de tokens:
+</Callout>
+
+    ```json
+    { "流畅阅读": "fluentread" }
+    ```
+
+<Callout type="info">
+  🌊 FluentRead es un plugin de traducción de navegador de código abierto dedicado a
+  proporcionar una experiencia de lectura similar a la nativa.
+</Callout>
+
+- Dirección del proyecto: [https://github.com/Bistutu/FluentRead](https://github.com/Bistutu/FluentRead)
+
+## 🌟 Características principales
+
+### Motor de traducción inteligente
+
+- **Soporte multi-motor**: Compatible con más de 20 motores de traducción
+- **Traducción tradicional**: Microsoft Translate, Google Translate, DeepL Translate, etc.
+- **Modelos de IA de gran escala**: OpenAI, DeepSeek, Kimi, Ollama, etc.
+- **Motor personalizado**: Compatible con configuración de servicios de traducción personalizados
+
+### Experiencia de lectura inmersiva
+
+- **Comparación bilingüe**: Texto original y traducido mostrados lado a lado para facilitar la lectura
+- **Traducción por selección**: Seleccione cualquier texto para obtener resultados de traducción instantáneos
+- **Copia con un clic**: Copie rápidamente el texto traducido para mejorar la eficiencia de lectura
+- **Traducción de página completa**: Traducción con un clic de toda la página web con botón flotante, sin necesidad de recargar la página
+
+### Privacidad y personalización
+
+- **Protección de privacidad**: Todos los datos almacenados localmente, código abierto y transparente
+- **Alta personalización**: Opciones de personalización enriquecidas para satisfacer diferentes necesidades
+- **Completamente gratuito**: Proyecto de código abierto y gratuito, no comercial
+
+## 📦 Métodos de instalación
+
+| Navegador   | Método de instalación                                                                                                                                                                                                                                 |
+| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Chrome**  | [Chrome Web Store](https://chromewebstore.google.com/detail/%E6%B5%81%E7%95%85%E9%98%85%E8%AF%BB/djnlaiohfaaifbibleebjggkghlmcpcj?hl=zh-CN&authuser=0) \| [Mirror nacional](https://www.crxsoso.com/webstore/detail/djnlaiohfaaifbibleebjggkghlmcpcj) |
+| **Edge**    | [Tienda de complementos de Edge](https://microsoftedge.microsoft.com/addons/detail/%E6%B5%81%E7%95%85%E9%98%85%E8%AF%BB/kakgmllfpjldjhcnkghpplmlbnmcoflp?hl=zh-CN)                                                                                    |
+| **Firefox** | [Tienda de complementos de Firefox](https://addons.mozilla.org/zh-CN/firefox/addon/%E6%B5%81%E7%95%85%E9%98%85%E8%AF%BB/)                                                                                                                             |
+
+## 🚀 Métodos de configuración
+
+### Importar configuración desde la consola de Vxon (Recomendado)
+
+Después de instalar el plugin FluentRead en su navegador, al abrir la consola de Vxon -> página de gestión de tokens se mostrará un aviso para agregar FluentRead.
+
+![添加提示](/assets/fluentread/hint.png)
+
+Después de seleccionar un modelo, haga clic en 'Autocompletar en FluentRead con un clic', y aparecerá una ventana de confirmación. Verifique si la información correspondiente es correcta.
+
+![确认](/assets/fluentread/confirm.png)
+
+Después de confirmar la importación, la configuración de Vxon en FluentRead se habilitará.
+
+![配置结果](/assets/fluentread/fluentread.png)
+
+### Completar la configuración manualmente en FluentRead
+
+![手动配置](/assets/fluentread/configuration.png)
+
+| Elemento de configuración | Contenido                                    |
+| ------------------------- | -------------------------------------------- |
+| Servicio de traducción    | Vxon                                         |
+| Token de acceso           | Clave de Vxon                                |
+| Endpoint de Vxon          | Dirección de despliegue de Vxon (sin /v1)    |
+| Modelo                    | Seleccionar de la lista, o modelo personalizado |
+| Modelo personalizado      | Nombre del modelo                            |
