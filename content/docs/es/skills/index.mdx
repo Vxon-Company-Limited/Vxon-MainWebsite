@@ -1,0 +1,50 @@
+---
+title: Skills
+description: Plugins oficiales de Skills de Vxon para Claude Code, Codex y OpenClaw. Gestione modelos, tokens, grupos, saldo y haga preguntas sobre el uso de Vxon directamente dentro de su flujo de trabajo de codificación con IA.
+---
+
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { User, Shield } from 'lucide-react';
+
+## Descripción general
+
+**Skills** son un protocolo de extensión ligero que permite a los editores de IA (como Claude Code, Codex, OpenClaw, Cursor, Windsurf, etc.) interactuar con Vxon directamente desde su entorno de codificación — sin necesidad de navegador ni panel de administración.
+
+Los Skills de Vxon ya funcionan en Claude Code, Codex, OpenClaw y otras herramientas compatibles con Skills para consultas de modelos, gestión de tokens, verificación de saldo y preguntas sobre el uso de Vxon.
+
+Vxon actualmente ofrece los siguientes Skills:
+
+<Cards>
+  <Card
+    icon={<User />}
+    title="vxon"
+    description="Skill de nivel de usuario — consulte modelos, gestione tokens, vea grupos, verifique saldo y haga preguntas sobre el uso de Vxon en Claude Code, Codex y OpenClaw."
+    href="/es/docs/skills/vxon"
+  />
+  <Card
+    icon={<Shield />}
+    title="vxon-admin (Próximamente)"
+    description="Skill de nivel de administrador — gestión de canales, gestión de usuarios, configuración del sistema y más. Para administradores de Vxon."
+    href="/es/docs/skills/vxon-admin"
+  />
+</Cards>
+
+## Editores de IA compatibles
+
+Todos los Skills funcionan con las siguientes herramientas de codificación con IA:
+
+| Editor de IA / Asistente de codificación | Tipo | Notas |
+|------------------------------|------|-------|
+| **Claude Code** | Asistente de programación de terminal con IA | CLI oficial de Anthropic |
+| **OpenClaw** | Plataforma de asistente de IA autoalojada | Compatible con flujos de trabajo de comandos `/vxon` basados en Skills |
+| **Cursor** | Editor de código nativo de IA | Basado en VS Code |
+| **Windsurf** | Editor de código con IA | Por Codeium |
+| **Cline** | Extensión de IA para VS Code | Agente de codificación con IA de código abierto |
+| **Codex CLI** | Asistente de programación de terminal con IA | CLI oficial de OpenAI |
+
+> Cualquier herramienta que admita el protocolo Skills puede usar los Skills de Vxon.
+
+## Más información
+
+- Repositorio de GitHub: [github.com/Vxon/skills](https://github.com/Vxon/skills)
+- Sitio web de Vxon: [www.vxon.ai](https://www.vxon.ai)
