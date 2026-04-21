@@ -1,0 +1,55 @@
+---
+title: LangBot - Plataforma de desarrollo de bots de mensajería instantánea
+description: Guía de integración de LangBot — cree chatbots impulsados por IA para Feishu, DingTalk, Telegram, Discord y más. Compatible con Base de conocimientos, Agent y MCP con Vxon.
+---
+
+<Callout type="info">
+  LangBot es una plataforma de desarrollo de bots de mensajería instantánea de código abierto que
+  admite diversas plataformas de mensajería instantánea como Feishu, DingTalk, WeChat,
+  QQ, Telegram, Discord, Slack, etc. Se integra con los principales modelos de IA globales,
+  admite diversas capacidades de aplicaciones de IA como Base de conocimientos,
+  Agent, MCP, y es perfectamente compatible con Vxon.
+</Callout>
+
+- Sitio web oficial: [https://langbot.app](https://langbot.app/)
+- Dirección de descarga: [https://github.com/langbot-app/LangBot/releases](https://github.com/langbot-app/LangBot/releases)
+- Documentación oficial: [https://docs.langbot.app](https://docs.langbot.app/)
+- Dirección del código fuente: [https://github.com/langbot-app/LangBot](https://github.com/langbot-app/LangBot)
+
+## Integración con Vxon
+
+LangBot admite la integración con Vxon desplegado localmente y servicios de Vxon de terceros construidos con Vxon.
+
+### Uso
+
+1.  Obtener una clave de API de Vxon
+    ![获取 API key](/assets/langbot/get_api_key.png)
+
+        Si Vxon está desplegado localmente, configure la dirección de la API usted mismo (consulte [Conexión de red de contenedores](https://docs.langbot.app/en/workshop/network-details.html)). Si utiliza un servicio de Vxon de terceros, puede copiar la dirección desde la página. Tenga en cuenta que se debe agregar `/v1` a la dirección.
+
+2.  Agregar un modelo en LangBot, seleccionar Vxon como proveedor y completar la clave de API y la dirección de API correspondientes
+    ![添加 Vxon 模型](/assets/langbot/add_vxon_model.png)
+
+3.  Seleccionar el modelo a utilizar en el pipeline
+
+    ![选择模型](/assets/langbot/select_model.png)
+
+4.  Úselo chateando en la depuración de conversaciones o chateando con un bot vinculado al pipeline
+
+    ![对话](/assets/langbot/debug_chat.png)
+
+    ![微信对话](/assets/langbot/wechat.png)
+
+    Para desplegar y configurar bots, consulte [Despliegue de bots](https://docs.langbot.app/en/deploy/platforms/readme.html).
+
+### Uso de la base de conocimientos de LangBot
+
+LangBot admite el uso de modelos de embedding de Vxon y su utilización como modelos vectoriales para la base de conocimientos.
+
+1. Agregar un modelo de embedding en LangBot, seleccionar Vxon como proveedor
+   ![添加嵌入模型](/assets/langbot/add_embedding_model.png)
+
+2. Seleccionar el modelo de embedding al crear una nueva base de conocimientos
+   ![使用嵌入模型](/assets/langbot/use_embedding_model.png)
+
+Para más instrucciones de uso, consulte la documentación oficial de LangBot: [https://docs.langbot.app](https://docs.langbot.app/)
