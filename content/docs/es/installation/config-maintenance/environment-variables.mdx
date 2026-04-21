@@ -1,0 +1,290 @@
+---
+title: Guía de configuración de variables de entorno
+---
+
+Este documento proporciona todas las variables de entorno compatibles con Vxon y sus instrucciones de configuración. Puede personalizar el comportamiento del sistema configurando estas variables de entorno.
+
+<Callout type="info" title="Consejo">
+  Vxon admite la lectura de variables de entorno desde archivos `.env`. Consulte el archivo `.env.example`
+  y renómbrelo a `.env` cuando lo use.
+</Callout>
+
+## Configuración básica
+
+| Variable de entorno | Descripción           | Valor predeterminado | Ejemplo               |
+| -------------------- | --------------------- | ------------- | --------------------- |
+| `PORT`               | Puerto de escucha del servicio | `3000`        | `PORT=8080`           |
+| `TZ`                 | Configuración de zona horaria | -             | `TZ=America/New_York` |
+| `VERSION`            | Sobrescribir número de versión en ejecución | -     | `VERSION=1.2.3`       |
+
+## Configuración de base de datos
+
+| Variable de entorno          | Descripción                                    | Valor predeterminado      | Ejemplo                                                                                                                             |
+| ----------------------------- | ---------------------------------------------- | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `SQL_DSN`                     | Cadena de conexión a la base de datos          | SQLite (`one-api.db`)     | MySQL: `SQL_DSN=root:123456@tcp(localhost:3306)/vxon` \| PostgreSQL: `SQL_DSN=postgresql://root:123456@postgres:5432/vxon` |
+| `SQL_MAX_IDLE_CONNS`          | Conexiones inactivas máximas en el pool        | `100`                     | `SQL_MAX_IDLE_CONNS=50`                                                                                                          |
+| `SQL_MAX_OPEN_CONNS`          | Conexiones abiertas máximas en el pool         | `1000`                    | `SQL_MAX_OPEN_CONNS=500`                                                                                                         |
+| `SQL_MAX_LIFETIME`            | Tiempo de vida máximo de conexión (segundos)   | `60`                      | `SQL_MAX_LIFETIME=120`                                                                                                          |
+| `LOG_SQL_DSN`                 | Cadena de conexión separada para tabla de logs  | -                         | `LOG_SQL_DSN=root:123456@tcp(localhost:3306)/oneapi_logs`                                                                        |
+| `SQLITE_PATH`                 | Ruta de la base de datos SQLite                | `one-api.db`              | `SQLITE_PATH=/var/lib/vxon/vxon.db`                                                                                        |
+
+## Configuración de caché
+
+| Variable de entorno          | Descripción                                                  | Valor predeterminado | Ejemplo                                                    |
+| ----------------------------- | ------------------------------------------------------------ | ------------- | ---------------------------------------------------------- |
+| `REDIS_CONN_STRING`           | Cadena de conexión a Redis                                   | -             | `REDIS_CONN_STRING=redis://default:redispw@localhost:6379` |
+| `REDIS_POOL_SIZE`             | Tamaño del pool de conexiones Redis                          | `10`          | `REDIS_POOL_SIZE=20`                                      |
+| `MEMORY_CACHE_ENABLED`        | Habilitar caché en memoria (se habilita automáticamente con Redis) | `false`       | `MEMORY_CACHE_ENABLED=true`                                |
+| `SYNC_FREQUENCY`              | Frecuencia de sincronización caché-base de datos (segundos)  | `60`          | `SYNC_FREQUENCY=120`                                       |
+| `BATCH_UPDATE_ENABLED`        | Habilitar agregación de actualizaciones por lotes            | `false`       | `BATCH_UPDATE_ENABLED=true`                                |
+| `BATCH_UPDATE_INTERVAL`       | Intervalo de agregación de actualizaciones por lotes (segundos) | `5`           | `BATCH_UPDATE_INTERVAL=10`                                 |
+## Configuración multinodo y de seguridad
+
+| Variable de entorno              | Descripción                                                  | Valor predeterminado | Ejemplo                                        |
+| --------------------------------- | ------------------------------------------------------------ | ------------- | ------------------------------------------- |
+| `SESSION_SECRET`                  | Secreto de sesión (requerido para despliegue multimáquina)   | -             | `SESSION_SECRET=your_session_secret`        |
+| `CRYPTO_SECRET`                   | Secreto de cifrado (cifra contenido de la base de datos, predeterminado a SESSION_SECRET) | -             | `CRYPTO_SECRET=your_crypto_secret`          |
+| `FRONTEND_BASE_URL`               | URL base del frontend (usada por nodos esclavos, redirige rutas no coincidentes a esta dirección) | -             | `FRONTEND_BASE_URL=https://<your-vxon-domain>` |
+| `NODE_TYPE`                       | Tipo de nodo                                                 | `master`      | `NODE_TYPE=slave`                           |
+| `TLS_INSECURE_SKIP_VERIFY`        | Omitir globalmente la verificación de certificados TLS       | `false`       | `TLS_INSECURE_SKIP_VERIFY=true`             |
+| `TRUSTED_REDIRECT_DOMAINS`        | Lista de dominios de redirección confiables (separados por comas) | -             | `TRUSTED_REDIRECT_DOMAINS=example.com,api.example.com` |
+
+<Callout type="warn" title="Notas sobre SESSION_SECRET">
+  `SESSION_SECRET` no puede establecerse como `random_string`, de lo contrario el programa se negará a iniciar. Todos los nodos deben usar el mismo secreto para despliegue multimáquina.
+</Callout>
+
+<Callout type="info" title="Despliegue en clúster">
+  Para saber cómo construir un despliegue en clúster completo usando estas variables de entorno, consulte la [Guía de despliegue en clúster](/es/docs/installation/deployment-methods/cluster-deployment).
+</Callout>
+
+## Configuración de usuarios y tokens
+
+| Variable de entorno                     | Descripción                                    | Valor predeterminado | Ejemplo                                    |
+| ---------------------------------------- | ---------------------------------------------- | ------------- | --------------------------------------- |
+| `GENERATE_DEFAULT_TOKEN`                 | Generar token inicial para nuevos usuarios registrados | `false`       | `GENERATE_DEFAULT_TOKEN=true`           |
+| `NOTIFICATION_LIMIT_DURATION_MINUTE`     | Duración del límite de notificaciones (minutos) | `10`          | `NOTIFICATION_LIMIT_DURATION_MINUTE=15` |
+| `NOTIFY_LIMIT_COUNT`                     | Número máximo de notificaciones dentro de la duración especificada | `2`           | `NOTIFY_LIMIT_COUNT=3`                  |
+
+## Configuración de límites de solicitudes
+
+| Variable de entorno                 | Descripción                                    | Valor predeterminado | Ejemplo                                     |
+| ------------------------------------ | ---------------------------------------------- | ------------- | ---------------------------------------- |
+| `GLOBAL_API_RATE_LIMIT_ENABLE`       | Interruptor de límite de tasa global de API    | `true`        | `GLOBAL_API_RATE_LIMIT_ENABLE=false`     |
+| `GLOBAL_API_RATE_LIMIT`              | Límite de tasa global de API (por IP)          | `180`         | `GLOBAL_API_RATE_LIMIT=100`              |
+| `GLOBAL_API_RATE_LIMIT_DURATION`     | Ventana de límite de tasa global de API (segundos) | `180`         | `GLOBAL_API_RATE_LIMIT_DURATION=120`     |
+| `GLOBAL_WEB_RATE_LIMIT_ENABLE`       | Interruptor de límite de tasa global Web       | `true`        | `GLOBAL_WEB_RATE_LIMIT_ENABLE=false`     |
+| `GLOBAL_WEB_RATE_LIMIT`              | Límite de tasa global Web (por IP)             | `60`          | `GLOBAL_WEB_RATE_LIMIT=30`               |
+| `GLOBAL_WEB_RATE_LIMIT_DURATION`     | Ventana de límite de tasa global Web (segundos) | `180`         | `GLOBAL_WEB_RATE_LIMIT_DURATION=120`     |
+| `CRITICAL_RATE_LIMIT_ENABLE`         | Interruptor de límite de tasa de operaciones críticas | `true`        | `CRITICAL_RATE_LIMIT_ENABLE=false`       |
+| `CRITICAL_RATE_LIMIT`                | Conteo de límite de tasa de operaciones críticas | `20`          | `CRITICAL_RATE_LIMIT=10`                 |
+| `CRITICAL_RATE_LIMIT_DURATION`       | Ventana de límite de tasa de operaciones críticas (segundos) | `1200`        | `CRITICAL_RATE_LIMIT_DURATION=600`       |
+
+## Configuración de retransmisión y proxy
+
+| Variable de entorno                  | Descripción                                                  | Valor predeterminado | Ejemplo                             |
+| ------------------------------------- | ------------------------------------------------------------ | ------------- | -------------------------------- |
+| `RELAY_TIMEOUT`                       | Tiempo de espera de solicitud de retransmisión (segundos), 0 para ilimitado | `0`           | `RELAY_TIMEOUT=60`               |
+| `STREAMING_TIMEOUT`                   | Tiempo de espera de respuesta única en streaming (segundos)  | `300`         | `STREAMING_TIMEOUT=120`          |
+| `RELAY_MAX_IDLE_CONNS`                | Conexiones inactivas máximas en el pool del cliente HTTP de retransmisión | `500`         | `RELAY_MAX_IDLE_CONNS=1000`      |
+| `RELAY_MAX_IDLE_CONNS_PER_HOST`       | Conexiones inactivas máximas por host en el pool del cliente HTTP de retransmisión | `100`         | `RELAY_MAX_IDLE_CONNS_PER_HOST=200` |
+| `MAX_FILE_DOWNLOAD_MB`                | Tamaño máximo de descarga de archivos (MB)                   | `64`          | `MAX_FILE_DOWNLOAD_MB=128`       |
+| `MAX_REQUEST_BODY_MB`                 | Tamaño máximo del cuerpo de solicitud (MB, contado después de descompresión; previene zip bomb/OOM) | `128`         | `MAX_REQUEST_BODY_MB=256`        |
+| `STREAM_SCANNER_MAX_BUFFER_MB`        | Tamaño máximo del buffer del escáner de flujo SSE (MB)       | `64`          | `STREAM_SCANNER_MAX_BUFFER_MB=128` |
+
+<Callout type="warn" title="Advertencia sobre la configuración de RELAY_TIMEOUT">
+  Tenga precaución al configurar la variable de entorno `RELAY_TIMEOUT`. Establecerla demasiado corta puede causar los siguientes problemas:
+</Callout>
+
+    - La API upstream ha completado la solicitud y cobrado, pero la facturación local falló debido al tiempo de espera
+
+    - Llevando a desincronización de facturación, lo que puede resultar en pérdidas del sistema
+
+    - Se recomienda no configurarla a menos que sepa lo que está haciendo
+## Configuración de gestión de canales
+
+| Variable de entorno                  | Descripción                                    | Valor predeterminado                 | Ejemplo                                |
+| ------------------------------------- | ---------------------------------------------- | ----------------------------- | ----------------------------------- |
+| `CHANNEL_UPDATE_FREQUENCY`            | Actualizar regularmente el saldo de canales (minutos) | - (deshabilitado si no se establece) | `CHANNEL_UPDATE_FREQUENCY=1440`     |
+| `CHANNEL_TEST_FREQUENCY`              | Verificar canales regularmente (minutos), sobrescribe configuración de base de datos | - (usa configuración de base de datos si no se establece) | `CHANNEL_TEST_FREQUENCY=1440`       |
+| `POLLING_INTERVAL`                    | Intervalo de sondeo de solicitudes (segundos)  | `0`                           | `POLLING_INTERVAL=5`                |
+
+### Sincronización de modelos upstream de canales
+
+| Variable de entorno                                              | Descripción                                    | Valor predeterminado | Ejemplo |
+| ----------------------------------------------------------------- | ---------------------------------------------- | ------------- | ---- |
+| `CHANNEL_UPSTREAM_MODEL_UPDATE_TASK_ENABLED`                      | Habilitar sincronización regular de lista de modelos del proveedor upstream | `true`        | `CHANNEL_UPSTREAM_MODEL_UPDATE_TASK_ENABLED=false` |
+| `CHANNEL_UPSTREAM_MODEL_UPDATE_TASK_INTERVAL_MINUTES`             | Intervalo de sincronización de lista de modelos (minutos) | `30`          | `CHANNEL_UPSTREAM_MODEL_UPDATE_TASK_INTERVAL_MINUTES=60` |
+| `CHANNEL_UPSTREAM_MODEL_UPDATE_MIN_CHECK_INTERVAL_SECONDS`        | Intervalo mínimo de verificación por canal (segundos) | `300`         | `CHANNEL_UPSTREAM_MODEL_UPDATE_MIN_CHECK_INTERVAL_SECONDS=600` |
+
+## Configuración de modelos y procesamiento de solicitudes
+
+| Variable de entorno             | Descripción                                                  | Valor predeterminado | Ejemplo                                 |
+| -------------------------------- | ------------------------------------------------------------ | ------------- | ------------------------------------ |
+| `FORCE_STREAM_OPTION`            | Sobrescribir parámetro stream_options del cliente, forzar obtención de información de uso en streaming | `true`        | `FORCE_STREAM_OPTION=false`          |
+| `CountToken`                     | Habilitar conteo local de tokens                             | `true`        | `CountToken=false`                   |
+| `GET_MEDIA_TOKEN`                | Contar tokens de imagen/audio en modo streaming              | `true`        | `GET_MEDIA_TOKEN=false`              |
+| `GET_MEDIA_TOKEN_NOT_STREAM`     | Contar tokens de imagen/audio en modo no streaming           | `false`       | `GET_MEDIA_TOKEN_NOT_STREAM=true`    |
+
+## Configuración de tareas asíncronas
+
+| Variable de entorno           | Descripción                                                  | Valor predeterminado | Ejemplo                               |
+| ------------------------------ | ------------------------------------------------------------ | ------------- | ---------------------------------- |
+| `UPDATE_TASK`                  | Habilitar sondeo de actualizaciones de tareas asíncronas (MJ, Suno, etc.) | `true`        | `UPDATE_TASK=false`                |
+| `TASK_QUERY_LIMIT`             | Número máximo de tareas consultadas por sondeo               | `1000`        | `TASK_QUERY_LIMIT=500`             |
+| `TASK_TIMEOUT_MINUTES`         | Tiempo de espera de tareas asíncronas (minutos), marcadas como fallidas y reembolsadas después del tiempo de espera, 0 para deshabilitar | `1440`        | `TASK_TIMEOUT_MINUTES=720`         |
+| `TASK_PRICE_PATCH`             | Parche de precio de tareas, modelos especificados se facturan solo por uso, nombres de modelos separados por comas | -             | `TASK_PRICE_PATCH=sora-2,sora-2-pro` |
+
+## Configuración de modelos específicos
+
+| Variable de entorno                | Descripción                                    | Valor predeterminado        | Ejemplo                                   |
+| ----------------------------------- | ---------------------------------------------- | -------------------- | -------------------------------------- |
+| `AZURE_DEFAULT_API_VERSION`         | Versión de API predeterminada del canal Azure   | `2025-04-01-preview` | `AZURE_DEFAULT_API_VERSION=2023-05-15` |
+| `COHERE_SAFETY_SETTING`             | Configuración de seguridad del modelo Cohere    | `NONE`               | `COHERE_SAFETY_SETTING=CONTEXTUAL`     |
+| `DIFY_DEBUG`                        | Canal Dify muestra información de flujo de trabajo y nodos | `true`               | `DIFY_DEBUG=false`                     |
+
+## Configuración de caché de suscripciones
+
+| Variable de entorno                   | Descripción                                    | Valor predeterminado | Ejemplo |
+| -------------------------------------- | ---------------------------------------------- | ------------- | ---- |
+| `SUBSCRIPTION_PLAN_CACHE_TTL`          | TTL de caché del plan de suscripción (segundos) | `300`         | `SUBSCRIPTION_PLAN_CACHE_TTL=600`      |
+| `SUBSCRIPTION_PLAN_INFO_CACHE_TTL`     | TTL de caché de detalles del plan de suscripción (segundos) | `120`         | `SUBSCRIPTION_PLAN_INFO_CACHE_TTL=300` |
+| `SUBSCRIPTION_PLAN_CACHE_CAP`          | Capacidad máxima de caché del plan de suscripción | `5000`        | `SUBSCRIPTION_PLAN_CACHE_CAP=10000`    |
+| `SUBSCRIPTION_PLAN_INFO_CACHE_CAP`     | Capacidad máxima de caché de detalles del plan de suscripción | `10000`       | `SUBSCRIPTION_PLAN_INFO_CACHE_CAP=20000` |
+
+## Otra configuración
+
+| Variable de entorno            | Descripción                                    | Valor predeterminado | Ejemplo                               |
+| ------------------------------- | ---------------------------------------------- | ------------- | ---------------------------------- |
+| `ERROR_LOG_ENABLED`             | Registrar y mostrar logs de errores en el frontend | `false`       | `ERROR_LOG_ENABLED=true`           |
+
+## Analítica y estadísticas
+
+| Variable de entorno | Descripción                  | Valor predeterminado                        | Ejemplo                     |
+| -------------------- | ---------------------------- | ------------------------------------ | --------------------------- |
+| `UMAMI_WEBSITE_ID`   | ID del sitio web de Umami    | -                                    | `UMAMI_WEBSITE_ID=xxxx-xxxx` |
+| `UMAMI_SCRIPT_URL`   | URL del script de Umami      | `https://analytics.umami.is/script.js` | `UMAMI_SCRIPT_URL=https://umami.example.com/script.js` |
+| `GOOGLE_ANALYTICS_ID`| ID del sitio web de Google Analytics 4 | -                                    | `GOOGLE_ANALYTICS_ID=G-XXXXXXX` |
+
+## Sincronización de metadatos
+
+| Variable de entorno        | Descripción                       | Valor predeterminado                                | Ejemplo                                   |
+| --------------------------- | --------------------------------- | -------------------------------------------- | ----------------------------------------- |
+| `SYNC_UPSTREAM_BASE`        | Dirección upstream de metadatos de modelo/proveedor | `https://basellm.github.io/llm-metadata`     | `SYNC_UPSTREAM_BASE=https://mirror.example.com/llm-metadata` |
+| `SYNC_HTTP_TIMEOUT_SECONDS` | Tiempo de espera HTTP de sincronización (segundos) | `10`                                         | `SYNC_HTTP_TIMEOUT_SECONDS=15`            |
+| `SYNC_HTTP_RETRY`           | Conteo de reintentos de sincronización | `3`                                          | `SYNC_HTTP_RETRY=5`                       |
+| `SYNC_HTTP_MAX_MB`          | Tamaño máximo del cuerpo de respuesta (MB) | `10`                                         | `SYNC_HTTP_MAX_MB=20`                     |
+
+## Configuración del frontend
+
+| Variable de entorno          | Descripción                                                  | Valor predeterminado | Ejemplo                                    |
+| ----------------------------- | ------------------------------------------------------------ | ------------- | ------------------------------------------ |
+| `VITE_REACT_APP_SERVER_URL`   | URL base del frontend para solicitudes al backend (efectiva en tiempo de compilación) | -             | `VITE_REACT_APP_SERVER_URL=https://api.example.com` |
+
+<Callout type="info" title="Variables de tiempo de compilación">
+  `VITE_REACT_APP_SERVER_URL` es una variable de frontend inyectada por Vite en tiempo de compilación, solo efectiva durante la compilación del frontend, no puede modificarse en tiempo de ejecución.
+</Callout>
+## Análisis continuo de rendimiento con Pyroscope
+
+| Variable de entorno          | Descripción                                    | Valor predeterminado | Ejemplo                      |
+| ----------------------------- | ---------------------------------------------- | ------------- | ---------------------------- |
+| `PYROSCOPE_URL`               | Dirección del servidor Pyroscope, dejar en blanco para deshabilitar | -             | `PYROSCOPE_URL=http://pyroscope:4040` |
+| `PYROSCOPE_APP_NAME`          | Nombre de la aplicación para reportes          | `vxon`     | `PYROSCOPE_APP_NAME=my-api`  |
+| `PYROSCOPE_BASIC_AUTH_USER`   | Nombre de usuario de autenticación básica de Pyroscope | -             | `PYROSCOPE_BASIC_AUTH_USER=admin` |
+| `PYROSCOPE_BASIC_AUTH_PASSWORD` | Contraseña de autenticación básica de Pyroscope | -             | `PYROSCOPE_BASIC_AUTH_PASSWORD=secret` |
+| `HOSTNAME`                    | Etiqueta de nombre de host para reportes       | `vxon`     | `HOSTNAME=node-1`            |
+| `PYROSCOPE_MUTEX_RATE`        | Tasa de muestreo de perfilado de mutex         | `5`           | `PYROSCOPE_MUTEX_RATE=10`    |
+| `PYROSCOPE_BLOCK_RATE`        | Tasa de muestreo de perfilado de bloqueo       | `5`           | `PYROSCOPE_BLOCK_RATE=10`    |
+
+## LinuxDo OAuth
+
+No se requiere modificación en circunstancias normales.
+
+| Variable de entorno          | Descripción               | Valor predeterminado                            | Ejemplo                                  |
+| ----------------------------- | ------------------------- | ---------------------------------------- | ---------------------------------------- |
+| `LINUX_DO_TOKEN_ENDPOINT`     | Endpoint de token de LinuxDo | `https://connect.linux.do/oauth2/token`  | `LINUX_DO_TOKEN_ENDPOINT=https://connect.linux.do/oauth2/token` |
+| `LINUX_DO_USER_ENDPOINT`      | Endpoint de usuario de LinuxDo | `https://connect.linux.do/api/user`      | `LINUX_DO_USER_ENDPOINT=https://connect.linux.do/api/user` |
+
+## Relacionado con depuración
+
+| Variable de entorno | Descripción                                    | Valor predeterminado | Ejemplo          |
+| -------------------- | ---------------------------------------------- | ------------- | ---------------- |
+| `DEBUG`              | Habilitar modo de depuración (incluyendo salida de depuración GORM) | `false`       | `DEBUG=true`     |
+| `GIN_MODE`           | Modo de ejecución de Gin                       | `release`     | `GIN_MODE=debug` |
+| `ENABLE_PPROF`       | Habilitar análisis de rendimiento pprof (puerto 8005) | `false`       | `ENABLE_PPROF=true` |
+
+## Variables de entorno obsoletas
+
+Las siguientes variables de entorno han sido obsoletas. Use las opciones correspondientes en la interfaz de configuración del sistema:
+
+| Variable de entorno          | Método alternativo                                |
+| ----------------------------- | ------------------------------------------------- |
+| `GEMINI_MODEL_MAP`            | Configure en Configuración del sistema - Configuración relacionada con modelos |
+| `GEMINI_SAFETY_SETTING`       | Configure en Configuración del sistema - Configuración relacionada con modelos |
+| `GEMINI_VISION_MAX_IMAGE_NUM` | Configure en Configuración del sistema - Configuración relacionada con modelos |
+
+## Ejemplo de despliegue multimáquina
+
+En escenarios de despliegue multimáquina, se deben configurar las siguientes variables de entorno:
+
+### Configuración del nodo maestro
+
+```bash
+# Database Configuration - Use a remote database
+SQL_DSN=root:password@tcp(db-server:3306)/oneapi
+
+# Security Configuration
+SESSION_SECRET=your_unique_session_secret
+CRYPTO_SECRET=your_unique_crypto_secret
+
+# Redis Cache Configuration
+REDIS_CONN_STRING=redis://default:password@redis-server:6379
+```
+
+### Configuración del nodo esclavo
+
+```bash
+# Database Configuration - Use the same remote database
+SQL_DSN=root:password@tcp(db-server:3306)/oneapi
+
+# Security Configuration - Use the same secret as the master node
+SESSION_SECRET=your_unique_session_secret
+CRYPTO_SECRET=your_unique_crypto_secret
+
+# Redis Cache Configuration - Use the same Redis as the master node
+REDIS_CONN_STRING=redis://default:password@redis-server:6379
+
+# Node Type Setting
+NODE_TYPE=slave
+
+# Optional: Frontend Base URL
+# FRONTEND_BASE_URL=https://<your-vxon-domain>
+
+# Optional: Synchronization Frequency
+SYNC_FREQUENCY=60
+```
+
+<Callout type="info" title="Configuración completa del clúster">
+  Este es solo un ejemplo básico de configuración multinodo. Para la configuración completa del despliegue en clúster, descripción de la arquitectura y mejores prácticas, consulte la [Guía de despliegue en clúster](/es/docs/installation/deployment-methods/cluster-deployment).
+</Callout>
+
+## Ejemplo de variables de entorno en Docker Compose
+
+A continuación se muestra un breve ejemplo de configuración de variables de entorno en un archivo de configuración de Docker Compose:
+
+```yaml
+services:
+  vxon:
+    image: vxon/vxon:latest
+    environment:
+      - TZ=Asia/Shanghai
+      - SQL_DSN=root:123456@tcp(mysql:3306)/oneapi
+      - REDIS_CONN_STRING=redis://default:redispw@redis:6379
+      - SESSION_SECRET=your_unique_session_secret
+      - CRYPTO_SECRET=your_unique_crypto_secret
+      - MEMORY_CACHE_ENABLED=true
+      - GENERATE_DEFAULT_TOKEN=true
+      - STREAMING_TIMEOUT=120
+      - CHANNEL_UPDATE_FREQUENCY=1440
+```
+
+Para una configuración completa de Docker Compose, incluyendo más opciones de configuración de variables de entorno, consulte el documento [Instrucciones de configuración de Docker Compose](/es/docs/installation/config-maintenance/docker-compose-yml).
