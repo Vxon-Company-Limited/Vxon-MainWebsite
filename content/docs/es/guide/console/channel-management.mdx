@@ -1,0 +1,569 @@
+---
+title: Canales
+---
+
+Aquí puede gestionar los canales upstream de Vxon.
+
+![Channels](/assets/guide/channel.png)
+
+## Página de Creación/Edición de Canal
+
+![Channel Management 1](/assets/guide/create-channel-1.png)
+
+![Channel Management 2](/assets/guide/create-channel-2.png)
+
+![Channel Management 3](/assets/guide/create-channel-3.png)
+
+# Documentación de Configuración de Sobrescritura de Parámetros
+
+## Descripción General
+
+El sistema de sobrescritura de parámetros admite dos modos: modo de sobrescritura simple (compatible con versiones anteriores) y modo de operación avanzada. Se pueden lograr ajustes dinámicos complejos de parámetros mediante juicios condicionales flexibles y tipos de operación.
+
+## Uso
+
+### Modo de Sobrescritura Simple
+
+Compatible con versiones anteriores, especifique directamente los campos y valores a sobrescribir, y el sistema fusionará estos campos en la solicitud original.
+
+```json
+{
+  "temperature": 0.8,
+  "max_tokens": 2000,
+  "model": "gpt-4"
+}
+```
+
+### Modo de Operación Avanzada
+
+Defina operaciones complejas de parámetros a través del array `operations`, admitiendo funciones avanzadas como juicios condicionales, operaciones de arrays, concatenación de cadenas y normalización de cadenas.
+
+#### Estructura Básica
+
+```json
+{
+  "operations": [
+    {
+      "path": "temperature",
+      "mode": "set",
+      "value": 0.8,
+      "conditions": [...],
+      "logic": "AND"
+    }
+  ]
+}
+```
+
+**Descripción de Campos (completar según sea necesario):**
+
+- `mode`: Requerido
+- `path`: Aplicable a `set` / `delete` / `append` / `prepend` / `trim_prefix` / `trim_suffix` / `ensure_prefix` / `ensure_suffix` / `trim_space` / `to_lower` / `to_upper` / `replace` / `regex_replace`
+- `value`: Comúnmente utilizado en `set` / `append` / `prepend` / `trim_prefix` / `trim_suffix` / `ensure_prefix` / `ensure_suffix`
+- `from` / `to`: Aplicable a `move` / `copy` / `replace` / `regex_replace`
+- `keep_origin`: Utilizado para `set` (omite si el valor ya existe) y para `append` / `prepend` durante la fusión de objetos.
+
+## Modos de Operación (mode)
+
+### 1. set - Establecer Valor
+
+Establece el valor en la ruta especificada.
+
+```json
+{
+  "path": "temperature",
+  "mode": "set",
+  "value": 0.8,
+  "keep_origin": false
+}
+```
+
+**Descripción de Parámetros:**
+
+- `keep_origin`: Cuando es `true`, si la ruta de destino ya tiene un valor, se omite la asignación.
+
+### 2. delete - Eliminar Campo
+
+Elimina el campo en la ruta especificada.
+
+```json
+{
+  "path": "messages.0",
+  "mode": "delete"
+}
+```
+
+### 3. move - Mover Campo
+
+Mueve el valor de un campo a otra ubicación.
+
+```json
+{
+  "mode": "move",
+  "from": "messages.0.content",
+  "to": "system"
+}
+```
+
+### 4. append - Agregar Contenido al Final
+
+Agrega nuevo contenido después del contenido existente.
+
+```json
+{
+  "path": "messages.0.content",
+  "mode": "append",
+  "value": "\n\n请用中文回答。"
+}
+```
+
+**Tipos de Datos Compatibles:**
+
+- **String**: Agrega al final de la cadena original.
+- **Array**: Agrega elementos al final del array (admite agregar elementos individuales o arrays).
+- **Object**: Fusiona propiedades del objeto.
+
+### 5. prepend - Agregar Contenido al Inicio
+
+Agrega nuevo contenido antes del contenido existente.
+
+```json
+{
+  "path": "messages.0.content",
+  "mode": "prepend",
+  "value": "重要提示：请仔细阅读以下内容。\n\n"
+}
+```
+
+**Tipos de Datos Compatibles:**
+
+- **String**: Agrega al inicio de la cadena original.
+- **Array**: Agrega elementos al inicio del array (admite agregar elementos individuales o arrays).
+- **Object**: Fusiona propiedades del objeto.
+
+### 6. copy - Copiar Campo
+
+Copia el valor de la ruta especificada por `from` a la ruta especificada por `to` (no elimina el campo de origen).
+
+```json
+{
+  "mode": "copy",
+  "from": "model",
+  "to": "original_model"
+}
+```
+
+**Requisitos de Parámetros:**
+
+- `from` / `to`: Requeridos
+- Se reportará un error si la ruta de origen no existe.
+
+### 7. trim_prefix - Recortar Prefijo
+
+Elimina el prefijo especificado de un campo de cadena (si no coincide, permanece sin cambios).
+
+```json
+{
+  "path": "model",
+  "mode": "trim_prefix",
+  "value": "openai/"
+}
+```
+
+**Requisitos de Parámetros:**
+
+- `value`: Requerido
+
+### 8. trim_suffix - Recortar Sufijo
+
+Elimina el sufijo especificado de un campo de cadena (si no coincide, permanece sin cambios).
+
+```json
+{
+  "path": "model",
+  "mode": "trim_suffix",
+  "value": "-latest"
+}
+```
+
+**Requisitos de Parámetros:**
+
+- `value`: Requerido
+
+### 9. ensure_prefix - Asegurar Prefijo
+
+Asegura que un campo de cadena comience con el prefijo especificado (si ya existe, permanece sin cambios).
+
+```json
+{
+  "path": "model",
+  "mode": "ensure_prefix",
+  "value": "openai/"
+}
+```
+
+**Requisitos de Parámetros:**
+
+- `value`: Requerido y no puede ser una cadena vacía.
+
+### 10. ensure_suffix - Asegurar Sufijo
+
+Asegura que un campo de cadena termine con el sufijo especificado (si ya existe, permanece sin cambios).
+
+```json
+{
+  "path": "model",
+  "mode": "ensure_suffix",
+  "value": "-latest"
+}
+```
+
+**Requisitos de Parámetros:**
+
+- `value`: Requerido y no puede ser una cadena vacía.
+
+### 11. trim_space - Recortar Espacios en Blanco
+
+Realiza `TrimSpace` en un campo de cadena (se eliminarán espacios, saltos de línea, tabulaciones, etc.).
+
+```json
+{
+  "path": "model",
+  "mode": "trim_space"
+}
+```
+
+### 12. to_lower - Convertir a Minúsculas
+
+Convierte un campo de cadena a minúsculas.
+
+```json
+{
+  "path": "model",
+  "mode": "to_lower"
+}
+```
+
+### 13. to_upper - Convertir a Mayúsculas
+
+Convierte un campo de cadena a mayúsculas.
+
+```json
+{
+  "path": "model",
+  "mode": "to_upper"
+}
+```
+
+### 14. replace - Reemplazo de Cadena
+
+Realiza el reemplazo de subcadenas en un campo de cadena.
+
+```json
+{
+  "path": "model",
+  "mode": "replace",
+  "from": "openai/",
+  "to": ""
+}
+```
+
+**Requisitos de Parámetros:**
+
+- `from`: Requerido y no puede ser una cadena vacía.
+- `to`: Opcional, equivalente a una cadena vacía si se omite.
+
+### 15. regex_replace - Reemplazo con Expresión Regular
+
+Realiza coincidencia y reemplazo con expresiones regulares en un campo de cadena.
+
+```json
+{
+  "path": "model",
+  "mode": "regex_replace",
+  "from": "^gpt-",
+  "to": "openai/gpt-"
+}
+```
+
+**Requisitos de Parámetros:**
+
+- `from`: Requerido (expresión regular, sintaxis regexp de Go).
+- `to`: Opcional, equivalente a una cadena vacía si se omite.
+
+## Juicio Condicional
+
+Establezca las condiciones para la ejecución de operaciones usando el array `conditions`; la operación correspondiente solo se ejecutará cuando se cumplan las condiciones.
+
+### Estructura de Condición
+
+```json
+{
+  "conditions": [
+    {
+      "path": "model",
+      "mode": "contains",
+      "value": "gpt-4",
+      "invert": false,
+      "pass_missing_key": false
+    }
+  ],
+  "logic": "AND"
+}
+```
+
+### Modos de Coincidencia de Condiciones
+
+- `full`: Coincidencia exacta (predeterminado)
+- `prefix`: Coincidencia por prefijo
+- `suffix`: Coincidencia por sufijo
+- `contains`: Coincidencia por contenido
+- `gt`: Mayor que (solo tipos numéricos)
+- `gte`: Mayor o igual que (solo tipos numéricos)
+- `lt`: Menor que (solo tipos numéricos)
+- `lte`: Menor o igual que (solo tipos numéricos)
+
+- Nota:
+
+* Las comparaciones numéricas solo pueden usarse para tipos numéricos.
+* Las operaciones de cadena (prefix, suffix, contains) convertirán los valores a cadenas para la comparación.
+
+### Descripción de Parámetros de Condición
+
+- `invert`: Función de inversión, `true` significa negar el resultado.
+- `pass_missing_key`: Comportamiento cuando la ruta especificada no existe.
+  - `true`: La condición se cumple si la ruta no existe.
+  - `false`: La condición no se cumple si la ruta no existe (predeterminado).
+
+### Relación Lógica (logic)
+
+- `AND`: Todas las condiciones deben cumplirse.
+- `OR`: Basta con que se cumpla cualquier condición (predeterminado).
+
+## Sintaxis de Ruta
+
+Use la sintaxis de ruta JSON para acceder a campos anidados:
+
+- `temperature` - Campo de nivel raíz
+- `messages.0.content` - El campo content del primer elemento del array.
+- `messages.-1.content` - El campo content del último elemento del array.
+- `metadata.user.name` - Campo de objeto anidado.
+
+Además, `path` admite las siguientes variables integradas (no necesitan existir explícitamente en el cuerpo de la solicitud), que pueden usarse directamente para juicios condicionales:
+
+| Variable | Significado | Uso Típico |
+| --- | --- | --- |
+| `model` / `upstream_model` | Modelo de destino después de la redirección | Coincidencia condicional basada en el modelo upstream real llamado |
+| `original_model` | Modelo de destino antes de la redirección | Coincidencia condicional basada en el modelo original solicitado por el usuario |
+
+## Ejemplos Prácticos
+
+### 1. Ajustar Dinámicamente los Parámetros del Modelo
+
+Ajustar dinámicamente el parámetro de temperatura según el contenido del mensaje:
+
+```json
+{
+  "operations": [
+    {
+      "path": "temperature",
+      "mode": "set",
+      "value": 0.3,
+      "conditions": [
+        {
+          "path": "messages.0.content",
+          "mode": "contains",
+          "value": "代码"
+        }
+      ]
+    },
+    {
+      "path": "temperature",
+      "mode": "set",
+      "value": 0.9,
+      "conditions": [
+        {
+          "path": "messages.0.content",
+          "mode": "contains",
+          "value": "创意"
+        }
+      ]
+    }
+  ]
+}
+```
+
+### 2. Agregar Prompt del Sistema
+
+Agregar un mensaje del sistema al inicio del array de mensajes:
+
+```json
+{
+  "operations": [
+    {
+      "path": "messages",
+      "mode": "prepend",
+      "value": [
+        {
+          "role": "system",
+          "content": "你是一个专业的AI助手，请始终保持礼貌和专业。"
+        }
+      ]
+    }
+  ]
+}
+```
+
+### 3. Ajustar Parámetros Según el Tipo de Modelo
+
+Establecer diferentes max_tokens según diferentes modelos:
+
+```json
+{
+  "operations": [
+    {
+      "path": "max_tokens",
+      "mode": "set",
+      "value": 4000,
+      "conditions": [
+        {
+          "path": "model",
+          "mode": "prefix",
+          "value": "gpt-4"
+        }
+      ]
+    },
+    {
+      "path": "max_tokens",
+      "mode": "set",
+      "value": 2000,
+      "conditions": [
+        {
+          "path": "model",
+          "mode": "prefix",
+          "value": "gpt-3.5"
+        }
+      ]
+    }
+  ]
+}
+```
+
+### 4. Combinación de Múltiples Condiciones (Lógica AND)
+
+Ejecutar la operación solo cuando se cumplan múltiples condiciones simultáneamente:
+
+```json
+{
+  "operations": [
+    {
+      "path": "stream",
+      "mode": "set",
+      "value": false,
+      "conditions": [
+        {
+          "path": "model",
+          "mode": "contains",
+          "value": "claude"
+        },
+        {
+          "path": "messages.0.content",
+          "mode": "contains",
+          "value": "长文"
+        }
+      ],
+      "logic": "AND"
+    }
+  ]
+}
+```
+
+### 5. Condiciones de Comparación Numérica
+
+Realizar juicio condicional basado en el tamaño numérico:
+
+```json
+{
+  "operations": [
+    {
+      "path": "temperature",
+      "mode": "set",
+      "value": 0.1,
+      "conditions": [
+        {
+          "path": "max_tokens",
+          "mode": "gt",
+          "value": 1000
+        }
+      ]
+    }
+  ]
+}
+```
+
+### 6. Condición Invertida
+
+Usar `invert` para implementar lógica inversa:
+
+```json
+{
+  "operations": [
+    {
+      "path": "stream",
+      "mode": "set",
+      "value": true,
+      "conditions": [
+        {
+          "path": "model",
+          "mode": "contains",
+          "value": "gpt-3.5",
+          "invert": true
+        }
+      ]
+    }
+  ]
+}
+```
+
+### 7. Manejar Campos Faltantes
+
+Usar `pass_missing_key` para manejar campos que podrían no existir:
+
+```json
+{
+  "operations": [
+    {
+      "path": "temperature",
+      "mode": "set",
+      "value": 0.7,
+      "conditions": [
+        {
+          "path": "custom_field",
+          "mode": "full",
+          "value": "special",
+          "pass_missing_key": true
+        }
+      ]
+    }
+  ]
+}
+```
+
+### 8. Ejemplo de Concatenación de Cadenas
+
+Agregar instrucciones después del mensaje del usuario:
+
+```json
+{
+  "operations": [
+    {
+      "path": "messages.-1.content",
+      "mode": "append",
+      "value": "\n\n请详细解释你的思考过程。"
+    }
+  ]
+}
+```
+
+## Notas Importantes
+
+**Orden de Ejecución**: Las operaciones se ejecutan secuencialmente según su orden en el array `operations`; las operaciones anteriores pueden afectar a las operaciones posteriores.
