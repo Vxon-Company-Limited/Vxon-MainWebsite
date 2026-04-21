@@ -1,0 +1,9 @@
+{
+  "title": "Cooperación comercial",
+  "description": "Business cooperation and contact information",
+  "root": true,
+  "icon": "Handshake",
+  "pages": [
+    "index"
+  ]
+}
