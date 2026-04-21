@@ -1,0 +1,89 @@
+---
+title: Inicio rápido
+description: Elija el método de despliegue que mejor se adapte a sus necesidades
+---
+
+import {
+  Server,
+  Network,
+  Code2,
+  Headphones,
+  Bot,
+  Handshake,
+  Container,
+  Boxes,
+} from 'lucide-react';
+
+## Selección del método de despliegue
+
+Elija el método de despliegue apropiado según su entorno y requisitos técnicos.
+
+<Cards>
+  <Card
+    icon={<Boxes />}
+    title="Despliegue con Docker Compose"
+    description="Orqueste múltiples servicios con Docker Compose, adecuado para entornos de producción o escenarios que requieren dependencias como MySQL y Redis."
+    href="/es/docs/installation/deployment-methods/docker-compose-installation"
+  />
+  <Card
+    icon={<Container />}
+    title="Despliegue con contenedor Docker único"
+    description="Despliegue rápido de Vxon usando una imagen Docker, adecuado para uso personal o aplicaciones de pequeña escala."
+    href="/es/docs/installation/deployment-methods/docker-installation"
+  />
+  <Card
+    icon={<Server />}
+    title="Despliegue con 1Panel"
+    description="Despliegue rápido a través de la interfaz gráfica de 1Panel, adecuado para usuarios no familiarizados con la línea de comandos."
+    href="/es/docs/installation/deployment-methods/1panel-installation"
+  />
+  <Card
+    icon={<Server />}
+    title="Despliegue con panel Baota"
+    description="Despliegue rápido a través de la interfaz gráfica del panel Baota, adecuado para usuarios no familiarizados con la línea de comandos."
+    href="/es/docs/installation/deployment-methods/bt-docker-installation"
+  />
+  <Card
+    icon={<Network />}
+    title="Modo de despliegue en clúster"
+    description="Despliegue distribuido multinodo para alta disponibilidad, balanceo de carga y escalabilidad horizontal, adecuado para aplicaciones a gran escala y escenarios empresariales."
+    href="/es/docs/installation/deployment-methods/cluster-deployment"
+  />
+  <Card
+    icon={<Code2 />}
+    title="Despliegue de desarrollo local"
+    description="Adecuado para desarrolladores que contribuyen código y desarrollo personalizado, proporcionando una guía completa de configuración del entorno de desarrollo local."
+    href="/es/docs/installation/deployment-methods/local-development"
+  />
+</Cards>
+
+## Explore nuestra documentación
+
+Explore guías y recursos completos para aprovechar al máximo las potentes funcionalidades de Vxon.
+
+<Cards>
+  <Card
+    icon={<Code2 />}
+    title="Documentación de la API"
+    description="Descripciones completas de interfaces API y ejemplos de llamadas."
+    href="/es/docs/api"
+  />
+  <Card
+    icon={<Bot />}
+    title="Aplicaciones de IA"
+    description="Explore diversos ejemplos de aplicaciones de IA desarrolladas con Vxon."
+    href="/es/docs/apps"
+  />
+  <Card
+    icon={<Headphones />}
+    title="Ayuda y soporte"
+    description="Preguntas frecuentes y comunicación con la comunidad."
+    href="/es/docs/support"
+  />
+  <Card
+    icon={<Handshake />}
+    title="Cooperación comercial"
+    description="Asóciese con nosotros para explorar conjuntamente el ecosistema de IA y las oportunidades de negocio."
+    href="/es/docs/business"
+  />
+</Cards>
