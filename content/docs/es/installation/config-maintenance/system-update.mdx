@@ -1,0 +1,212 @@
+---
+title: Guía de actualización del sistema
+---
+
+Este documento proporciona métodos y mejores prácticas para actualizar el sistema Vxon para garantizar una actualización fluida a la última versión.
+
+## Preparativos previos a la actualización
+
+Antes de actualizar el sistema, se recomienda realizar los siguientes preparativos:
+
+1.  **Respaldar datos**: Respalde su base de datos y archivos de configuración importantes
+2.  **Revisar los registros de actualización**: Revise el contenido de actualización de la última versión en [GitHub Releases](https://github.com/Vxon/vxon/releases)
+3.  **Verificar compatibilidad**: Confirme si la nueva versión es compatible con sus plugins, integraciones o configuraciones personalizadas existentes
+4.  **Elegir un momento apropiado**: Realice la actualización durante horas de baja actividad para minimizar el impacto en los usuarios
+
+## Métodos de actualización para despliegue Docker
+
+### Método uno: Actualización de despliegue con contenedor único
+
+Si ha desplegado Vxon usando un contenedor Docker único, puede actualizar siguiendo estos pasos:
+
+```shell
+# 拉取最新镜像
+docker pull vxon/vxon:latest
+
+# 停止并移除旧容器
+docker stop vxon
+docker rm vxon
+
+# 使用相同的参数重新运行容器
+docker run --name vxon -d --restart always \
+  -p 3000:3000 \
+  -e TZ=Asia/Shanghai \
+  -v /your/data/path:/data \
+  vxon/vxon:latest
+```
+
+<Callout type="warn" title="Tenga en cuenta">
+  Asegúrese de usar los mismos parámetros que el contenedor original al
+  iniciar el nuevo contenedor, especialmente para los montajes de volúmenes de datos y las
+  configuraciones de variables de entorno.
+</Callout>
+
+### Método dos: Actualización usando Docker Compose
+
+Si está desplegando usando Docker Compose (consulte [Instrucciones de configuración de Docker Compose](/es/docs/installation/config-maintenance/docker-compose-yml)), el proceso de actualización es más simple:
+
+```shell
+# 进入项目目录
+cd vxon
+
+# 拉取最新镜像
+docker compose pull
+
+# 停止并重启服务
+docker compose down
+docker compose up -d
+```
+
+O use un comando más conciso:
+
+```shell
+docker compose pull && docker compose down && docker compose up -d
+```
+### Método tres: Actualización usando el panel 1Panel
+
+Si está desplegando usando el panel 1Panel, puede actualizar siguiendo estos pasos:
+
+1.  Inicie sesión en el panel 1Panel, vaya a **Tienda de aplicaciones** -> **Página de actualizables**
+2.  Encuentre la aplicación Vxon y haga clic en el botón **Actualizar**
+3.  Seleccione la **Versión de destino a la que actualizar**
+4.  Haga clic en el botón **Confirmar**, y el sistema descargará automáticamente la última imagen para actualizar la aplicación
+
+### Método cuatro: Actualización usando el panel Baota
+
+Si está desplegando usando el panel Baota, puede actualizar siguiendo estos pasos:
+
+1.  Inicie sesión en el panel Baota, vaya a **Gestión de Docker** -> **Lista de contenedores**
+2.  Encuentre el contenedor Vxon, haga clic en **Más** -> **Recrear**
+3.  Marque la opción **Descargar última imagen**, asegurándose de que las demás configuraciones permanezcan sin cambios
+4.  Haga clic en **Enviar**, y el sistema descargará automáticamente la última imagen y recreará el contenedor
+
+## Método de actualización desde compilación de código fuente
+
+Si ha desplegado Vxon compilando desde código fuente, los pasos de actualización son los siguientes:
+
+```shell
+# 进入项目目录
+cd vxon
+
+# 拉取最新代码
+git pull
+
+# 编译后端
+go build -o vxon
+
+# 更新并编译前端
+cd web
+bun install
+bun run build
+cd ..
+
+# 重启服务
+./vxon --port 3000
+```
+
+## Estrategia de actualización para despliegue multinodo
+
+Para entornos de despliegue multinodo, se recomienda la siguiente estrategia de actualización:
+
+1.  **Actualizar primero los nodos secundarios**: Primero actualice un nodo secundario y pruebe su estabilidad
+2.  **Despliegue gradual**: Después de confirmar la estabilidad del nodo secundario, actualice los nodos secundarios restantes uno por uno
+3.  **Finalmente actualizar el nodo principal**: Después de que todos los nodos secundarios estén funcionando de manera estable, actualice el nodo principal
+
+Esta estrategia puede minimizar el riesgo de interrupción del servicio.
+
+<Callout title="Guía detallada">
+  Para una guía completa sobre despliegue en clúster, consulte la [Documentación
+  de despliegue en
+  clúster](/es/docs/installation/deployment-methods/cluster-deployment).
+</Callout>
+
+## Lista de verificación posterior a la actualización
+
+Después de la actualización del sistema, verifique los siguientes elementos para asegurar que el sistema funcione correctamente:
+
+1.  **Acceder a la interfaz de gestión**: Confirme que puede iniciar sesión y acceder a la interfaz de gestión normalmente
+2.  **Verificar logs**: Revise los logs del sistema en busca de errores o advertencias
+3.  **Probar llamadas a la API**: Pruebe algunas llamadas a la API para asegurar que la funcionalidad sea normal
+4.  **Verificar migración de base de datos**: Confirme si la actualización de la estructura de la base de datos fue exitosa
+5.  **Verificar estado de canales**: Confirme si todas las conexiones de canales son normales
+
+## Reversión de versión
+
+Si surgen problemas después de una actualización, puede revertir a una versión estable anterior:
+
+### Reversión con Docker
+
+```shell
+# 拉取特定版本的镜像
+docker pull vxon/vxon:v1.x.x
+
+# 停止并移除当前容器
+docker stop vxon
+docker rm vxon
+
+# 使用旧版本镜像重新创建容器
+docker run --name vxon -d --restart always \
+  -p 3000:3000 \
+  -e TZ=Asia/Shanghai \
+  -v /your/data/path:/data \
+  vxon/vxon:v1.x.x
+```
+
+### Reversión desde código fuente
+
+```shell
+# 进入项目目录
+cd vxon
+
+# 切换到特定版本
+git checkout v1.x.x
+
+# 重新编译
+go build -o vxon
+
+# 更新并编译前端
+cd web
+bun install
+bun run build
+cd ..
+
+# 重启服务
+./vxon --port 3000
+```
+
+## Problemas comunes
+
+### El servicio no inicia después de la actualización
+
+- Verifique los logs en busca de mensajes de error
+- Confirme que la conexión a la base de datos sea normal
+- Confirme que la configuración de variables de entorno sea correcta
+
+### Funcionalidad anormal después de la actualización
+
+- Verifique si hay cambios en el formato de la API
+- Verifique si las versiones del frontend y backend coinciden
+- Confirme si la nueva versión requiere configuración adicional
+
+### Incompatibilidad de estructura de base de datos
+
+- Verifique los registros de actualización para instrucciones de migración de base de datos
+- Verifique si se requiere la ejecución manual de scripts de migración de base de datos
+- Contacte a los desarrolladores para orientación sobre la actualización de la base de datos
+
+## Herramientas de actualización automática (Usar con precaución)
+
+Para usuarios que deseen automatizar las actualizaciones, se puede usar Watchtower para actualizar contenedores automáticamente:
+
+```shell
+docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+  containrrr/watchtower -c \
+  --run-once vxon
+```
+
+<Callout type="warn" title="Tenga en cuenta">
+  Las actualizaciones automáticas pueden causar problemas inesperados, especialmente cuando
+  las estructuras de la base de datos cambian. Se recomienda usar actualizaciones automáticas solo en entornos
+  de prueba; los entornos de producción deben controlar el proceso de actualización
+  manualmente.
+</Callout>
