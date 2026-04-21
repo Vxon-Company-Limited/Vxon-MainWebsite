@@ -1,0 +1,169 @@
+---
+title: Factory Droid CLI
+description: Guía de configuración de Factory Droid CLI — instale y configure este agente de ingeniería de software con IA con Vxon. Compatible con desarrollo de extremo a extremo desde la planificación hasta las pruebas.
+---
+
+<Callout type="info" title="Introducción del proyecto">
+  Droid CLI es una herramienta de línea de comandos desarrollada por Factory AI, diseñada para ejecutarse como un agente de ingeniería de software con IA. Permite a los usuarios interactuar con diversos modelos de lenguaje de gran escala a través de la terminal, construir, depurar y refactorizar código, e incluso crear aplicaciones completas.
+
+  - Página oficial: [https://factory.ai/product/cli](https://factory.ai/product/cli)
+  - Documentación oficial: [https://docs.factory.ai/cli/getting-started/quickstart](https://docs.factory.ai/cli/getting-started/quickstart)
+</Callout>
+
+## Demo
+
+![droid.webp](/assets/factory_droid_cli/droid_example.webp)
+
+### Características
+
+| Categoría                          | Característica                                                                                                              | Valor/Capacidad                                                | Ejemplo/Notas                                                             |
+| ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| Inicio rápido con CLI              | Instalación en 30 segundos; inicie sesión interactiva de droid en el directorio del proyecto; compatible con macOS/Linux y Windows | Integración rápida en proyectos actuales, sin nuevas herramientas necesarias | Instalación en Windows: `irm https://app.factory.ai/cli/windows \| iex`; Iniciar: `droid` |
+| Desarrollo de funcionalidades de extremo a extremo | Automatización de proceso completo desde planificación hasta implementación y pruebas; proceso de revisión transparente | Acelerar la entrega, mantener supervisión humana               | Visualización nativa de diff y proceso de aprobación (ver "Transparencia y control") |
+| Comprensión profunda de la base de código | Integra conocimiento organizacional compartido de bases de código, documentación, seguimiento de issues; consciente del contexto, mejora con el tiempo | Sugerencias y cambios más precisos                             | Aprovecha continuamente el conocimiento entre repositorios y documentos   |
+| Integración con sistemas de ingeniería | Integración nativa con Jira, Notion, Slack y otras herramientas; el trabajo de desarrollo se mantiene sincronizado con los procesos del equipo | Reducir cambio de herramientas y silos de información          | "etc." indica más integraciones                                           |
+| Automatización de grado de producción | Flujos de trabajo reutilizables localmente y en CI/CD; seguridad y cumplimiento de nivel empresarial integrados | Consistencia y auditabilidad                                   | Se adapta a pipelines y entornos empresariales                            |
+| Capacidades empresariales          | Opciones de despliegue privado, cumplimiento SOC-2, entornos aislados                                                      | Cumple con requisitos de seguridad y cumplimiento              | Prioriza seguridad y calidad                                              |
+| Mejorar herramientas existentes    | Funciona en terminal, IDE y entornos de desarrollo existentes; sin necesidad de cambiar editores o aprender nuevas interfaces | Mantener hábitos de trabajo existentes, bajo costo de migración | Integración profunda con herramientas familiares                          |
+| Transparencia y control            | Cada decisión es visible y revisable; supervisión completa de cambios de código; visualización nativa de diff y flujos de aprobación | Reducir riesgo, mejorar controlabilidad                        | Compatible con auditoría, rastreable                                      |
+| Flexibilidad de modelos            | No vinculado a un solo proveedor de IA; elija el mejor modelo por tarea; comportamiento y memoria organizacional consistentes | Elección óptima entre rendimiento y costo                      | Compatible con enrutamiento multi-modelo                                  |
+| Próximos pasos y recursos          | Inicio rápido, Casos de uso comunes, Integración con IDE, Configuración, AGENTS.md                                         | Facilita la adopción y práctica                                | Ver "Próximos pasos/Recursos adicionales" en la página                    |
+## Método de configuración del modelo de IA
+
+### Guía gráfica para Windows
+
+#### 1. Abrir Terminal
+
+![windows_open_terminal](/assets/factory_droid_cli/windows_open_terminal.png)
+
+#### 2. Instalar Factory Droid CLI
+
+Comando de instalación oficial con un clic:
+
+<Callout type="info" title="Comando de instalación con un clic">
+  ```powershell
+  irm https://app.factory.ai/cli/windows | iex
+  ```
+</Callout>
+
+![windows-install](/assets/factory_droid_cli/windows_install_droid.webp)
+
+#### 3. Modificar archivo de configuración
+
+Droid CLI requiere modificar el archivo de configuración para usar APIs de terceros.
+
+![windows-configure.webp](/assets/factory_droid_cli/factory_cli_setup_windows.png)
+
+<Callout type="info" title="Modificar variables de entorno">
+  ```powershell
+  iex (irm 'https://raw.githubusercontent.com/Vxon/vxon-docs/refs/heads/main/helper/factory-cli-setup.ps1')
+  ```
+</Callout>
+
+#### 4. Comenzar a usar Droid CLI
+
+¡Ahora puede comenzar a usar Droid CLI!
+
+<Callout type="info" title="Iniciar Droid CLI">
+  Inicie Droid CLI directamente:
+
+  ```bash
+  droid
+  ```
+
+  Usar en un proyecto específico:
+
+  ```bash
+  # Navegue al directorio de su proyecto
+  cd C:\path\to\your\project
+
+  # Inicie Droid CLI
+  droid
+  ```
+
+  Presione Enter para iniciar Droid CLI.
+</Callout>
+
+Droid CLI requiere que los usuarios inicien sesión en una cuenta oficial (gratuita) antes de usarlo.
+
+#### 5. Solución de problemas comunes en Windows
+
+<Callout type="info" title='La instalación muestra error de "permiso denegado"'>
+  Esto generalmente es un problema de permisos. Pruebe las siguientes soluciones:
+
+  - Ejecute PowerShell como administrador
+  - O configure `npm` para usar el directorio del usuario: `npm config set prefix %APPDATA%\npm`
+</Callout>
+
+<Callout type="info" title="Error de política de ejecución de PowerShell">
+  Si encuentra una restricción de política de ejecución, ejecute:
+
+  ```powershell
+  Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+  ```
+</Callout>
+
+### Guía gráfica para macOS/Linux
+
+#### 1. Instalar Droid CLI
+
+<Callout type="info" title="Instalar Droid CLI">
+  Abra su terminal y ejecute el siguiente comando:
+
+  ```bash
+  curl -fsSL https://app.factory.ai/cli | sh
+  ```
+</Callout>
+
+![macos-open-terminal](/assets/factory_droid_cli/macos_install_droid.webp)
+
+![macos-img-02.webp](/assets/factory_droid_cli/macos_install_droid_2.webp)
+
+Siga las instrucciones de instalación para modificar las variables de entorno (copie directamente el código de las instrucciones de instalación):
+
+Para Linux, elija `~/.bashrc` o `~/.zshrc` según corresponda.
+
+<Callout type="info" title="Variables de entorno de Droid CLI (Solo ejemplo)">
+  ```bash
+  echo 'export PATH=/Users/modify_here/.local/bin:$PATH' >> ~/.zshrc
+  source ~/.zshrc
+  ```
+</Callout>
+
+#### 2. Modificar archivo de configuración
+
+Droid CLI requiere modificar el archivo de configuración para usar APIs de terceros.
+
+<Callout type="info" title="Modificación del archivo de configuración con un clic">
+  ```bash
+  curl -fsSL https://raw.githubusercontent.com/Vxon/vxon-docs/refs/heads/main/helper/factory-cli-setup.sh | bash
+  ```
+</Callout>
+
+![macos-img-03.webp](/assets/factory_droid_cli/macos_configure.png)
+
+#### 3. Comenzar a usar Droid CLI
+
+¡Ahora puede comenzar a usar Droid CLI!
+
+<Callout type="info" title="Iniciar Droid CLI">
+  Inicie Droid CLI directamente:
+
+  ```bash
+  droid
+  ```
+
+  Usar en un proyecto específico:
+
+  ```bash
+  # Navegue al directorio de su proyecto
+  cd /path/to/your/project
+
+  # Inicie Droid CLI
+  droid
+  ```
+
+  Presione Enter para iniciar Droid CLI.
+</Callout>
+
+> Droid CLI requiere que los usuarios inicien sesión en una cuenta oficial (gratuita) antes de usarlo.
