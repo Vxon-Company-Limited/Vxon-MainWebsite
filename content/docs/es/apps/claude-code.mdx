@@ -1,0 +1,421 @@
+---
+title: Claude Code
+description: Guía de configuración de Claude Code — use el agente de codificación basado en terminal de Anthropic con Vxon. Compatible con comprensión de código, edición de múltiples archivos e integración con IDE.
+---
+
+<Callout type="info" title="Introducción del proyecto">
+  Libere el poder bruto de Claude directamente en su terminal. Busque en bases de código de millones de líneas al instante. Convierta flujos de trabajo de horas en un solo comando. Sus herramientas. Su flujo de trabajo. Su base de código, evolucionando a la velocidad del pensamiento.
+
+  - Página oficial: [https://www.anthropic.com/claude-code](https://www.anthropic.com/claude-code)
+</Callout>
+
+## Demo
+
+![introduce-01.webp](/assets/claude_code/introduce-01.webp)
+
+![introduce-02.webp](/assets/claude_code/introduce-02.webp)
+
+### Características
+
+| **Categoría**                      | **Característica**                                                                                                 |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| **Comprensión de código**          | Análisis profundo de la base de código, utilizando agentes inteligentes para buscar y comprender la estructura del proyecto y sus dependencias |
+|                                    | Genera automáticamente resúmenes de código de alto nivel, ayudando rápidamente a los usuarios a comprender la base de código |
+| **Edición de código**              | Compatible con edición colaborativa de múltiples archivos, adecuada para modificaciones de código complejas |
+|                                    | Proporciona sugerencias de código prácticas y utilizables que se alinean con los patrones y la arquitectura del proyecto |
+| **Capacidades de integración**     | Compatible con ejecución directa en la terminal, eliminando el cambio de contexto |
+|                                    | Integración perfecta con VS Code y JetBrains IDEs, sin necesidad de copiar y pegar |
+| **Generación y optimización de código** | Genera código automáticamente, crea pruebas, corrige errores, soportando el proceso completo desde el concepto hasta el commit |
+|                                    | Optimizado para generación y comprensión de código, combinando modelos avanzados como Claude Opus 4 |
+| **Seguridad y flexibilidad**       | Los cambios requieren autorización explícita del usuario, garantizando operaciones de archivos y comandos más seguras |
+|                                    | Se adapta a los estándares de código del usuario, compatible con configuraciones personalizadas |
+| **Integración de cadena de herramientas** | Compatible con integración con herramientas como GitHub y GitLab para lograr flujos de trabajo automatizados |
+|                                    | Se integra con suites de pruebas y sistemas de compilación, mejorando las herramientas de desarrollo existentes |
+| **Multiplataforma y extensibilidad** | Compatible con sistemas operativos Windows, macOS y Linux |
+|                                    | Configurable para ejecutarse en SDKs o GitHub Actions, adaptándose de forma flexible a diferentes necesidades |
+| **Escenarios de aplicación clave** | Incorporación y comprensión de la base de código, inicio rápido para nuevos miembros |
+|                                    | Corrección y optimización de problemas de código, desde el análisis del problema hasta el envío de PR |
+|                                    | Refactorización de código del proyecto e implementación de nuevas funcionalidades |
+| **Aspectos destacados de comentarios de usuarios** | Mejora la eficiencia del desarrollo diario, ahorrando tiempo en tareas rutinarias |
+|                                    | Excelente rendimiento en el manejo de tareas complejas de múltiples pasos, ampliando las posibilidades de desarrollo |
+
+## Método de configuración del modelo de IA
+
+### Guía gráfica para Windows
+
+#### 1. Instalar el entorno Node.js
+
+Claude Code requiere un entorno Node.js para ejecutarse.
+
+<Callout type="info" title="Pasos de instalación del entorno Node.js">
+  - Abra su navegador y visite https://nodejs.org/
+  - Haga clic en la versión "LTS" para descargar (se recomienda la versión de soporte a largo plazo)
+  - Después de descargar, haga doble clic en el archivo .msi
+  - Siga el asistente de instalación para completar la instalación, manteniendo la configuración predeterminada
+</Callout>
+<Callout type="warn" title="Notas para Windows">
+  - Se recomienda usar PowerShell en lugar de CMD
+  - Si encuentra problemas de permisos, intente ejecutar como administrador
+  - Algunos antivirus pueden reportar falsos positivos; puede que necesite agregar una excepción
+</Callout>
+
+![windows-img-01.webp](/assets/claude_code/windows-img-01.webp)
+
+![windows-img-02.webp](/assets/claude_code/windows-img-02.webp)
+
+![windows-img-03.webp](/assets/claude_code/windows-img-03.webp)
+
+![windows-img-04.webp](/assets/claude_code/windows-img-04.webp)
+
+![windows-img-05.webp](/assets/claude_code/windows-img-05.webp)
+
+<Callout type="info" title="Verificar instalación exitosa">
+  Después de la instalación, abra PowerShell o CMD e ingrese los siguientes comandos:
+
+  ```bash
+  node --version
+  npm --version
+  ```
+
+  Si se muestran los números de versión, la instalación fue exitosa.
+</Callout>
+
+#### 2. Instalar Git Bash
+
+<Callout type="warn" title="Notas para Windows">
+  En un entorno Windows, se requiere Git Bash para instalar Claude Code. Después de la instalación, la configuración de variables de entorno y el uso de Claude Code se realizarán en PowerShell o CMD normal.
+</Callout>
+
+<Callout type="info" title="Descargar e instalar Git para Windows">
+  - Visite https://git-scm.com/downloads/win
+  - Haga clic en "Download for Windows" para descargar el instalador
+  - Ejecute el archivo de instalación .exe descargado
+  - Mantenga la configuración predeterminada durante la instalación y haga clic en "Next" para completar la instalación
+</Callout>
+
+![windows-img-06.webp](/assets/claude_code/windows-img-06.webp)
+
+![windows-img-07.webp](/assets/claude_code/windows-img-07.webp)
+
+![windows-img-08.webp](/assets/claude_code/windows-img-08.webp)
+
+<Callout type="info" title="Verificar instalación de Git Bash">
+  Después de la instalación, abra Git Bash e ingrese el siguiente comando para verificar:
+
+  ```bash
+  git --version
+  ```
+
+  Si se muestra un número de versión, la instalación fue exitosa.
+</Callout>
+
+#### 3. Instalar Claude Code
+
+<Callout type="info" title="Instalar Claude Code">
+  Abra PowerShell y ejecute el siguiente comando:
+
+  ```bash
+  npm install -g @anthropic-ai/claude-code
+  ```
+
+  Este comando descargará e instalará la última versión de Claude Code desde el repositorio oficial de npm.
+</Callout>
+
+![windows-img-09.webp](/assets/claude_code/windows-img-09.webp)
+
+<Callout type="info" title="Agregar ~/.local/bin al PATH (solo si se solicita)">
+  ```powershell
+  [Environment]::SetEnvironmentVariable('Path', ([Environment]::GetEnvironmentVariable('Path','User') + ";$HOME\.local\bin"), 'User')
+  ```
+</Callout>
+
+<Callout type="info" title="Verificar instalación de Claude Code">
+  Después de la instalación, ingrese el siguiente comando para verificar si se instaló correctamente:
+
+  ```bash
+  claude --version
+  ```
+
+  Si se muestra un número de versión, ¡felicidades! Claude Code se ha instalado correctamente.
+</Callout>
+#### 4. Configurar variables de entorno
+
+<Callout type="info" title="Comando de configuración con un clic (Sistema Windows)">
+  Para permitir que Claude Code se conecte a su servicio de retransmisión, necesita configurar múltiples variables de entorno:
+</Callout>
+
+```powershell
+iex (irm 'https://raw.githubusercontent.com/Vxon/vxon-docs/refs/heads/main/helper/claude-cli-setup.ps1')
+```
+
+![windows-configure](/assets/claude_code/windows_configure.png)
+
+#### 5. Comenzar a usar Claude Code
+
+¡Ahora puede comenzar a usar Claude Code!
+
+<Callout type="info" title="Iniciar Claude Code">
+  Abra PowerShell e inicie Claude Code directamente:
+
+  ```bash
+  claude
+  ```
+
+  Para usar en un proyecto específico:
+
+  ```bash
+  # Navegue al directorio de su proyecto
+  cd C:\path\to\your\project
+
+  # Inicie Claude Code
+  claude
+  ```
+</Callout>
+
+![windows-img-11.webp](/assets/claude_code/windows-img-11.webp)
+
+![windows-img-12.webp](/assets/claude_code/windows-img-12.webp)
+
+![windows-img-13.webp](/assets/claude_code/windows-img-13.webp)
+
+![windows-img-14.webp](/assets/claude_code/windows-img-14.webp)
+
+![windows-img-15.webp](/assets/claude_code/windows-img-15.webp)
+
+<Callout type="info" title="Seleccionar modelo">
+  Ingrese el comando:
+
+  ```bash
+  /model
+  ```
+
+  Presione Enter para seleccionar un modelo; generalmente, la configuración predeterminada es suficiente.
+</Callout>
+
+![windows-img-16.webp](/assets/claude_code/windows-img-16.webp)
+
+![windows-img-17.webp](/assets/claude_code/windows-img-17.webp)
+
+> Nota: Después de modificar las variables de entorno, todos los modelos (incluidos los modelos preconfigurados oficialmente) llamarán al punto de acceso personalizado en lugar de usar las cuotas de la cuenta oficial.
+
+### Guía gráfica para macOS
+
+#### 1. Instalar Claude Code CLI
+
+Abra Terminal
+
+![macos-img-01.webp](/assets/claude_code/macos-img-01.webp)
+<Callout type="info" title="Instalar Claude Code">
+  Abra Terminal y ejecute el siguiente comando:
+
+  ```bash
+  curl -fsSL https://claude.ai/install.sh | bash
+  ```
+
+  Opcional: Ejecute el comando proporcionado cuando se le solicite
+
+  ```bash
+  echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc && source ~/.bashrc
+  ```
+</Callout>
+
+![macos-img-02.webp](/assets/claude_code/macos-img-02.webp)
+
+#### 2. Configurar variables de entorno
+
+Para permitir que Claude Code se conecte a un servicio de retransmisión de terceros, necesita configurar variables de entorno:
+
+<Callout type="info" title="Configuración con un clic de variables de entorno de Claude Code">
+  Ingrese el comando:
+
+  ```bash
+  curl -fsSL https://raw.githubusercontent.com/Vxon/vxon-docs/refs/heads/main/helper/claude-cli-setup.sh | bash
+  ```
+</Callout>
+
+![macos-configure](/assets/claude_code/macos_configure.png)
+
+<Callout type="info" title="Verificar instalación de Claude Code">
+  Después de la instalación, ingrese el siguiente comando para verificar si se instaló correctamente:
+
+  ```bash
+  claude --version
+  ```
+
+  Si se muestra un número de versión, ¡felicidades! Claude Code se ha instalado correctamente.
+</Callout>
+
+#### 3. Comenzar a usar Claude Code
+
+¡Ahora puede comenzar a usar Claude Code!
+
+<Callout type="info" title="Iniciar Claude Code">
+  Inicie Claude Code directamente:
+
+  ```bash
+  claude
+  ```
+
+  Para usar en un proyecto específico:
+
+  ```bash
+  # Navegue al directorio de su proyecto
+  cd /path/to/your/project
+
+  # Inicie Claude Code
+  claude
+  ```
+</Callout>
+
+![macos-img-04.webp](/assets/claude_code/macos-img-04.webp)
+
+![macos-img-05.webp](/assets/claude_code/macos-img-05.webp)
+
+![macos-img-06.webp](/assets/claude_code/macos-img-06.webp)
+
+![macos-img-07.webp](/assets/claude_code/macos-img-07.webp)
+
+![macos-img-08.webp](/assets/claude_code/macos-img-08.webp)
+
+<Callout type="info" title="Seleccionar modelo (Opcional)">
+  Ingrese el comando:
+
+  ```bash
+  /model
+  ```
+
+  Presione Enter para seleccionar un modelo oficial; generalmente, el modelo predeterminado es suficiente.
+</Callout>
+
+![macos-img-09.webp](/assets/claude_code/macos-img-09.webp)
+
+![macos-img-10.webp](/assets/claude_code/macos-img-10.webp)
+
+![macos-img-11.webp](/assets/claude_code/macos-img-11.webp)
+
+> Nota: Después de modificar la variable de entorno `ANTHROPIC_BASE_URL`, todos los modelos (incluidos los modelos preconfigurados oficialmente) llamarán al punto de acceso personalizado en lugar de usar las cuotas de la cuenta oficial.
+#### 4. Problemas comunes en macOS
+
+<Callout type="info" title="La configuración de seguridad de macOS impide la ejecución">
+  Si el sistema impide que Claude Code se ejecute:
+
+  - Abra "Preferencias del Sistema" → "Seguridad y Privacidad"
+  - Haga clic en "Abrir de todos modos" o "Permitir"
+  - O ejecute en Terminal: `sudo spctl --master-disable`
+</Callout>
+
+### Guía gráfica para Linux
+
+#### 1. Instalar Claude Code
+
+![linux-img-01.webp](/assets/claude_code/linux-img-01.webp)
+
+<Callout type="info" title="Instalar Claude Code">
+  Abra Terminal y ejecute el siguiente comando:
+
+  ```bash
+  curl -fsSL https://claude.ai/install.sh | bash
+  ```
+
+  Si encuentra problemas de permisos, puede usar sudo:
+
+  ```bash
+  sudo curl -fsSL https://claude.ai/install.sh | bash
+  ```
+</Callout>
+
+![linux-img-03.webp](/assets/claude_code/linux-img-03.webp)
+
+<Callout type="info" title="Verificar instalación de Claude Code">
+  Después de la instalación, ingrese el siguiente comando para verificar si se instaló correctamente:
+
+  ```bash
+  claude --version
+  ```
+
+  Si se muestra un número de versión, ¡felicidades! Claude Code se ha instalado correctamente.
+</Callout>
+
+#### 2. Configurar variables de entorno
+
+Para permitir que Claude Code se conecte a su servicio de retransmisión, necesita configurar dos variables de entorno:
+
+<Callout type="info" title="Modificación de variables de entorno con un clic">
+  Ingrese el comando:
+
+  ```bash
+  curl -fsSL https://raw.githubusercontent.com/Vxon/vxon-docs/refs/heads/main/helper/claude-cli-setup.sh | bash
+  ```
+</Callout>
+
+![macos-configure](/assets/claude_code/macos_configure.png)
+
+#### 3. Comenzar a usar Claude Code
+
+¡Ahora puede comenzar a usar Claude Code!
+
+<Callout type="info" title="Iniciar Claude Code">
+  Inicie Claude Code directamente:
+
+  ```bash
+  claude
+  ```
+
+  Para usar en un proyecto específico:
+
+  ```bash
+  # Navegue al directorio de su proyecto
+  cd /path/to/your/project
+
+  # Inicie Claude Code
+  claude
+  ```
+</Callout>
+
+![linux-img-03.webp](/assets/claude_code/linux-img-03.webp)
+
+![linux-img-04.webp](/assets/claude_code/linux-img-04.webp)
+
+![linux-img-05.webp](/assets/claude_code/linux-img-05.webp)
+
+<Callout type="info" title="Seleccionar modelo">
+  Ingrese el comando:
+
+  ```bash
+  /model
+  ```
+
+  Presione Enter para seleccionar un modelo oficial; generalmente, el modelo predeterminado es suficiente.
+</Callout>
+
+![linux-img-06.webp](/assets/claude_code/linux-img-06.webp)
+
+![linux-img-07.webp](/assets/claude_code/linux-img-07.webp)
+
+![linux-img-08.webp](/assets/claude_code/linux-img-08.webp)
+
+![linux-img-09.webp](/assets/claude_code/linux-img-09.webp)
+
+> Nota: Después de modificar la variable de entorno `ANTHROPIC_BASE_URL`, todos los modelos (incluidos los modelos preconfigurados oficialmente) llamarán al punto de acceso personalizado en lugar de usar las cuotas de la cuenta oficial.
+
+#### 4. Problemas comunes en Linux
+
+<Callout type="info" title="Bibliotecas de dependencias faltantes">
+  Algunas distribuciones de Linux requieren la instalación de dependencias adicionales:
+
+  ```bash
+  # Ubuntu/Debian
+  sudo apt install build-essential
+
+  # CentOS/RHEL
+  sudo dnf groupinstall "Development Tools"
+  ```
+</Callout>
+
+<Callout type="info" title="Las variables de entorno no surten efecto">
+  Verifique los siguientes puntos:
+
+  - Confirme que modificó el archivo de configuración correcto (`.bashrc` o `.zshrc`)
+  - Reinicie la terminal o ejecute `source ~/.bashrc`
+  - Verifique la configuración: `echo $ANTHROPIC_BASE_URL`
+</Callout>
