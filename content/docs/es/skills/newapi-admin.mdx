@@ -1,0 +1,77 @@
+---
+title: vxon-admin (Próximamente)
+description: vxon-admin es el plugin oficial de Skills de nivel de administrador de Vxon, que permite la gestión de canales, gestión de usuarios, configuración del sistema, consultas de logs y más directamente desde Claude Code, Cursor, Windsurf y otros editores de IA. Actualmente en desarrollo.
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+
+<Callout type="warn" title="En desarrollo — Próximamente">
+  **vxon-admin** está actualmente en desarrollo y aún no ha sido publicado. A continuación se muestra una vista previa de las funcionalidades planificadas. Esta página se actualizará con documentación completa cuando se publique.
+</Callout>
+
+## Introducción
+
+**vxon-admin** es un plugin de Skills diseñado para administradores de Vxon. A diferencia del Skill de nivel de usuario [vxon](/es/docs/skills/vxon), vxon-admin se enfoca en **operaciones de administración**, permitiendo a los administradores del sitio realizar tareas de gestión diarias desde su editor de IA usando comandos en lenguaje natural — sin necesidad de iniciar sesión en el panel de administración.
+
+## Funcionalidades planificadas
+
+### Gestión de canales
+
+| Comando (Planificado) | Descripción |
+|-------------------|-------------|
+| `/vxon-admin channels` | Listar todos los canales y su estado |
+| `/vxon-admin channel-add` | Agregar nuevos canales (OpenAI, Claude, Gemini, Azure, etc.) |
+| `/vxon-admin channel-test <id>` | Probar la conectividad de un canal específico |
+| `/vxon-admin channel-toggle <id>` | Habilitar o deshabilitar un canal específico |
+| `/vxon-admin channel-priority` | Ver y ajustar la prioridad de canales |
+
+### Gestión de usuarios
+
+| Comando (Planificado) | Descripción |
+|-------------------|-------------|
+| `/vxon-admin users` | Listar usuarios |
+| `/vxon-admin user-info <id>` | Ver detalles del usuario (saldo, grupo, uso) |
+| `/vxon-admin user-quota <id>` | Ajustar cuota y saldo del usuario |
+| `/vxon-admin user-group <id> <group>` | Cambiar el grupo del usuario |
+| `/vxon-admin user-ban <id>` | Bloquear o desbloquear un usuario |
+
+### Configuración del sistema
+
+| Comando (Planificado) | Descripción |
+|-------------------|-------------|
+| `/vxon-admin config` | Ver la configuración actual del sistema |
+| `/vxon-admin config-set <key> <value>` | Modificar un elemento de configuración del sistema |
+| `/vxon-admin ratio` | Ver la configuración de multiplicadores de ratio de modelo |
+| `/vxon-admin ratio-sync` | Sincronizar multiplicadores de ratio de modelo upstream |
+
+### Logs y monitoreo
+
+| Comando (Planificado) | Descripción |
+|-------------------|-------------|
+| `/vxon-admin logs` | Ver logs de solicitudes recientes |
+| `/vxon-admin stats` | Ver estadísticas del sistema (volumen de solicitudes, consumo, tasa de error) |
+| `/vxon-admin status` | Verificar el estado del sistema y la conectividad de canales |
+
+### Gestión de tokens y códigos de canje
+
+| Comando (Planificado) | Descripción |
+|-------------------|-------------|
+| `/vxon-admin redemptions` | Listar códigos de canje |
+| `/vxon-admin redemption-create` | Crear códigos de canje por lotes |
+| `/vxon-admin token-overview` | Resumen global del uso de tokens |
+
+## Comparación con el Skill vxon
+
+| | vxon | vxon-admin |
+|---|--------|-------------|
+| **Usuarios objetivo** | Usuarios regulares / desarrolladores | Administradores del sitio |
+| **Alcance** | Modelos personales, tokens, saldo, grupos | Canales globales, usuarios, configuración, logs |
+| **Permisos** | Token de acceso de usuario | Token de acceso de administrador |
+| **Estado** | Publicado | En desarrollo |
+
+## Manténgase actualizado
+
+vxon-admin está en desarrollo activo. Siga el repositorio para las últimas actualizaciones:
+
+- Repositorio de GitHub: [github.com/Vxon/skills](https://github.com/Vxon/skills)
+- Skill de nivel de usuario publicado: [vxon](/es/docs/skills/vxon)
