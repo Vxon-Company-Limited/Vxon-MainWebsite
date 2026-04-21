@@ -1,0 +1,107 @@
+---
+title: Aplicaciones de IA
+description: Aplicaciones de IA compatibles y soluciones de integración
+---
+
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import {
+  Cherry,
+  Sparkles,
+  Terminal,
+  BookOpen,
+  MessageCircle,
+  Languages,
+  Bot,
+  Settings,
+} from 'lucide-react';
+
+## Descripción general
+
+Vxon es compatible con diversas aplicaciones y herramientas de IA populares. A continuación se muestra una lista de aplicaciones compatibles verificadas y sus guías de configuración.
+
+## Aplicaciones compatibles
+
+<Cards>
+  <Card
+    icon={<Sparkles />}
+    title="AionUi"
+    description="Agente de escritorio gratuito, local y de código abierto 24/7 con Cowork y OpenClaw para Gemini CLI, Claude Code, Codex, OpenCode, Qwen Code, Goose CLI, Auggie y más."
+    href="/es/docs/apps/aionui"
+  />
+  <Card
+    icon={<Settings />}
+    title="CC Switch"
+    description="Autocompletado con un clic desde la página de tokens de Vxon; configure Claude, Codex o Gemini con modelos principales y variantes en la ventana emergente."
+    href="/es/docs/apps/cc-switch"
+  />
+  <Card
+    icon={<Cherry />}
+    title="Cherry Studio"
+    description="Un potente cliente de asistente de IA que admite conversaciones con múltiples modelos."
+    href="/es/docs/apps/cherry-studio"
+  />
+  <Card
+    icon={<Bot />}
+    title="Memoh"
+    description="Una plataforma de agentes de IA en contenedores donde cada bot se ejecuta en su propio contenedor con memoria a largo plazo y soporte multicanal."
+    href="/es/docs/apps/memoh"
+  />
+  <Card
+    icon={<Bot />}
+    title="OpenClaw"
+    description="Una plataforma de asistente de IA autoalojada — instale OpenClaw, conéctese a Vxon y gestione agentes en Feishu, Discord, Slack y más."
+    href="/es/docs/apps/openclaw"
+  />
+  <Card
+    icon={<BookOpen />}
+    title="Fluent Read"
+    description="Un asistente inteligente de lectura y traducción impulsado por IA."
+    href="/es/docs/apps/fluent-read"
+  />
+  <Card
+    icon={<MessageCircle />}
+    title="LangBot"
+    description="Un framework de chatbot basado en modelos de lenguaje de gran escala."
+    href="/es/docs/apps/langbot"
+  />
+  <Card
+    icon={<Languages />}
+    title="Luna Translator"
+    description="Una herramienta de traducción en tiempo real para juegos y documentos."
+    href="/es/docs/apps/luna-translator"
+  />
+  <Card
+    icon={<Bot />}
+    title="AstrBot"
+    description="Una plataforma de chatbot Agent de código abierto todo en uno."
+    href="/es/docs/apps/astrbot"
+  />
+  <Card
+    icon={<Terminal />}
+    title="Claude Code"
+    description="Una integración de editor de código impulsada por Anthropic Claude."
+    href="/es/docs/apps/claude-code"
+  />
+  <Card
+    icon={<Terminal />}
+    title="Codex CLI"
+    description="Una herramienta de asistente de código con IA de línea de comandos."
+    href="/es/docs/apps/codex-cli"
+  />
+  <Card
+    icon={<Bot />}
+    title="Factory Droid CLI"
+    description="Una herramienta de agente de IA para automatizar flujos de trabajo."
+    href="/es/docs/apps/factory-droid-cli"
+  />
+</Cards>
+
+## Guía de integración
+
+La mayoría de las aplicaciones solo requieren configurar la siguiente información para conectarse a Vxon:
+
+1.  **Dirección de la API**: La dirección de su servicio Vxon
+2.  **Clave de API**: El token generado en la consola de Vxon
+3.  **Nombre del modelo**: Seleccione el modelo a utilizar
+
+Para los pasos de configuración específicos, consulte la documentación detallada de cada aplicación.
