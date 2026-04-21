@@ -1,0 +1,40 @@
+---
+title: Ayuda y soporte
+description: Obtenga ayuda y participe en discusiones de la comunidad
+---
+
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { HelpCircle, MessageCircle, Bug, Coffee } from 'lucide-react';
+
+## Descripción general
+
+¿Tiene problemas? ¿Necesita ayuda? Proporcionamos múltiples canales de soporte para ayudarle a resolver diversos problemas durante el uso.
+
+## Obtener ayuda
+
+<Cards>
+  <Card
+    icon={<HelpCircle />}
+    title="Preguntas frecuentes"
+    description="Consulte las respuestas a preguntas frecuentes para una resolución rápida de problemas."
+    href="/es/docs/support/faq"
+  />
+  <Card
+    icon={<MessageCircle />}
+    title="Comunidad"
+    description="Únase a la comunidad para intercambiar experiencias y consejos con otros usuarios."
+    href="/es/docs/support/community-interaction"
+  />
+  <Card
+    icon={<Bug />}
+    title="Comentarios"
+    description="¿Encontró un error o tiene una sugerencia de funcionalidad? ¡Háganoslo saber!"
+    href="/es/docs/support/feedback-issues"
+  />
+  <Card
+    icon={<Coffee />}
+    title="Patrocinar"
+    description="Si Vxon le ha sido útil, no dude en invitarnos a un café."
+    href="/es/docs/support/buy-us-a-coffee"
+  />
+</Cards>
