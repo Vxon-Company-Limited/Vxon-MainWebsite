@@ -1,0 +1,444 @@
+---
+title: OpenAI Codex CLI
+description: Guía de instalación y configuración de Codex CLI — configure este agente de codificación con IA basado en terminal con Vxon en Windows, macOS y Linux. Compatible con sandboxing y edición de parches.
+---
+
+<Callout type="info" title="Introducción del proyecto">
+  Codex CLI es un agente de codificación de OpenAI que se ejecuta localmente en su computadora.
+
+  - Página oficial: [https://chatgpt.com/codex](https://chatgpt.com/codex)
+  - Página del proyecto: [https://github.com/openai/codex](https://github.com/openai/codex)
+</Callout>
+
+## Demo
+
+![introduce-01.webp](/assets/codex/introduce-01.webp)
+
+### Características
+
+| **Categoría de característica**   | **Característica**                                                                                                                                                                   |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Asistente de codificación en terminal | Codex CLI es un asistente de codificación interactivo basado en terminal para editar código, generar parches y ejecutar comandos en la línea de comandos.                            |
+| Arquitectura basada en herramientas | Proporciona herramientas como `apply_patch`, `shell`, `update_plan` y `multi_tool_use` para modificaciones controladas de archivos del repositorio y operaciones.                    |
+| Edición atómica de parches        | Utiliza un formato de parche dedicado para agregar/actualizar/eliminar archivos atómicamente mediante `apply_patch`, facilitando la auditoría y la reversión.                        |
+| Sandboxing y aprobación           | Compatible con políticas de sandboxing (ej. `workspace-write`, `read-only`) y modos de aprobación (`on-request`, `on-failure`, `never`) para controlar permisos de escritura y acceso a red. |
+| Seguimiento de plan               | `update_plan` se usa para listar pasos y rastrear el estado, requiriendo solo un paso `in_progress` en todo momento para mantener un progreso claro.                                |
+| Protocolo de interacción          | Envía explicaciones introductorias breves antes de operaciones importantes, manteniendo un tono amigable y conciso y proporcionando actualizaciones de progreso.                     |
+| Restricciones de seguridad        | Se adhiere a reglas estrictas (sin cambios arbitrarios en archivos no relacionados, sin agregar encabezados de copyright, sin ejecutar comandos destructivos), requiriendo aprobación del usuario para operaciones sensibles. |
+| Pruebas y formato                 | Recomienda ejecutar pruebas relevantes y herramientas de formato después de las modificaciones, pero no es responsable de corregir problemas no relacionados con la tarea actual.    |
+| Salida y estilo                   | La salida final sigue las especificaciones de renderizado CLI (ej. `**` para encabezados, backticks para rutas/comandos), manteniendo una estructura escaneable y concisa.           |
+| Ejecución paralela                | Compatible con la ejecución de múltiples herramientas en paralelo mediante `multi_tool_use.parallel` para mejorar la eficiencia.                                                     |
+## Método de configuración del modelo de IA
+
+### Guía gráfica para Windows
+
+#### 1. Abrir Terminal
+
+![windows_open_terminal](/assets/codex/windows_open_terminal.png)
+
+#### 2. Instalar WSL
+
+Para un rendimiento óptimo en Windows, instale y use Windows Subsystem for Linux (WSL2).
+
+<Callout type="info" title="Instalar WSL2, reiniciar la computadora Windows">
+  ```powershell
+  wsl --install
+  ```
+
+  Reinicie su computadora Windows después de la instalación.
+</Callout>
+
+<Callout type="warn" title="Notas para Windows">
+  - Se recomienda usar PowerShell en lugar de CMD
+  - Si encuentra problemas de permisos, intente ejecutar como administrador
+  - Algunos antivirus pueden marcarlo falsamente; necesita agregarlo a la lista blanca
+</Callout>
+
+![windows-img-03.webp](/assets/codex/windows-img-03.webp)
+
+<Callout type="info" title="Descargar Node Version Manager (NVM)">
+  ```bash
+  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
+  ```
+</Callout>
+
+![windows-img-04.webp](/assets/codex/windows-img-04.webp)
+
+<Callout type="info" title="NVM instala Node.js 22">
+  Abra una nueva ventana de PowerShell en la barra de pestañas, luego abra WSL:
+
+  ```bash
+  wsl
+  ```
+
+  Instale Node.js (los números de versión son sensibles al tiempo; instale la versión correspondiente según los requisitos del [sitio web oficial de OpenAI](https://developers.openai.com/codex/windows)):
+
+  ```bash
+  nvm install 22
+  ```
+</Callout>
+
+![windows-img-05.webp](/assets/codex/windows-img-05.webp)
+
+#### 3. Instalar Codex CLI
+
+<Callout type="info" title="Instalar Codex CLI">
+  ```bash
+  npm i -g @openai/codex
+  ```
+
+  Este comando descarga e instala la última versión de Codex CLI desde el repositorio oficial de npm.
+</Callout>
+
+![windows-img-06.webp](/assets/codex/windows-img-06.webp)
+
+#### 4. Modificar archivo de configuración
+
+<Callout type="info" title="Modificación con un clic del archivo de configuración de Codex CLI">
+  ```powershell
+  iex (irm 'https://raw.githubusercontent.com/Vxon/vxon-docs/refs/heads/main/helper/codex-cli-setup.ps1')
+  ```
+</Callout>
+
+![windows-configure](/assets/codex/windows_configure.png)
+
+#### 5. Comenzar a usar Codex CLI
+
+¡Ahora puede comenzar a usar Codex CLI!
+
+<Callout type="info" title="Iniciar Codex CLI">
+  Inicie WSL2:
+
+  ```bash
+  wsl
+  ```
+
+  Inicie Codex CLI directamente:
+
+  ```bash
+  codex
+  ```
+
+  Usar en un proyecto específico:
+
+  ```bash
+  cd mnt/c/path/to/your/project
+  codex
+  ```
+
+  Presione Enter para iniciar Codex CLI.
+</Callout>
+
+![windows-img-09.webp](/assets/codex/windows-img-09.webp)
+
+![windows-img-10.webp](/assets/codex/windows-img-10.webp)
+
+> Configurar permisos de Codex CLI: 1. Permitir que Codex modifique archivos directamente; 2. Codex requiere autorización manual para modificar archivos
+
+<Callout type="info" title="Seleccionar modelo">
+  ```bash
+  /model
+  ```
+</Callout>
+
+![windows-img-11.webp](/assets/codex/windows-img-11.webp)
+
+![windows-img-12.webp](/assets/codex/windows-img-12.webp)
+
+![windows-img-13.webp](/assets/codex/windows-img-13.webp)
+
+![windows-img-14.webp](/assets/codex/windows-img-14.webp)
+
+> Nota: Después de modificar la dirección de la API, todos los modelos (incluidos los modelos preconfigurados oficialmente) llamarán al punto de acceso personalizado y no usarán la cuota de la cuenta oficial.
+### Guía gráfica para macOS
+
+#### 1. Instalar Homebrew (Omitir si ya está instalado)
+
+Homebrew es el gestor de paquetes que falta para macOS.
+
+Sitio web oficial: https://brew.sh
+
+![macos-img-01.webp](/assets/codex/macos-img-01.webp)
+
+<Callout type="info" title="Instalar Homebrew">
+  ```bash
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  ```
+</Callout>
+
+![macos-img-02.webp](/assets/codex/macos-img-02.webp)
+
+![macos-img-03.webp](/assets/codex/macos-img-03.webp)
+
+![macos-img-04.webp](/assets/codex/macos-img-04.webp)
+
+#### 2. Instalar el entorno Node.js
+
+<Callout type="info" title="Pasos de instalación del entorno Node.js">
+  Actualizar Homebrew:
+
+  ```bash
+  brew update
+  ```
+
+  Instalar Node.js:
+
+  ```bash
+  brew install node
+  ```
+</Callout>
+
+<Callout type="warn" title="Notas para macOS">
+  - Si encuentra problemas de permisos, puede que necesite usar `sudo`
+  - La primera ejecución puede requerir permiso en Preferencias del Sistema
+  - Se recomienda usar Terminal o iTerm2
+</Callout>
+
+![macos-img-05.webp](/assets/codex/macos-img-05.webp)
+
+![macos-img-06.webp](/assets/codex/macos-img-06.webp)
+
+<Callout type="info" title="Verificar instalación exitosa">
+  Después de la instalación, abra la terminal e ingrese los siguientes comandos:
+
+  ```bash
+  node --version
+  npm --version
+  ```
+
+  Si se muestran los números de versión, la instalación fue exitosa.
+</Callout>
+
+#### 3. Instalar Codex CLI
+
+<Callout type="info" title="Instalar Codex CLI">
+  Abra la terminal y ejecute los siguientes comandos:
+
+  ```bash
+  # Instalar Codex CLI globalmente
+  npm install -g @openai/codex
+  ```
+
+  Si encuentra problemas de permisos, puede usar sudo:
+
+  ```bash
+  sudo npm install -g @openai/codex
+  ```
+</Callout>
+
+![macos-img-07.webp](/assets/codex/macos-img-07.webp)
+
+<Callout type="info" title="Verificar instalación de Codex CLI">
+  Después de la instalación, ingrese el siguiente comando para verificar si la instalación fue exitosa:
+
+  ```bash
+  codex --version
+  ```
+
+  Si se muestra un número de versión, ¡felicidades! Codex CLI se ha instalado correctamente.
+</Callout>
+
+#### 4. Modificar archivo de configuración
+
+<Callout type="info" title="Modificación con un clic del archivo de configuración de Codex CLI">
+  ```bash
+  curl -fsSL https://raw.githubusercontent.com/Vxon/vxon-docs/refs/heads/main/helper/codex-cli-setup.sh | bash
+  ```
+</Callout>
+
+![macos-configure](/assets/codex/macos_configure.png)
+
+#### 5. Comenzar a usar Codex CLI
+
+¡Ahora puede comenzar a usar Codex CLI!
+
+<Callout type="info" title="Iniciar Codex CLI">
+  Inicie Codex CLI directamente:
+
+  ```bash
+  codex
+  ```
+
+  Usar en un proyecto específico:
+
+  ```bash
+  cd /path/to/your/project
+  codex
+  ```
+
+  Presione Enter para iniciar Codex CLI.
+</Callout>
+
+![macos-img-09.webp](/assets/codex/macos-img-09.webp)
+
+![macos-img-10.webp](/assets/codex/macos-img-10.webp)
+
+> Configurar permisos de Codex CLI: 1. Permitir que Codex modifique archivos directamente; 2. Codex requiere autorización manual para modificar archivos
+
+![macos-img-11.webp](/assets/codex/macos-img-11.webp)
+
+![macos-img-12.webp](/assets/codex/macos-img-12.webp)
+
+![macos-img-13.webp](/assets/codex/macos-img-13.webp)
+
+![macos-img-14.webp](/assets/codex/macos-img-14.webp)
+
+> Nota: Después de modificar la dirección de la API, todos los modelos (incluidos los modelos preconfigurados oficialmente) llamarán al punto de acceso personalizado y no usarán la cuota de la cuenta oficial.
+
+#### 6. Solución de problemas comunes en macOS
+
+<Callout type="info" title="Error de permisos durante la instalación">
+  Pruebe las siguientes soluciones:
+
+  - Instalar con `sudo`: `sudo npm install -g @openai/codex`
+  - O configurar `npm` para usar el directorio del usuario: `npm config set prefix ~/.npm-global`
+</Callout>
+
+<Callout type="info" title="La configuración de seguridad de macOS impide la ejecución">
+  Si el sistema impide que Codex CLI se ejecute:
+
+  - Abra "Preferencias del Sistema" → "Seguridad y Privacidad"
+  - Haga clic en "Abrir de todos modos" o "Permitir"
+  - O ejecute en Terminal: `sudo spctl --master-disable`
+</Callout>
+### Guía gráfica para Linux
+
+#### 1. Instalar el entorno Node.js
+
+Codex CLI requiere un entorno Node.js para ejecutarse.
+
+<Callout type="info" title="Pasos de instalación del entorno Node.js">
+  Agregar el repositorio de NodeSource:
+
+  ```bash
+  sudo curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+  ```
+
+  Instalar Node.js:
+
+  ```bash
+  sudo apt-get install -y nodejs
+  ```
+</Callout>
+
+<Callout type="warn" title="Notas para Linux">
+  - Algunas distribuciones pueden requerir dependencias adicionales
+  - Si encuentra problemas de permisos, use sudo
+  - Asegúrese de que su usuario tenga permisos de escritura en el directorio global de npm
+</Callout>
+
+![linux-img-01.webp](/assets/codex/linux-img-01.webp)
+
+![linux-img-02.webp](/assets/codex/linux-img-02.webp)
+
+<Callout type="info" title="Verificar instalación exitosa">
+  Después de la instalación, abra la terminal e ingrese los siguientes comandos:
+
+  ```bash
+  node --version
+  npm --version
+  ```
+
+  Si se muestran los números de versión, la instalación fue exitosa.
+</Callout>
+
+#### 2. Instalar Codex CLI
+
+<Callout type="info" title="Instalar Codex CLI">
+  Abra la terminal y ejecute los siguientes comandos:
+
+  ```bash
+  # Instalar Codex CLI globalmente
+  npm install -g @openai/codex
+  ```
+
+  Si encuentra problemas de permisos, puede usar sudo:
+
+  ```bash
+  sudo npm install -g @openai/codex
+  ```
+</Callout>
+
+![linux-img-03.webp](/assets/codex/linux-img-03.webp)
+
+<Callout type="info" title="Verificar instalación de Codex CLI">
+  Después de la instalación, ingrese el siguiente comando para verificar si la instalación fue exitosa:
+
+  ```bash
+  codex --version
+  ```
+
+  Si se muestra un número de versión, ¡felicidades! Codex CLI se ha instalado correctamente.
+</Callout>
+
+#### 3. Modificar archivo de configuración
+
+<Callout type="info" title="Modificación con un clic del archivo de configuración de Codex CLI">
+  ```bash
+  curl -fsSL https://raw.githubusercontent.com/Vxon/vxon-docs/refs/heads/main/helper/codex-cli-setup.sh | bash
+  ```
+</Callout>
+
+![macos-configure](/assets/codex/macos_configure.png)
+
+#### 4. Comenzar a usar Codex CLI
+
+¡Ahora puede comenzar a usar Codex CLI!
+
+<Callout type="info" title="Iniciar Codex CLI">
+  Inicie Codex CLI directamente:
+
+  ```bash
+  codex
+  ```
+
+  Usar en un proyecto específico:
+
+  ```bash
+  # Navegue al directorio de su proyecto
+  cd /path/to/your/project
+
+  # Inicie Codex CLI
+  codex
+  ```
+
+  Presione Enter para iniciar Codex CLI.
+</Callout>
+
+![linux-img-05.webp](/assets/codex/linux-img-05.webp)
+
+![linux-img-06.webp](/assets/codex/linux-img-06.webp)
+
+> Configurar permisos de Codex CLI: 1. Permitir que Codex modifique archivos directamente; 2. Codex requiere autorización manual para modificar archivos
+
+![linux-img-07.webp](/assets/codex/linux-img-07.webp)
+
+![linux-img-08.webp](/assets/codex/linux-img-08.webp)
+
+![linux-img-09.webp](/assets/codex/linux-img-09.webp)
+
+![linux-img-10.webp](/assets/codex/linux-img-10.webp)
+
+> Nota: Después de modificar la dirección de la API, todos los modelos (incluidos los modelos preconfigurados oficialmente) llamarán al punto de acceso personalizado y no usarán la cuota de la cuenta oficial.
+
+#### 5. Solución de problemas comunes en Linux
+
+<Callout type="info" title="Error de permisos durante la instalación">
+  Pruebe las siguientes soluciones:
+
+  - Instalar con `sudo`: `sudo npm install -g @openai/codex`
+  - O configurar `npm` para usar el directorio del usuario: `npm config set prefix ~/.npm-global`
+  - Luego agregar al PATH: `export PATH=~/.npm-global/bin:$PATH`
+</Callout>
+
+<Callout type="info" title="Bibliotecas de dependencias faltantes">
+  Algunas distribuciones de Linux requieren dependencias adicionales:
+
+  ```bash
+  # Ubuntu/Debian
+  sudo apt install build-essential
+
+  # CentOS/RHEL
+  sudo dnf groupinstall "Development Tools"
+  ```
+</Callout>
