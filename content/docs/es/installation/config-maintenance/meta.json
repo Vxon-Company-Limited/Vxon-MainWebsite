@@ -1,0 +1,9 @@
+{
+  "title": "Configuración y mantenimiento",
+  "icon": "Settings",
+  "pages": [
+    "system-update",
+    "environment-variables",
+    "docker-compose-yml"
+  ]
+}
