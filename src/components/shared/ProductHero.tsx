@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, Zap, Shield, Wallet } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { CanvasAnimation, type DrawFunction } from "./CanvasAnimation";
 import { drawNatureScene } from "@/animations/zen/natureScene";
@@ -32,11 +32,7 @@ interface ProductHeroProps {
   accentColor?: ProductColor;
 }
 
-const defaultStats: HeroStat[] = [
-  { icon: Zap, value: "7+", label: "主流模型" },
-  { icon: Wallet, value: "7折起", label: "官网价格" },
-  { icon: Shield, value: "99.9%", label: "服务可用性" },
-];
+const defaultStats: HeroStat[] = [];
 
 const colorMap: Record<ProductColor, {
   dot: string;
@@ -44,8 +40,6 @@ const colorMap: Record<ProductColor, {
   statBg: string;
   statBorder: string;
   statValue: string;
-  btnPrimary: string;
-  btnHover: string;
   glow: string;
   glowRgb: string;
 }> = {
@@ -55,8 +49,6 @@ const colorMap: Record<ProductColor, {
     statBg: "bg-blue-500/10",
     statBorder: "border-blue-500/20 hover:border-blue-500/30",
     statValue: "text-blue-400",
-    btnPrimary: "bg-blue-600 hover:bg-blue-500",
-    btnHover: "hover:shadow-[0_0_24px_rgba(59,130,246,0.3)]",
     glow: "rgba(59, 130, 246, 0.12)",
     glowRgb: "59, 130, 246",
   },
@@ -66,8 +58,6 @@ const colorMap: Record<ProductColor, {
     statBg: "bg-emerald-500/10",
     statBorder: "border-emerald-500/20 hover:border-emerald-500/30",
     statValue: "text-emerald-400",
-    btnPrimary: "bg-emerald-600 hover:bg-emerald-500",
-    btnHover: "hover:shadow-[0_0_24px_rgba(16,185,129,0.3)]",
     glow: "rgba(16, 185, 129, 0.12)",
     glowRgb: "16, 185, 129",
   },
@@ -77,8 +67,6 @@ const colorMap: Record<ProductColor, {
     statBg: "bg-violet-500/10",
     statBorder: "border-violet-500/20 hover:border-violet-500/30",
     statValue: "text-violet-400",
-    btnPrimary: "bg-violet-600 hover:bg-violet-500",
-    btnHover: "hover:shadow-[0_0_24px_rgba(139,92,246,0.3)]",
     glow: "rgba(139, 92, 246, 0.12)",
     glowRgb: "139, 92, 246",
   },
@@ -88,8 +76,6 @@ const colorMap: Record<ProductColor, {
     statBg: "bg-orange-500/10",
     statBorder: "border-orange-500/20 hover:border-orange-500/30",
     statValue: "text-orange-400",
-    btnPrimary: "bg-orange-600 hover:bg-orange-500",
-    btnHover: "hover:shadow-[0_0_24px_rgba(249,115,22,0.3)]",
     glow: "rgba(249, 115, 22, 0.12)",
     glowRgb: "249, 115, 22",
   },
@@ -175,11 +161,7 @@ export function ProductHero({ badge, title, subtitle, buttons, draw, stats = def
               <Link
                 key={btn.label}
                 href={btn.href}
-                className={clsx(
-                  "group w-full sm:w-auto px-8 py-4 text-white text-base font-semibold rounded-full transition-all flex items-center justify-center gap-2",
-                  colors.btnPrimary,
-                  colors.btnHover
-                )}
+                className="group w-full sm:w-auto px-8 py-4 bg-white text-zinc-900 text-base font-semibold rounded-full hover:bg-zinc-200 transition-all flex items-center justify-center gap-2"
               >
                 {btn.label}
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -188,7 +170,7 @@ export function ProductHero({ badge, title, subtitle, buttons, draw, stats = def
               <Link
                 key={btn.label}
                 href={btn.href}
-                className="w-full sm:w-auto px-8 py-4 bg-transparent border border-zinc-700 text-white text-base font-medium rounded-full hover:bg-white/5 hover:border-zinc-500 transition-all flex items-center justify-center gap-2"
+                className="w-full sm:w-auto px-8 py-4 bg-white/5 border border-white/10 text-white text-base font-medium rounded-full hover:bg-white/10 hover:border-white/20 transition-all flex items-center justify-center gap-2"
               >
                 {btn.label}
               </Link>

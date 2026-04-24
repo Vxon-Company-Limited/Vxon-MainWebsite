@@ -12,16 +12,16 @@ import { t } from "@/lib/translations/site";
 import { apiPage } from "@/lib/translations/product-api";
 
 const featureIcons = [Layers, Wallet, Zap, Signal, ArrowLeftRight, FileText];
-
-const apiStats = [
-  { icon: Globe, value: "7+", label: "主流模型" },
-  { icon: Wallet, value: "7折起", label: "价格优势" },
-  { icon: Clock, value: "5分钟", label: "快速接入" },
-  { icon: Users, value: "5000+", label: "企业客户" },
-];
+const statIcons = [Globe, Wallet, Clock, Users];
 
 export function VxonAPIPage({ locale }: { locale: string }) {
   const s = t(apiPage, locale);
+
+  const apiStats = s.heroStats.map((stat, i) => ({
+    icon: statIcons[i],
+    value: stat.value,
+    label: stat.label,
+  }));
 
   const features = s.features.map((f, i) => ({
     icon: featureIcons[i],

@@ -14,7 +14,7 @@ export function UseCases({ locale }: { locale: string }) {
     <section className="py-24 px-6 relative z-10">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <span className="text-blue-500 font-semibold tracking-wider uppercase text-sm">{tx.badge}</span>
+          <span className="text-emerald-500 font-semibold tracking-wider uppercase text-sm">{tx.badge}</span>
           <h2 className="text-3xl md:text-4xl font-bold text-white mt-4 tracking-tight">{tx.title}</h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -30,7 +30,7 @@ export function UseCases({ locale }: { locale: string }) {
                 whileHover={{ y: -4 }}
                 className="group bg-surface-elevated border border-white/10 rounded-2xl p-8 hover:border-white/20 transition-all"
               >
-                <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center mb-6 text-blue-400">
+                <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-6 text-emerald-400">
                   <Icon className="w-6 h-6" />
                 </div>
                 <h3 className="text-lg font-bold text-white mb-3">{c.title}</h3>

@@ -46,6 +46,14 @@ export const pricingPage = {
       subtitle: '立即注册，免费获得 100 元额度体验所有模型。',
       primaryLabel: '免费试用',
     },
+    trustIndicators: [
+      { value: '5000+', label: '企业客户信赖' },
+      { value: '99.9%', label: '服务可用性' },
+      { value: '7+', label: '主流模型覆盖' },
+      { value: '5分钟', label: '快速接入' },
+    ],
+    perMonth: '/月起',
+    guarantee: '安全支付 · 7天内无条件退款 · 企业可开增值税发票',
   },
   en: {
     hero: {
@@ -94,6 +102,14 @@ export const pricingPage = {
       subtitle: 'Sign up now and get ¥100 in free credits to try all models.',
       primaryLabel: 'Free Trial',
     },
+    trustIndicators: [
+      { value: '5,000+', label: 'Enterprise Clients' },
+      { value: '99.9%', label: 'Uptime SLA' },
+      { value: '7+', label: 'Major LLMs' },
+      { value: '5 min', label: 'Quick Integration' },
+    ],
+    perMonth: '/mo',
+    guarantee: 'Secure payment · 7-day unconditional refund · Enterprise invoicing available',
   },
   'zh-Hant': {
     hero: {
@@ -142,6 +158,14 @@ export const pricingPage = {
       subtitle: '立即註冊，免費獲得 100 元額度體驗所有模型。',
       primaryLabel: '免費試用',
     },
+    trustIndicators: [
+      { value: '5000+', label: '企業客戶信賴' },
+      { value: '99.9%', label: '服務可用性' },
+      { value: '7+', label: '主流模型覆蓋' },
+      { value: '5分鐘', label: '快速接入' },
+    ],
+    perMonth: '/月起',
+    guarantee: '安全支付 · 7天內無條件退款 · 企業可開增值稅發票',
   },
   ja: {
     hero: {
@@ -190,6 +214,14 @@ export const pricingPage = {
       subtitle: '今すぐ登録して、100元分の無料クレジットで全モデルをお試しください。',
       primaryLabel: '無料トライアル',
     },
+    trustIndicators: [
+      { value: '5,000+', label: '企業のお客様' },
+      { value: '99.9%', label: 'サービス稼働率' },
+      { value: '7+', label: '主要モデル' },
+      { value: '5分', label: 'クイック統合' },
+    ],
+    perMonth: '/月〜',
+    guarantee: '安全な決済 · 7日間無条件返金 · 法人向け請求書発行対応',
   },
   es: {
     hero: {
@@ -238,5 +270,13 @@ export const pricingPage = {
       subtitle: 'Regístrate ahora y obtén ¥100 en créditos gratis para probar todos los modelos.',
       primaryLabel: 'Prueba Gratis',
     },
+    trustIndicators: [
+      { value: '5.000+', label: 'Clientes empresariales' },
+      { value: '99.9%', label: 'Disponibilidad SLA' },
+      { value: '7+', label: 'Modelos principales' },
+      { value: '5 min', label: 'Integración rápida' },
+    ],
+    perMonth: '/mes',
+    guarantee: 'Pago seguro · Reembolso incondicional en 7 días · Facturación empresarial disponible',
   },
 } as const;

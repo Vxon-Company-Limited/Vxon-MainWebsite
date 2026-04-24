@@ -36,6 +36,7 @@ export const navbar = {
       { title: '编码安全合规', desc: '零信任研发安全管控' },
     ],
     aboutItems: ['关于我们', '加入我们', '联系方式'],
+    compare: '产品对比',
     langLabel: '语言',
   },
   en: {
@@ -61,6 +62,7 @@ export const navbar = {
       { title: 'Coding Security Compliance', desc: 'Zero-trust R&D security management' },
     ],
     aboutItems: ['About Us', 'Careers', 'Contact'],
+    compare: 'Compare',
     langLabel: 'Language',
   },
   'zh-Hant': {
@@ -86,6 +88,7 @@ export const navbar = {
       { title: '編碼安全合規', desc: '零信任研發安全管控' },
     ],
     aboutItems: ['關於我們', '加入我們', '聯絡方式'],
+    compare: '產品對比',
     langLabel: '語言',
   },
   ja: {
@@ -111,6 +114,7 @@ export const navbar = {
       { title: 'コーディングセキュリティコンプライアンス', desc: 'ゼロトラストR&Dセキュリティ管理' },
     ],
     aboutItems: ['会社概要', '採用情報', 'お問い合わせ'],
+    compare: '製品比較',
     langLabel: '言語',
   },
   es: {
@@ -136,6 +140,7 @@ export const navbar = {
       { title: 'Cumplimiento de seguridad en codificación', desc: 'Gestión de seguridad R&D zero-trust' },
     ],
     aboutItems: ['Sobre nosotros', 'Empleo', 'Contacto'],
+    compare: 'Comparar',
     langLabel: 'Idioma',
   },
 } as const;

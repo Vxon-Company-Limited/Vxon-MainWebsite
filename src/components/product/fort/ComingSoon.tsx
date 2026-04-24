@@ -14,10 +14,10 @@ export function ComingSoon({ locale }: { locale: string }) {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/10 border border-violet-500/20 text-sm text-violet-400 mb-8"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-500/10 border border-orange-500/20 text-sm text-orange-400 mb-8"
         >
           <span
-            className="w-2 h-2 rounded-full bg-violet-500"
+            className="w-2 h-2 rounded-full bg-orange-500"
             style={{ animation: "pulseDot 2s ease-in-out infinite" }}
           />
           {cs.title}
@@ -52,7 +52,7 @@ export function ComingSoon({ locale }: { locale: string }) {
         >
           <a
             href="#demo"
-            className="px-8 py-4 bg-blue-600 text-white text-base font-semibold rounded-full hover:bg-blue-500 hover:shadow-[0_0_24px_rgba(59,130,246,0.3)] transition-all"
+            className="px-8 py-4 bg-white text-zinc-900 text-base font-semibold rounded-full hover:bg-zinc-200 transition-all"
           >
             {cs.buttons[0]}
           </a>

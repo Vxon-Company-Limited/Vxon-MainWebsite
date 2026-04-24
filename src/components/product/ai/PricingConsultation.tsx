@@ -17,7 +17,7 @@ export function PricingConsultation({ locale }: { locale: string }) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <span className="text-blue-500 font-semibold tracking-wider uppercase text-sm">{tx.badge}</span>
+          <span className="text-emerald-500 font-semibold tracking-wider uppercase text-sm">{tx.badge}</span>
           <h2 className="text-3xl md:text-5xl font-bold text-white mt-4 tracking-tight mb-4">
             {tx.title}
           </h2>
@@ -35,7 +35,7 @@ export function PricingConsultation({ locale }: { locale: string }) {
         >
           <Link
             href="#demo"
-            className="group w-full sm:w-auto px-8 py-4 bg-blue-600 text-white text-base font-semibold rounded-full hover:bg-blue-500 hover:shadow-[0_0_24px_rgba(59,130,246,0.3)] transition-all flex items-center justify-center gap-2"
+            className="group w-full sm:w-auto px-8 py-4 bg-white text-zinc-900 text-base font-semibold rounded-full hover:bg-zinc-200 transition-all flex items-center justify-center gap-2"
           >
             {tx.primaryLabel}
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

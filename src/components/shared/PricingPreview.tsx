@@ -26,15 +26,13 @@ interface PricingPreviewProps {
   accentColor?: AccentColor;
 }
 
-const accentColorMap: Record<AccentColor, { badge: string; highlightBg: string; highlightBorder: string; shadow: string; icon: string; btnPrimary: string; btnHover: string }> = {
+const accentColorMap: Record<AccentColor, { badge: string; highlightBg: string; highlightBorder: string; shadow: string; icon: string }> = {
   blue: {
     badge: "bg-blue-500",
     highlightBg: "from-blue-500/15 to-transparent",
     highlightBorder: "border-blue-500/40",
     shadow: "shadow-blue-500/15",
     icon: "text-blue-400",
-    btnPrimary: "from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400",
-    btnHover: "shadow-blue-500/20",
   },
   emerald: {
     badge: "bg-emerald-500",
@@ -42,8 +40,6 @@ const accentColorMap: Record<AccentColor, { badge: string; highlightBg: string; 
     highlightBorder: "border-emerald-500/40",
     shadow: "shadow-emerald-500/15",
     icon: "text-emerald-400",
-    btnPrimary: "from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400",
-    btnHover: "shadow-emerald-500/20",
   },
   violet: {
     badge: "bg-violet-500",
@@ -51,8 +47,6 @@ const accentColorMap: Record<AccentColor, { badge: string; highlightBg: string; 
     highlightBorder: "border-violet-500/40",
     shadow: "shadow-violet-500/15",
     icon: "text-violet-400",
-    btnPrimary: "from-violet-600 to-violet-500 hover:from-violet-500 hover:to-violet-400",
-    btnHover: "shadow-violet-500/20",
   },
   orange: {
     badge: "bg-orange-500",
@@ -60,8 +54,6 @@ const accentColorMap: Record<AccentColor, { badge: string; highlightBg: string; 
     highlightBorder: "border-orange-500/40",
     shadow: "shadow-orange-500/15",
     icon: "text-orange-400",
-    btnPrimary: "from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400",
-    btnHover: "shadow-orange-500/20",
   },
 };
 
@@ -115,10 +107,10 @@ export function PricingPreview({ badge, title, description, plans, accentColor =
               <Link
                 href={plan.ctaHref}
                 className={clsx(
-                  "mt-auto w-full py-3.5 rounded-xl font-semibold text-center transition-all text-sm text-white",
+                  "mt-auto w-full py-3.5 rounded-xl font-semibold text-center transition-all text-sm",
                   plan.highlight
-                    ? clsx("bg-gradient-to-r", colors.btnPrimary, "shadow-lg", colors.btnHover)
-                    : "bg-white/10 hover:bg-white/20"
+                    ? "bg-white text-zinc-900 hover:bg-zinc-200"
+                    : "bg-white/10 text-white hover:bg-white/20"
                 )}
               >
                 {plan.cta}

@@ -13,7 +13,7 @@ export function DepartmentCoverage({ locale }: { locale: string }) {
     <section className="py-24 px-6 relative z-10 bg-surface">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <span className="text-blue-500 font-semibold tracking-wider uppercase text-sm">{dc.badge}</span>
+          <span className="text-violet-500 font-semibold tracking-wider uppercase text-sm">{dc.badge}</span>
           <h2 className="text-3xl md:text-4xl font-bold text-white mt-4 tracking-tight">{dc.title}</h2>
           <p className="text-zinc-400 text-lg mt-4">{dc.subtitle}</p>
         </div>
@@ -23,12 +23,12 @@ export function DepartmentCoverage({ locale }: { locale: string }) {
           {/* Center node */}
           <motion.div
             animate={{ boxShadow: [
-              "0 0 20px rgba(59,130,246,0.1)",
-              "0 0 40px rgba(59,130,246,0.2)",
-              "0 0 20px rgba(59,130,246,0.1)",
+              "0 0 20px rgba(139,92,246,0.1)",
+              "0 0 40px rgba(139,92,246,0.2)",
+              "0 0 20px rgba(139,92,246,0.1)",
             ]}}
             transition={{ duration: 4.5, repeat: Infinity }}
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 rounded-full bg-blue-600/20 border border-blue-500/40 flex items-center justify-center z-10"
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 rounded-full bg-violet-600/20 border border-violet-500/40 flex items-center justify-center z-10"
           >
             <span className="text-sm font-bold text-white">{dc.center}</span>
           </motion.div>
@@ -71,7 +71,7 @@ export function DepartmentCoverage({ locale }: { locale: string }) {
                 <motion.line
                   key={idx}
                   x1="50" y1="50" x2={x} y2={y}
-                  stroke="rgba(59,130,246,0.2)"
+                  stroke="rgba(139,92,246,0.2)"
                   strokeWidth="0.3"
                   animate={{ opacity: [0.1, 0.4, 0.1] }}
                   transition={{ duration: 3 + idx * 0.6, repeat: Infinity, ease: "easeInOut" }}

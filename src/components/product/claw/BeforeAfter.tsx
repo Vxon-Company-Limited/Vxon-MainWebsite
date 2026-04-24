@@ -11,7 +11,7 @@ export function BeforeAfter({ locale }: { locale: string }) {
     <section className="py-24 px-6 relative z-10">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <span className="text-blue-500 font-semibold tracking-wider uppercase text-sm">{ba.badge}</span>
+          <span className="text-violet-500 font-semibold tracking-wider uppercase text-sm">{ba.badge}</span>
           <h2 className="text-3xl md:text-4xl font-bold text-white mt-4 tracking-tight">{ba.title}</h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -38,13 +38,13 @@ export function BeforeAfter({ locale }: { locale: string }) {
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="bg-blue-500/5 border border-blue-500/20 rounded-2xl p-8"
+            className="bg-violet-500/5 border border-violet-500/20 rounded-2xl p-8"
           >
             <h3 className="text-lg font-bold text-white mb-6">{ba.right.title}</h3>
             <div className="space-y-4">
               {ba.right.items.map((item) => (
                 <div key={item} className="flex items-start gap-3">
-                  <Check className="w-4 h-4 text-blue-400 shrink-0 mt-1" />
+                  <Check className="w-4 h-4 text-violet-400 shrink-0 mt-1" />
                   <span className="text-sm text-zinc-300 leading-relaxed">{item}</span>
                 </div>
               ))}

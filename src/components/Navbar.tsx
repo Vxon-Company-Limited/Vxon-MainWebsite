@@ -113,7 +113,7 @@ export function Navbar({ locale }: { locale: string }) {
             {s.pricing}
           </Link>
           <Link href={lp("/compare")} className="nav-link px-3 py-2 text-sm text-zinc-400 hover:text-white transition-colors rounded-lg">
-            {locale === "zh" ? "产品对比" : "Compare"}
+            {s.compare}
           </Link>
           <Link href={lp("/docs")} target="_blank" className="nav-link px-3 py-2 text-sm text-zinc-400 hover:text-white transition-colors rounded-lg">
             {s.docs}
@@ -164,7 +164,7 @@ export function Navbar({ locale }: { locale: string }) {
           </Link>
           <Link
             href="#signup"
-            className="group flex items-center gap-2 px-5 py-2 bg-blue-600 text-white text-sm font-medium rounded-full hover:bg-blue-500 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:ring-1 hover:ring-blue-400/50 hover:-translate-y-0.5 transition-all"
+            className="group flex items-center gap-2 px-5 py-2 bg-white text-zinc-900 text-sm font-medium rounded-full hover:bg-zinc-200 transition-all"
           >
             {s.freeTrial}
             <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
@@ -320,7 +320,7 @@ export function Navbar({ locale }: { locale: string }) {
                 ))}
               </MobileSection>
               <Link href={lp("/pricing")} className="block py-3 text-lg font-medium text-zinc-300 hover:text-white" onClick={() => setMobileMenuOpen(false)}>{s.pricing}</Link>
-              <Link href={lp("/compare")} className="block py-3 text-lg font-medium text-zinc-300 hover:text-white" onClick={() => setMobileMenuOpen(false)}>{locale === "zh" ? "产品对比" : "Compare"}</Link>
+              <Link href={lp("/compare")} className="block py-3 text-lg font-medium text-zinc-300 hover:text-white" onClick={() => setMobileMenuOpen(false)}>{s.compare}</Link>
               <Link href={lp("/docs")} className="block py-3 text-lg font-medium text-zinc-300 hover:text-white" onClick={() => setMobileMenuOpen(false)}>{s.docs}</Link>
               <div className="h-px bg-white/10" />
               <div className="flex items-center gap-3 py-3">
@@ -334,7 +334,7 @@ export function Navbar({ locale }: { locale: string }) {
               <Link href="#login" className="block py-3 text-zinc-400 hover:text-white" onClick={() => setMobileMenuOpen(false)}>{s.login}</Link>
               <Link
                 href="#signup"
-                className="flex items-center justify-center gap-2 w-full py-3 bg-blue-600 text-white font-semibold rounded-lg"
+                className="flex items-center justify-center gap-2 w-full py-3 bg-white text-zinc-900 font-semibold rounded-lg"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 {s.freeTrial}

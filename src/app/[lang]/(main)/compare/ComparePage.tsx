@@ -6,6 +6,8 @@ import Link from "next/link";
 import clsx from "clsx";
 import type { Locale } from "@/lib/translations/site";
 
+const productLinks = ["/product/api", "/product/ai", "/product/claw", "/product/fort"];
+
 const comparisonData = {
   zh: {
     badge: "产品对比",
@@ -109,6 +111,159 @@ const comparisonData = {
       button: "Consult Experts",
     },
   },
+  'zh-Hant': {
+    badge: "產品對比",
+    title: "找到最適合你的 AI 解決方案",
+    subtitle: "四大產品覆蓋從大模型聚合到企業級私有化部署的全部場景",
+    products: [
+      { name: "VxonAPI", subtitle: "大模型聚合平台", icon: Zap, color: "blue" },
+      { name: "VxonAI", subtitle: "企業級AI私有化部署", icon: Shield, color: "emerald" },
+      { name: "VxonClaw", subtitle: "企業智能體平台", icon: BarChart3, color: "violet" },
+      { name: "VxonFort ZT", subtitle: "零信任AI編碼堡壘機", icon: Code2, color: "orange" },
+    ],
+    criteria: [
+      {
+        category: "核心定位",
+        items: [
+          { label: "適用場景", values: ["API呼叫", "私有化部署", "業務流程", "程式碼安全"] },
+          { label: "目標用戶", values: ["開發者/小團隊", "大型企業", "業務部門", "研發團隊"] },
+        ],
+      },
+      {
+        category: "價格模式",
+        items: [
+          { label: "起步價格", values: ["免費額度", "聯繫報價", "免費體驗", "預約報價"] },
+          { label: "計費方式", values: ["按量計費", "定制方案", "按量計費", "定制方案"] },
+        ],
+      },
+      {
+        category: "核心能力",
+        items: [
+          { label: "多模型支援", values: [true, true, true, true] },
+          { label: "私有化部署", values: [false, true, true, true] },
+          { label: "資料不出內網", values: [false, true, true, true] },
+          { label: "統一帳戶管理", values: [true, true, true, true] },
+          { label: "SLA保障", values: [false, true, true, true] },
+        ],
+      },
+      {
+        category: "適用行業",
+        items: [
+          { label: "互聯網/科技", values: [true, true, true, true] },
+          { label: "金融/銀行", values: [false, true, true, true] },
+          { label: "政務/教育", values: [false, true, true, true] },
+          { label: "製造/零售", values: [true, true, true, false] },
+        ],
+      },
+    ],
+    cta: {
+      title: "不知道選哪個產品？",
+      subtitle: "我們的專家團隊可以幫你選擇最適合的解決方案",
+      button: "諮詢專家",
+    },
+  },
+  ja: {
+    badge: "製品比較",
+    title: "最適なAIソリューションを見つけよう",
+    subtitle: "4つの製品がLLM統合からエンタープライズプライベートデプロイまで全シナリオをカバー",
+    products: [
+      { name: "VxonAPI", subtitle: "LLM統合プラットフォーム", icon: Zap, color: "blue" },
+      { name: "VxonAI", subtitle: "エンタープライズAIプライベートデプロイ", icon: Shield, color: "emerald" },
+      { name: "VxonClaw", subtitle: "エンタープライズエージェントプラットフォーム", icon: BarChart3, color: "violet" },
+      { name: "VxonFort ZT", subtitle: "ゼロトラストAIコーディング要塞", icon: Code2, color: "orange" },
+    ],
+    criteria: [
+      {
+        category: "コアフォーカス",
+        items: [
+          { label: "ユースケース", values: ["APIアクセス", "プライベートデプロイ", "ビジネスプロセス", "コードセキュリティ"] },
+          { label: "対象ユーザー", values: ["開発者/小規模チーム", "大企業", "ビジネスチーム", "R&Dチーム"] },
+        ],
+      },
+      {
+        category: "料金モデル",
+        items: [
+          { label: "開始価格", values: ["無料クレジット", "カスタム見積", "無料体験", "予約見積"] },
+          { label: "課金方式", values: ["従量課金", "カスタムプラン", "従量課金", "カスタムプラン"] },
+        ],
+      },
+      {
+        category: "コア機能",
+        items: [
+          { label: "マルチモデル対応", values: [true, true, true, true] },
+          { label: "プライベートデプロイ", values: [false, true, true, true] },
+          { label: "データ社内保持", values: [false, true, true, true] },
+          { label: "統一アカウント管理", values: [true, true, true, true] },
+          { label: "SLA保証", values: [false, true, true, true] },
+        ],
+      },
+      {
+        category: "対応業界",
+        items: [
+          { label: "テック/インターネット", values: [true, true, true, true] },
+          { label: "金融/銀行", values: [false, true, true, true] },
+          { label: "政府/教育", values: [false, true, true, true] },
+          { label: "製造/小売", values: [true, true, true, false] },
+        ],
+      },
+    ],
+    cta: {
+      title: "どの製品を選べばいいかわからない？",
+      subtitle: "専門チームが最適なソリューション選びをお手伝いします",
+      button: "専門家に相談",
+    },
+  },
+  es: {
+    badge: "Comparar Productos",
+    title: "Encuentra la solución de IA perfecta",
+    subtitle: "Cuatro productos que cubren desde la agregación de LLM hasta el despliegue privado empresarial",
+    products: [
+      { name: "VxonAPI", subtitle: "Plataforma de Agregación LLM", icon: Zap, color: "blue" },
+      { name: "VxonAI", subtitle: "Despliegue Privado de IA Empresarial", icon: Shield, color: "emerald" },
+      { name: "VxonClaw", subtitle: "Plataforma de Agentes Empresariales", icon: BarChart3, color: "violet" },
+      { name: "VxonFort ZT", subtitle: "Bastión de Codificación IA Zero-Trust", icon: Code2, color: "orange" },
+    ],
+    criteria: [
+      {
+        category: "Enfoque Principal",
+        items: [
+          { label: "Caso de Uso", values: ["Acceso API", "Despliegue Privado", "Procesos de Negocio", "Seguridad de Código"] },
+          { label: "Usuarios Objetivo", values: ["Desarrolladores/Equipos pequeños", "Grandes Empresas", "Equipos de Negocio", "Equipos de I+D"] },
+        ],
+      },
+      {
+        category: "Modelo de Precios",
+        items: [
+          { label: "Precio Inicial", values: ["Créditos gratis", "Cotización personalizada", "Prueba gratis", "Reservar cotización"] },
+          { label: "Facturación", values: ["Pago por uso", "Plan personalizado", "Pago por uso", "Plan personalizado"] },
+        ],
+      },
+      {
+        category: "Capacidades Principales",
+        items: [
+          { label: "Soporte Multi-modelo", values: [true, true, true, true] },
+          { label: "Despliegue Privado", values: [false, true, true, true] },
+          { label: "Datos en Intranet", values: [false, true, true, true] },
+          { label: "Gestión Unificada", values: [true, true, true, true] },
+          { label: "Garantía SLA", values: [false, true, true, true] },
+        ],
+      },
+      {
+        category: "Industrias",
+        items: [
+          { label: "Tecnología/Internet", values: [true, true, true, true] },
+          { label: "Finanzas/Banca", values: [false, true, true, true] },
+          { label: "Gobierno/Educación", values: [false, true, true, true] },
+          { label: "Manufactura/Retail", values: [true, true, true, false] },
+        ],
+      },
+    ],
+    cta: {
+      title: "¿No sabes qué producto elegir?",
+      subtitle: "Nuestros expertos pueden ayudarte a elegir la mejor solución",
+      button: "Consultar Expertos",
+    },
+  },
 };
 
 const colorMap: Record<string, { bg: string; border: string; text: string; icon: string }> = {
@@ -160,22 +315,24 @@ export function ComparePage({ locale }: { locale: string }) {
             {s.products.map((product, idx) => {
               const colors = colorMap[product.color];
               return (
-                <motion.div
-                  key={product.name}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: idx * 0.1 }}
-                  className={clsx(
-                    "relative rounded-2xl p-6 border bg-surface text-center",
-                    colors.border
-                  )}
-                >
-                  <div className={clsx("w-12 h-12 rounded-xl mx-auto mb-4 flex items-center justify-center", colors.bg)}>
-                    <product.icon className={clsx("w-6 h-6", colors.icon)} />
-                  </div>
-                  <h3 className="text-lg font-bold text-white mb-1">{product.name}</h3>
-                  <p className="text-sm text-zinc-400">{product.subtitle}</p>
-                </motion.div>
+                <Link key={product.name} href={`/${locale}${productLinks[idx]}`}>
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: idx * 0.1 }}
+                    whileHover={{ y: -4 }}
+                    className={clsx(
+                      "relative rounded-2xl p-6 border bg-surface text-center cursor-pointer transition-all hover:shadow-lg",
+                      colors.border
+                    )}
+                  >
+                    <div className={clsx("w-12 h-12 rounded-xl mx-auto mb-4 flex items-center justify-center", colors.bg)}>
+                      <product.icon className={clsx("w-6 h-6", colors.icon)} />
+                    </div>
+                    <h3 className="text-lg font-bold text-white mb-1">{product.name}</h3>
+                    <p className="text-sm text-zinc-400">{product.subtitle}</p>
+                  </motion.div>
+                </Link>
               );
             })}
           </div>
@@ -201,7 +358,7 @@ export function ComparePage({ locale }: { locale: string }) {
                     animate={{ opacity: 1 }}
                     transition={{ delay: (sectionIdx * section.items.length + itemIdx) * 0.03 }}
                     className={clsx(
-                      "grid grid-cols-5 border-b border-white/5 last:border-b-0",
+                      "grid grid-cols-5 border-b border-white/5 last:border-b-0 transition-colors hover:bg-white/[0.03]",
                       itemIdx % 2 === 0 ? "bg-white/[0.01]" : ""
                     )}
                   >
@@ -256,7 +413,7 @@ export function ComparePage({ locale }: { locale: string }) {
               <p className="text-zinc-400 mb-6">{s.cta.subtitle}</p>
               <Link
                 href="#contact"
-                className="inline-flex items-center gap-2 px-8 py-4 bg-blue-600 text-white font-semibold rounded-full hover:bg-blue-500 transition-all"
+                className="inline-flex items-center gap-2 px-8 py-4 bg-white text-zinc-900 font-semibold rounded-full hover:bg-zinc-200 transition-all"
               >
                 {s.cta.button}
                 <ArrowRight className="w-4 h-4" />

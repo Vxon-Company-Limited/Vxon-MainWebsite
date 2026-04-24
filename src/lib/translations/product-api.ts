@@ -9,6 +9,12 @@ export const apiPage = {
         'VxonAPI 已适配 7+ 主流大模型，兼容 OpenAI 标准接口，对标官网 7 折起，量大管饱，技术团队 5 分钟即可完成接入。',
       buttons: ['免费试用', '查看定价'] as const,
     },
+    heroStats: [
+      { value: '7+', label: '主流模型' },
+      { value: '7折起', label: '价格优势' },
+      { value: '5分钟', label: '快速接入' },
+      { value: '5000+', label: '企业客户' },
+    ],
     featureGrid: {
       badge: 'Features',
       title: '为什么选择 VxonAPI',
@@ -46,6 +52,12 @@ export const apiPage = {
         'VxonAPI supports 7+ major LLMs with an OpenAI-compatible interface, starting at 30% off official pricing. Your engineering team can integrate in just 5 minutes.',
       buttons: ['Free Trial', 'View Pricing'] as const,
     },
+    heroStats: [
+      { value: '7+', label: 'Major LLMs' },
+      { value: '30% off', label: 'vs Official' },
+      { value: '5 min', label: 'Integration' },
+      { value: '5,000+', label: 'Clients' },
+    ],
     featureGrid: {
       badge: 'Features',
       title: 'Why VxonAPI',
@@ -83,6 +95,12 @@ export const apiPage = {
         'VxonAPI 已適配 7+ 主流大模型，相容 OpenAI 標準介面，對標官網 7 折起，量大管飽，技術團隊 5 分鐘即可完成接入。',
       buttons: ['免費試用', '查看定價'] as const,
     },
+    heroStats: [
+      { value: '7+', label: '主流模型' },
+      { value: '7折起', label: '價格優勢' },
+      { value: '5分鐘', label: '快速接入' },
+      { value: '5000+', label: '企業客戶' },
+    ],
     featureGrid: {
       badge: 'Features',
       title: '為什麼選擇 VxonAPI',
@@ -120,6 +138,12 @@ export const apiPage = {
         'VxonAPI は 7 以上の主要LLMに対応し、OpenAI 互換インターフェースを提供。公式価格の3割引から利用可能、技術チームはわずか5分で統合完了。',
       buttons: ['無料トライアル', '料金を見る'] as const,
     },
+    heroStats: [
+      { value: '7+', label: '主要モデル' },
+      { value: '3割引〜', label: '価格優位' },
+      { value: '5分', label: 'クイック統合' },
+      { value: '5,000+', label: '企業のお客様' },
+    ],
     featureGrid: {
       badge: 'Features',
       title: 'VxonAPI が選ばれる理由',
@@ -157,6 +181,12 @@ export const apiPage = {
         'VxonAPI es compatible con más de 7 LLMs principales con una interfaz compatible con OpenAI, desde un 30% de descuento sobre el precio oficial. Tu equipo técnico puede integrarlo en solo 5 minutos.',
       buttons: ['Prueba Gratis', 'Ver Precios'] as const,
     },
+    heroStats: [
+      { value: '7+', label: 'Modelos' },
+      { value: '30% dto.', label: 'vs Oficial' },
+      { value: '5 min', label: 'Integración' },
+      { value: '5.000+', label: 'Clientes' },
+    ],
     featureGrid: {
       badge: 'Features',
       title: 'Por qué elegir VxonAPI',

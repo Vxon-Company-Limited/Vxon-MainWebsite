@@ -37,12 +37,7 @@ export function PricingPage({ locale }: { locale: string }) {
       <section className="py-16 px-6 relative z-10 bg-surface border-y border-white/5">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {[
-              { icon: Users, value: "5000+", label: "企业客户信赖" },
-              { icon: TrendingUp, value: "99.9%", label: "服务可用性" },
-              { icon: Award, value: "7+", label: "主流模型覆盖" },
-              { icon: Zap, value: "5分钟", label: "快速接入" },
-            ].map((item, idx) => (
+            {[Users, TrendingUp, Award, Zap].map((Icon, idx) => (
               <motion.div
                 key={idx}
                 initial={{ opacity: 0, y: 20 }}
@@ -51,9 +46,9 @@ export function PricingPage({ locale }: { locale: string }) {
                 transition={{ delay: idx * 0.1 }}
                 className="flex flex-col items-center text-center"
               >
-                <item.icon className="w-6 h-6 text-blue-500 mb-3" />
-                <div className="text-2xl md:text-3xl font-bold text-white mb-1">{item.value}</div>
-                <div className="text-sm text-zinc-500">{item.label}</div>
+                <Icon className="w-6 h-6 text-blue-500 mb-3" />
+                <div className="text-2xl md:text-3xl font-bold text-white mb-1">{s.trustIndicators[idx].value}</div>
+                <div className="text-sm text-zinc-500">{s.trustIndicators[idx].label}</div>
               </motion.div>
             ))}
           </div>
@@ -101,8 +96,8 @@ export function PricingPage({ locale }: { locale: string }) {
                 {/* Price */}
                 <div className="mb-6 pb-6 border-b border-white/10">
                   <span className="text-4xl font-extrabold text-white">{plan.price}</span>
-                  {plan.price !== "免费" && plan.price !== "Free" && plan.price !== "免費" && plan.price !== "無料" && plan.price !== "Gratis" && plan.price !== "联系报价" && plan.price !== "聯繫報價" && plan.price !== "Contact Us" && (
-                    <span className="text-zinc-500 text-sm ml-2">/月起</span>
+                  {plan.price !== s.apiPlans[0].price && plan.price !== s.apiPlans[2].price && (
+                    <span className="text-zinc-500 text-sm ml-2">{s.perMonth}</span>
                   )}
                 </div>
 
@@ -122,7 +117,7 @@ export function PricingPage({ locale }: { locale: string }) {
                   className={clsx(
                     "mt-auto w-full py-3.5 rounded-xl font-semibold text-center transition-all text-sm",
                     plan.highlight
-                      ? "bg-gradient-to-r from-blue-600 to-blue-500 text-white hover:from-blue-500 hover:to-blue-400 shadow-lg shadow-blue-500/20"
+                      ? "bg-white text-zinc-900 hover:bg-zinc-200"
                       : "bg-white/10 text-white hover:bg-white/20"
                   )}
                 >
@@ -140,7 +135,7 @@ export function PricingPage({ locale }: { locale: string }) {
             className="mt-12 flex items-center justify-center gap-3 text-zinc-500 text-sm"
           >
             <Shield className="w-4 h-4 text-emerald-500" />
-            <span>安全支付 · 7天内无条件退款 · 企业可开增值税发票</span>
+            <span>{s.guarantee}</span>
           </motion.div>
         </div>
       </section>

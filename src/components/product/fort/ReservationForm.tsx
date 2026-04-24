@@ -40,30 +40,30 @@ export function ReservationForm({ locale }: { locale: string }) {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
                 <label className="block text-sm text-zinc-400 mb-2">{rf.fields.name}</label>
-                <input type="text" required className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500/50 transition-colors" placeholder={rf.fields.name} />
+                <input type="text" required className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-orange-500/50 transition-colors" placeholder={rf.fields.name} />
               </div>
               <div>
                 <label className="block text-sm text-zinc-400 mb-2">{rf.fields.company}</label>
-                <input type="text" required className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500/50 transition-colors" placeholder={rf.fields.company} />
+                <input type="text" required className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-orange-500/50 transition-colors" placeholder={rf.fields.company} />
               </div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
                 <label className="block text-sm text-zinc-400 mb-2">{rf.fields.email}</label>
-                <input type="email" required className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500/50 transition-colors" placeholder="work@company.com" />
+                <input type="email" required className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-orange-500/50 transition-colors" placeholder="work@company.com" />
               </div>
               <div>
                 <label className="block text-sm text-zinc-400 mb-2">{rf.fields.phone}</label>
-                <input type="tel" className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500/50 transition-colors" placeholder={rf.fields.phone} />
+                <input type="tel" className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-orange-500/50 transition-colors" placeholder={rf.fields.phone} />
               </div>
             </div>
             <div>
               <label className="block text-sm text-zinc-400 mb-2">{rf.fields.description}</label>
-              <textarea rows={3} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500/50 transition-colors resize-none" placeholder={rf.fields.description} />
+              <textarea rows={3} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-orange-500/50 transition-colors resize-none" placeholder={rf.fields.description} />
             </div>
             <button
               type="submit"
-              className="w-full py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-500 hover:shadow-[0_0_24px_rgba(59,130,246,0.3)] transition-all"
+              className="w-full py-3 bg-white text-zinc-900 font-semibold rounded-xl hover:bg-zinc-200 transition-all"
             >
               {rf.submit}
             </button>

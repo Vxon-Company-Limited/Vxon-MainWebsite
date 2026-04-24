@@ -59,14 +59,14 @@ export function Hero({ locale }: { locale: string }) {
         >
           <Link
             href="#signup"
-            className="group w-full sm:w-auto px-8 py-4 bg-blue-600 text-white text-base font-semibold rounded-full hover:bg-blue-500 hover:shadow-[0_0_24px_rgba(59,130,246,0.3)] transition-all flex items-center justify-center gap-2"
+            className="group w-full sm:w-auto px-8 py-4 bg-white text-zinc-900 text-base font-semibold rounded-full hover:bg-zinc-200 transition-all flex items-center justify-center gap-2"
           >
             {s.cta1}
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
           <Link
             href="#products"
-            className="group w-full sm:w-auto px-8 py-4 bg-transparent border border-zinc-700 text-white text-base font-medium rounded-full hover:bg-white/5 hover:border-zinc-500 transition-all flex items-center justify-center gap-2"
+            className="group w-full sm:w-auto px-8 py-4 bg-white/5 border border-white/10 text-white text-base font-medium rounded-full hover:bg-white/10 hover:border-white/20 transition-all flex items-center justify-center gap-2"
           >
             {s.cta2}
           </Link>

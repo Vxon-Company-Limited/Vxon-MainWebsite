@@ -489,7 +489,7 @@ export function QQGroupQuiz({ locale = 'en' }: QuizProps) {
           href="https://qm.qq.com/q/tMKEbRIHVS"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-block rounded bg-blue-600 px-5 py-2.5 font-medium text-white no-underline transition-colors hover:bg-blue-700"
+          className="inline-block rounded bg-white px-5 py-2.5 font-medium text-zinc-900 no-underline transition-colors hover:bg-zinc-200"
         >
           {t.joinLink}
         </a>
