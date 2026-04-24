@@ -112,6 +112,9 @@ export function Navbar({ locale }: { locale: string }) {
           <Link href={lp("/pricing")} className="nav-link px-3 py-2 text-sm text-zinc-400 hover:text-white transition-colors rounded-lg">
             {s.pricing}
           </Link>
+          <Link href={lp("/compare")} className="nav-link px-3 py-2 text-sm text-zinc-400 hover:text-white transition-colors rounded-lg">
+            {locale === "zh" ? "产品对比" : "Compare"}
+          </Link>
           <Link href={lp("/docs")} target="_blank" className="nav-link px-3 py-2 text-sm text-zinc-400 hover:text-white transition-colors rounded-lg">
             {s.docs}
           </Link>
@@ -317,6 +320,7 @@ export function Navbar({ locale }: { locale: string }) {
                 ))}
               </MobileSection>
               <Link href={lp("/pricing")} className="block py-3 text-lg font-medium text-zinc-300 hover:text-white" onClick={() => setMobileMenuOpen(false)}>{s.pricing}</Link>
+              <Link href={lp("/compare")} className="block py-3 text-lg font-medium text-zinc-300 hover:text-white" onClick={() => setMobileMenuOpen(false)}>{locale === "zh" ? "产品对比" : "Compare"}</Link>
               <Link href={lp("/docs")} className="block py-3 text-lg font-medium text-zinc-300 hover:text-white" onClick={() => setMobileMenuOpen(false)}>{s.docs}</Link>
               <div className="h-px bg-white/10" />
               <div className="flex items-center gap-3 py-3">

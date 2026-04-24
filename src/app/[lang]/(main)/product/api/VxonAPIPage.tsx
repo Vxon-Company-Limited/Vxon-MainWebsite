@@ -7,11 +7,18 @@ import { ProductCTA } from "@/components/shared/ProductCTA";
 import { SupportedModels } from "@/components/product/api/SupportedModels";
 import { GettingStarted } from "@/components/product/api/GettingStarted";
 import { drawApiConvergence } from "@/animations/apiConvergence";
-import { Layers, Wallet, Zap, Signal, ArrowLeftRight, FileText } from "lucide-react";
+import { Layers, Wallet, Zap, Signal, ArrowLeftRight, FileText, Globe, Clock, Users } from "lucide-react";
 import { t } from "@/lib/translations/site";
 import { apiPage } from "@/lib/translations/product-api";
 
 const featureIcons = [Layers, Wallet, Zap, Signal, ArrowLeftRight, FileText];
+
+const apiStats = [
+  { icon: Globe, value: "7+", label: "主流模型" },
+  { icon: Wallet, value: "7折起", label: "价格优势" },
+  { icon: Clock, value: "5分钟", label: "快速接入" },
+  { icon: Users, value: "5000+", label: "企业客户" },
+];
 
 export function VxonAPIPage({ locale }: { locale: string }) {
   const s = t(apiPage, locale);
@@ -43,6 +50,7 @@ export function VxonAPIPage({ locale }: { locale: string }) {
           { label: s.hero.buttons[1], href: "#pricing" },
         ]}
         draw={drawApiConvergence}
+        stats={apiStats}
       />
       <FeatureGrid
         badge={s.featureGrid.badge}

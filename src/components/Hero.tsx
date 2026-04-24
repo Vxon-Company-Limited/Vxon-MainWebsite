@@ -4,19 +4,19 @@ import { motion } from "framer-motion";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { CanvasAnimation } from "@/components/shared/CanvasAnimation";
-import { drawNeuralNetwork } from "@/animations/neuralNetwork";
+import { drawParticleMesh } from "@/animations/particleMesh";
 import { drawNatureScene } from "@/animations/zen/natureScene";
 import { useThemeAnimation, useIsZen } from "@/hooks/useThemeAnimation";
 import { t, hero as heroT } from "@/lib/translations/site";
 
 export function Hero({ locale }: { locale: string }) {
   const s = t(heroT, locale);
-  const draw = useThemeAnimation(drawNeuralNetwork, drawNatureScene);
+  const draw = useThemeAnimation(drawParticleMesh, drawNatureScene);
   const isZen = useIsZen();
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Layer 2: Neural network canvas */}
-      <CanvasAnimation draw={draw} className={`${isZen ? 'opacity-[0.35]' : 'opacity-[0.15]'} pointer-events-none`} />
+      {/* Layer 2: Particle mesh canvas */}
+      <CanvasAnimation draw={draw} className={`${isZen ? 'opacity-[0.35]' : 'opacity-100'} pointer-events-none`} />
 
       {/* Layer 3: Content */}
       <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">

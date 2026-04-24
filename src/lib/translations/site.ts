@@ -628,6 +628,7 @@ export const metadata = {
     productClaw: { title: 'VxonClaw — 企业智能体平台 | Vxon', description: '融合运营、财务、销售业务，替代BI/CRM/OA，实时为业务赋能。' },
     productFort: { title: 'VxonFort ZT — 零信任AI编码安全堡垒机 | Vxon', description: '将 Claude Code 封装进零信任管控，满足企业等保合规要求。' },
     pricing: { title: '定价 — Vxon', description: '简单透明的定价方案，从免费体验到企业定制。' },
+    compare: { title: '产品对比 — Vxon', description: '对比 Vxon 四大产品，找到最适合你的 AI 解决方案。' },
   },
   en: {
     home: { title: 'Vxon - Enterprise AI Infrastructure | Stable, Secure, Cost-Effective', description: 'Access top LLMs via a single API. Enterprise private deployment and zero-trust agent platform for business growth.' },
@@ -637,6 +638,7 @@ export const metadata = {
     productClaw: { title: 'VxonClaw — Enterprise Agent Platform | Vxon', description: 'Integrate operations, finance, and sales. Replace BI/CRM/OA with real-time AI.' },
     productFort: { title: 'VxonFort ZT — Zero-Trust AI Coding Bastion | Vxon', description: 'Wrap Claude Code in zero-trust controls for enterprise compliance.' },
     pricing: { title: 'Pricing — Vxon', description: 'Simple, transparent pricing from free trial to enterprise custom plans.' },
+    compare: { title: 'Compare Products — Vxon', description: 'Compare Vxon four products and find the best AI solution for you.' },
   },
   'zh-Hant': {
     home: { title: 'Vxon - 企業級AI基礎設施 | 穩定、安全、高性價比', description: '一站式接入全球頂尖大模型，專為企業辦公與研發設計的私有化及零信任智能體平台。' },
@@ -646,6 +648,7 @@ export const metadata = {
     productClaw: { title: 'VxonClaw — 企業智能體平台 | Vxon', description: '融合運營、財務、銷售業務，替代BI/CRM/OA，即時為業務賦能。' },
     productFort: { title: 'VxonFort ZT — 零信任AI編碼安全堡壘機 | Vxon', description: '將 Claude Code 封裝進零信任管控，滿足企業等保合規要求。' },
     pricing: { title: '定價 — Vxon', description: '簡單透明的定價方案，從免費體驗到企業定制。' },
+    compare: { title: '產品對比 — Vxon', description: '對比 Vxon 四大產品，找到最適合你的 AI 解決方案。' },
   },
   ja: {
     home: { title: 'Vxon - エンタープライズAIインフラ | 安定・安全・高コスパ', description: '主要LLMにワンストップでアクセス。エンタープライズプライベートデプロイとゼロトラストエージェントプラットフォーム。' },
@@ -655,6 +658,7 @@ export const metadata = {
     productClaw: { title: 'VxonClaw — エンタープライズエージェントプラットフォーム | Vxon', description: '運営、財務、営業を統合。BI/CRM/OAをリアルタイムAIで置き換え。' },
     productFort: { title: 'VxonFort ZT — ゼロトラストAIコーディング要塞 | Vxon', description: 'Claude Codeをゼロトラスト管理に組み込み、企業コンプライアンス対応。' },
     pricing: { title: '料金 — Vxon', description: 'シンプルで透明な料金体系。無料体験からエンタープライズカスタムまで。' },
+    compare: { title: '製品比較 — Vxon', description: 'Vxonの4つの製品を比較して、あなたに最適なAIソリューションを見つけましょう。' },
   },
   es: {
     home: { title: 'Vxon - Infraestructura IA Empresarial | Estable, Segura, Rentable', description: 'Accede a los principales LLM con una sola API. Despliegue privado empresarial y plataforma de agentes zero-trust.' },
@@ -664,5 +668,6 @@ export const metadata = {
     productClaw: { title: 'VxonClaw — Plataforma de agentes empresariales | Vxon', description: 'Integra operaciones, finanzas y ventas. Reemplaza BI/CRM/OA con IA en tiempo real.' },
     productFort: { title: 'VxonFort ZT — Bastión de codificación IA Zero-Trust | Vxon', description: 'Envuelve Claude Code en controles zero-trust para cumplimiento empresarial.' },
     pricing: { title: 'Precios — Vxon', description: 'Precios simples y transparentes, desde prueba gratuita hasta planes empresariales.' },
+    compare: { title: 'Comparar productos — Vxon', description: 'Compara los 4 productos de Vxon y encuentra la mejor solución de IA para ti.' },
   },
 } as const;

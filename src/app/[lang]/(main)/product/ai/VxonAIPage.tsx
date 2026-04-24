@@ -33,6 +33,7 @@ export function VxonAIPage({ locale }: { locale: string }) {
           { label: tx.hero.buttons[1], href: "#pricing" },
         ]}
         draw={drawConcentricRings}
+        accentColor="emerald"
       />
       <ValueProps locale={locale} />
       <FeatureGrid
@@ -40,6 +41,7 @@ export function VxonAIPage({ locale }: { locale: string }) {
         title={tx.featureGrid.title}
         description={tx.featureGrid.description}
         features={features}
+        accentColor="emerald"
       />
       <ArchitectureDiagram locale={locale} />
       <UseCases locale={locale} />

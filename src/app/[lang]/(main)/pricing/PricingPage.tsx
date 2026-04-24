@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Check, ArrowRight, Clock, Shield, Server, Bot } from "lucide-react";
+import { Check, ArrowRight, Clock, Shield, Server, Bot, Users, TrendingUp, Award, Zap } from "lucide-react";
 import Link from "next/link";
 import clsx from "clsx";
 import { ProductHero } from "@/components/shared/ProductHero";
@@ -33,13 +33,40 @@ export function PricingPage({ locale }: { locale: string }) {
         draw={drawConcentricRings}
       />
 
-      {/* VxonAPI Pricing Cards */}
+      {/* Trust Indicators */}
+      <section className="py-16 px-6 relative z-10 bg-surface border-y border-white/5">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {[
+              { icon: Users, value: "5000+", label: "企业客户信赖" },
+              { icon: TrendingUp, value: "99.9%", label: "服务可用性" },
+              { icon: Award, value: "7+", label: "主流模型覆盖" },
+              { icon: Zap, value: "5分钟", label: "快速接入" },
+            ].map((item, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.1 }}
+                className="flex flex-col items-center text-center"
+              >
+                <item.icon className="w-6 h-6 text-blue-500 mb-3" />
+                <div className="text-2xl md:text-3xl font-bold text-white mb-1">{item.value}</div>
+                <div className="text-sm text-zinc-500">{item.label}</div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* VxonAPI Pricing Cards - Enhanced */}
       <section className="py-24 px-6 relative z-10 bg-surface">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <span className="text-blue-500 font-semibold tracking-wider uppercase text-sm">{s.apiSection.badge}</span>
             <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight mt-3 mb-4">{s.apiSection.title}</h2>
-            <p className="text-zinc-400 text-lg">{s.apiSection.description}</p>
+            <p className="text-zinc-400 text-lg max-w-2xl mx-auto">{s.apiSection.description}</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
             {apiPlans.map((plan, idx) => (
@@ -50,38 +77,52 @@ export function PricingPage({ locale }: { locale: string }) {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
                 className={clsx(
-                  "relative rounded-2xl p-8 flex flex-col h-full border transition-colors",
+                  "relative rounded-2xl p-8 flex flex-col h-full border transition-all duration-300",
                   plan.highlight
-                    ? "bg-blue-500/10 border-blue-500/30"
+                    ? "bg-gradient-to-b from-blue-500/15 to-transparent border-blue-500/40 shadow-[0_0_40px_rgba(59,130,246,0.15)]"
                     : "bg-white/5 border-white/10 hover:border-white/20"
                 )}
               >
+                {/* Recommended Badge */}
                 {plan.highlight && "badge" in plan && plan.badge && (
                   <div className="absolute top-0 inset-x-0 -translate-y-1/2 flex justify-center">
-                    <span className="bg-blue-500 text-white text-xs font-bold uppercase tracking-wider py-1 px-3 rounded-full">
+                    <span className="bg-gradient-to-r from-blue-500 to-blue-600 text-white text-xs font-bold uppercase tracking-wider py-1.5 px-4 rounded-full shadow-lg">
                       {plan.badge}
                     </span>
                   </div>
                 )}
-                <h3 className="text-xl font-bold text-white mb-2">{plan.name}</h3>
-                <p className="text-sm text-zinc-400 mb-6">{plan.description}</p>
+
+                {/* Plan Header */}
                 <div className="mb-6">
-                  <span className="text-3xl font-extrabold text-white">{plan.price}</span>
+                  <h3 className="text-xl font-bold text-white mb-1">{plan.name}</h3>
+                  <p className="text-sm text-zinc-400">{plan.description}</p>
                 </div>
+
+                {/* Price */}
+                <div className="mb-6 pb-6 border-b border-white/10">
+                  <span className="text-4xl font-extrabold text-white">{plan.price}</span>
+                  {plan.price !== "免费" && plan.price !== "Free" && plan.price !== "免費" && plan.price !== "無料" && plan.price !== "Gratis" && plan.price !== "联系报价" && plan.price !== "聯繫報價" && plan.price !== "Contact Us" && (
+                    <span className="text-zinc-500 text-sm ml-2">/月起</span>
+                  )}
+                </div>
+
+                {/* Features */}
                 <ul className="space-y-3 mb-8 flex-grow">
                   {plan.features.map((feat) => (
                     <li key={feat} className="flex items-start gap-3 text-zinc-300 text-sm">
-                      <Check className="w-4 h-4 text-blue-500 shrink-0 mt-0.5" />
+                      <Check className={clsx("w-4 h-4 shrink-0 mt-0.5", plan.highlight ? "text-blue-400" : "text-blue-500")} />
                       {feat}
                     </li>
                   ))}
                 </ul>
+
+                {/* CTA Button */}
                 <Link
                   href={plan.ctaHref}
                   className={clsx(
-                    "mt-auto w-full py-3 rounded-xl font-medium text-center transition-colors text-sm",
+                    "mt-auto w-full py-3.5 rounded-xl font-semibold text-center transition-all text-sm",
                     plan.highlight
-                      ? "bg-blue-600 text-white hover:bg-blue-700"
+                      ? "bg-gradient-to-r from-blue-600 to-blue-500 text-white hover:from-blue-500 hover:to-blue-400 shadow-lg shadow-blue-500/20"
                       : "bg-white/10 text-white hover:bg-white/20"
                   )}
                 >
@@ -90,6 +131,17 @@ export function PricingPage({ locale }: { locale: string }) {
               </motion.div>
             ))}
           </div>
+
+          {/* Money Back Guarantee */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mt-12 flex items-center justify-center gap-3 text-zinc-500 text-sm"
+          >
+            <Shield className="w-4 h-4 text-emerald-500" />
+            <span>安全支付 · 7天内无条件退款 · 企业可开增值税发票</span>
+          </motion.div>
         </div>
       </section>
 

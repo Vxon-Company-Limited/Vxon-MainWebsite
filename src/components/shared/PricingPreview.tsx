@@ -16,19 +16,62 @@ export interface PricingPlan {
   badge?: string;
 }
 
+type AccentColor = "blue" | "emerald" | "violet" | "orange";
+
 interface PricingPreviewProps {
   badge?: string;
   title: string;
   description?: string;
   plans: PricingPlan[];
+  accentColor?: AccentColor;
 }
 
-export function PricingPreview({ badge, title, description, plans }: PricingPreviewProps) {
+const accentColorMap: Record<AccentColor, { badge: string; highlightBg: string; highlightBorder: string; shadow: string; icon: string; btnPrimary: string; btnHover: string }> = {
+  blue: {
+    badge: "bg-blue-500",
+    highlightBg: "from-blue-500/15 to-transparent",
+    highlightBorder: "border-blue-500/40",
+    shadow: "shadow-blue-500/15",
+    icon: "text-blue-400",
+    btnPrimary: "from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400",
+    btnHover: "shadow-blue-500/20",
+  },
+  emerald: {
+    badge: "bg-emerald-500",
+    highlightBg: "from-emerald-500/15 to-transparent",
+    highlightBorder: "border-emerald-500/40",
+    shadow: "shadow-emerald-500/15",
+    icon: "text-emerald-400",
+    btnPrimary: "from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400",
+    btnHover: "shadow-emerald-500/20",
+  },
+  violet: {
+    badge: "bg-violet-500",
+    highlightBg: "from-violet-500/15 to-transparent",
+    highlightBorder: "border-violet-500/40",
+    shadow: "shadow-violet-500/15",
+    icon: "text-violet-400",
+    btnPrimary: "from-violet-600 to-violet-500 hover:from-violet-500 hover:to-violet-400",
+    btnHover: "shadow-violet-500/20",
+  },
+  orange: {
+    badge: "bg-orange-500",
+    highlightBg: "from-orange-500/15 to-transparent",
+    highlightBorder: "border-orange-500/40",
+    shadow: "shadow-orange-500/15",
+    icon: "text-orange-400",
+    btnPrimary: "from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400",
+    btnHover: "shadow-orange-500/20",
+  },
+};
+
+export function PricingPreview({ badge, title, description, plans, accentColor = "blue" }: PricingPreviewProps) {
+  const colors = accentColorMap[accentColor];
   return (
     <section className="py-24 px-6 relative z-10 bg-surface">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          {badge && <span className="text-blue-500 font-semibold tracking-wider uppercase text-sm">{badge}</span>}
+          {badge && <span className={clsx("font-semibold tracking-wider uppercase text-sm", colors.icon)}>{badge}</span>}
           <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight mt-3 mb-4">{title}</h2>
           {description && <p className="text-zinc-400 text-lg">{description}</p>}
         </div>
@@ -41,28 +84,30 @@ export function PricingPreview({ badge, title, description, plans }: PricingPrev
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: idx * 0.1 }}
               className={clsx(
-                "relative rounded-2xl p-8 flex flex-col h-full border transition-colors",
+                "relative rounded-2xl p-8 flex flex-col h-full border transition-all duration-300",
                 plan.highlight
-                  ? "bg-blue-500/10 border-blue-500/30"
+                  ? clsx("bg-gradient-to-b", colors.highlightBg, colors.highlightBorder, "shadow-[0_0_40px_rgba(59,130,246,0.15)]")
                   : "bg-white/5 border-white/10 hover:border-white/20"
               )}
             >
               {plan.badge && (
                 <div className="absolute top-0 inset-x-0 -translate-y-1/2 flex justify-center">
-                  <span className="bg-blue-500 text-white text-xs font-bold uppercase tracking-wider py-1 px-3 rounded-full">
+                  <span className={clsx("text-white text-xs font-bold uppercase tracking-wider py-1.5 px-4 rounded-full shadow-lg", colors.badge)}>
                     {plan.badge}
                   </span>
                 </div>
               )}
-              <h3 className="text-xl font-bold text-white mb-2">{plan.name}</h3>
-              <p className="text-sm text-zinc-400 mb-6">{plan.description}</p>
               <div className="mb-6">
-                <span className="text-3xl font-extrabold text-white">{plan.price}</span>
+                <h3 className="text-xl font-bold text-white mb-1">{plan.name}</h3>
+                <p className="text-sm text-zinc-400">{plan.description}</p>
+              </div>
+              <div className="mb-6 pb-6 border-b border-white/10">
+                <span className="text-4xl font-extrabold text-white">{plan.price}</span>
               </div>
               <ul className="space-y-3 mb-8 flex-grow">
                 {plan.features.map((feat) => (
                   <li key={feat} className="flex items-start gap-3 text-zinc-300 text-sm">
-                    <Check className="w-4 h-4 text-blue-500 shrink-0 mt-0.5" />
+                    <Check className={clsx("w-4 h-4 shrink-0 mt-0.5", colors.icon)} />
                     {feat}
                   </li>
                 ))}
@@ -70,10 +115,10 @@ export function PricingPreview({ badge, title, description, plans }: PricingPrev
               <Link
                 href={plan.ctaHref}
                 className={clsx(
-                  "mt-auto w-full py-3 rounded-xl font-medium text-center transition-colors text-sm",
+                  "mt-auto w-full py-3.5 rounded-xl font-semibold text-center transition-all text-sm text-white",
                   plan.highlight
-                    ? "bg-blue-600 text-white hover:bg-blue-700"
-                    : "bg-white/10 text-white hover:bg-white/20"
+                    ? clsx("bg-gradient-to-r", colors.btnPrimary, "shadow-lg", colors.btnHover)
+                    : "bg-white/10 hover:bg-white/20"
                 )}
               >
                 {plan.cta}

@@ -1,11 +1,12 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Zap, Shield, Wallet } from "lucide-react";
 import Link from "next/link";
 import { CanvasAnimation, type DrawFunction } from "./CanvasAnimation";
 import { drawNatureScene } from "@/animations/zen/natureScene";
 import { useThemeAnimation, useIsZen } from "@/hooks/useThemeAnimation";
+import clsx from "clsx";
 
 interface HeroButton {
   label: string;
@@ -13,17 +14,91 @@ interface HeroButton {
   primary?: boolean;
 }
 
+interface HeroStat {
+  icon: React.ComponentType<{ className?: string }>;
+  value: string;
+  label: string;
+}
+
+type ProductColor = "blue" | "emerald" | "violet" | "orange";
+
 interface ProductHeroProps {
   badge: string;
   title: string;
   subtitle: string;
   buttons: HeroButton[];
   draw: DrawFunction;
+  stats?: HeroStat[];
+  accentColor?: ProductColor;
 }
 
-export function ProductHero({ badge, title, subtitle, buttons, draw }: ProductHeroProps) {
+const defaultStats: HeroStat[] = [
+  { icon: Zap, value: "7+", label: "主流模型" },
+  { icon: Wallet, value: "7折起", label: "官网价格" },
+  { icon: Shield, value: "99.9%", label: "服务可用性" },
+];
+
+const colorMap: Record<ProductColor, {
+  dot: string;
+  statIcon: string;
+  statBg: string;
+  statBorder: string;
+  statValue: string;
+  btnPrimary: string;
+  btnHover: string;
+  glow: string;
+  glowRgb: string;
+}> = {
+  blue: {
+    dot: "bg-blue-500",
+    statIcon: "text-blue-400",
+    statBg: "bg-blue-500/10",
+    statBorder: "border-blue-500/20 hover:border-blue-500/30",
+    statValue: "text-blue-400",
+    btnPrimary: "bg-blue-600 hover:bg-blue-500",
+    btnHover: "hover:shadow-[0_0_24px_rgba(59,130,246,0.3)]",
+    glow: "rgba(59, 130, 246, 0.12)",
+    glowRgb: "59, 130, 246",
+  },
+  emerald: {
+    dot: "bg-emerald-500",
+    statIcon: "text-emerald-400",
+    statBg: "bg-emerald-500/10",
+    statBorder: "border-emerald-500/20 hover:border-emerald-500/30",
+    statValue: "text-emerald-400",
+    btnPrimary: "bg-emerald-600 hover:bg-emerald-500",
+    btnHover: "hover:shadow-[0_0_24px_rgba(16,185,129,0.3)]",
+    glow: "rgba(16, 185, 129, 0.12)",
+    glowRgb: "16, 185, 129",
+  },
+  violet: {
+    dot: "bg-violet-500",
+    statIcon: "text-violet-400",
+    statBg: "bg-violet-500/10",
+    statBorder: "border-violet-500/20 hover:border-violet-500/30",
+    statValue: "text-violet-400",
+    btnPrimary: "bg-violet-600 hover:bg-violet-500",
+    btnHover: "hover:shadow-[0_0_24px_rgba(139,92,246,0.3)]",
+    glow: "rgba(139, 92, 246, 0.12)",
+    glowRgb: "139, 92, 246",
+  },
+  orange: {
+    dot: "bg-orange-500",
+    statIcon: "text-orange-400",
+    statBg: "bg-orange-500/10",
+    statBorder: "border-orange-500/20 hover:border-orange-500/30",
+    statValue: "text-orange-400",
+    btnPrimary: "bg-orange-600 hover:bg-orange-500",
+    btnHover: "hover:shadow-[0_0_24px_rgba(249,115,22,0.3)]",
+    glow: "rgba(249, 115, 22, 0.12)",
+    glowRgb: "249, 115, 22",
+  },
+};
+
+export function ProductHero({ badge, title, subtitle, buttons, draw, stats = defaultStats, accentColor = "blue" }: ProductHeroProps) {
   const themedDraw = useThemeAnimation(draw, drawNatureScene);
   const isZen = useIsZen();
+  const colors = colorMap[accentColor];
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
       <div className="absolute inset-0 bg-background" />
@@ -36,7 +111,7 @@ export function ProductHero({ badge, title, subtitle, buttons, draw }: ProductHe
           transition={{ duration: 0.5 }}
           className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-sm text-zinc-300 mb-8"
         >
-          <span className="flex h-2 w-2 rounded-full bg-blue-500 animate-pulse" />
+          <span className={clsx("flex h-2 w-2 rounded-full animate-pulse", colors.dot)} />
           {badge}
         </motion.div>
 
@@ -45,7 +120,7 @@ export function ProductHero({ badge, title, subtitle, buttons, draw }: ProductHe
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
           className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white mb-6 leading-tight"
-          style={{ textShadow: "0 0 60px rgba(var(--theme-glow-rgb),0.12)" }}
+          style={{ textShadow: `0 0 60px ${colors.glow}` }}
         >
           {title}
         </motion.h1>
@@ -59,10 +134,40 @@ export function ProductHero({ badge, title, subtitle, buttons, draw }: ProductHe
           {subtitle}
         </motion.p>
 
+        {/* Stats Section */}
+        {stats && stats.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.25 }}
+            className="flex flex-wrap justify-center gap-8 mb-12"
+          >
+            {stats.map((stat, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.4, delay: 0.3 + idx * 0.1 }}
+                className={clsx(
+                  "flex items-center gap-3 px-5 py-3 rounded-xl border transition-colors",
+                  colors.statBg,
+                  colors.statBorder
+                )}
+              >
+                <stat.icon className={clsx("w-5 h-5", colors.statIcon)} />
+                <div className="text-left">
+                  <div className={clsx("text-xl font-bold text-white metric-number", colors.statValue)}>{stat.value}</div>
+                  <div className="text-xs text-zinc-500">{stat.label}</div>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        )}
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
           className="flex flex-col sm:flex-row items-center justify-center gap-4"
         >
           {buttons.map((btn) =>
@@ -70,7 +175,11 @@ export function ProductHero({ badge, title, subtitle, buttons, draw }: ProductHe
               <Link
                 key={btn.label}
                 href={btn.href}
-                className="group w-full sm:w-auto px-8 py-4 bg-blue-600 text-white text-base font-semibold rounded-full hover:bg-blue-500 hover:shadow-[0_0_24px_rgba(59,130,246,0.3)] transition-all flex items-center justify-center gap-2"
+                className={clsx(
+                  "group w-full sm:w-auto px-8 py-4 text-white text-base font-semibold rounded-full transition-all flex items-center justify-center gap-2",
+                  colors.btnPrimary,
+                  colors.btnHover
+                )}
               >
                 {btn.label}
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

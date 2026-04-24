@@ -44,6 +44,7 @@ export function VxonClawPage({ locale }: { locale: string }) {
           { label: p.hero.buttons[1], href: "#demo" },
         ]}
         draw={drawConnectedNodes}
+        accentColor="violet"
       />
       <BeforeAfter locale={locale} />
       <FeatureGrid
@@ -51,6 +52,7 @@ export function VxonClawPage({ locale }: { locale: string }) {
         title={p.featureGrid.title}
         description={p.featureGrid.description}
         features={features}
+        accentColor="violet"
       />
       <DepartmentCoverage locale={locale} />
       <IntegrationLogos locale={locale} />
@@ -58,6 +60,7 @@ export function VxonClawPage({ locale }: { locale: string }) {
         badge={p.pricingPreview.badge}
         title={p.pricingPreview.title}
         plans={pricingPlans}
+        accentColor="violet"
       />
       <ProductCTA
         title={p.productCTA.title}

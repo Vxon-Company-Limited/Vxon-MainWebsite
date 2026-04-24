@@ -23,6 +23,7 @@ export function VxonFortPage({ locale }: { locale: string }) {
           { label: p.hero.buttons[0], href: "#demo", primary: true },
         ]}
         draw={drawShieldLayers}
+        accentColor="orange"
       />
       <ComingSoon locale={locale} />
       <CoreCapabilities locale={locale} />
