@@ -25,14 +25,16 @@ export function ZenBackground() {
           className="fixed inset-0 z-0 pointer-events-none"
           aria-hidden="true"
         >
-          <Image
-            src={images[0]}
-            alt=""
-            fill
-            priority
-            className="object-cover"
-            sizes="100vw"
-          />
+          <div className="absolute inset-0 zen-bg-breathe">
+            <Image
+              src={images[0]}
+              alt=""
+              fill
+              priority
+              className="object-cover"
+              sizes="100vw"
+            />
+          </div>
           <div
             className="absolute inset-0"
             style={{

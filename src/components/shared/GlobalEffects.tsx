@@ -79,7 +79,7 @@ export function GlobalEffects() {
         className="fixed inset-x-0 top-0 h-[1px] pointer-events-none z-[2]"
         style={{
           display: "none",
-          background: `linear-gradient(90deg, transparent, rgba(var(--theme-glow-rgb),0.03), transparent)`,
+          background: `linear-gradient(90deg, transparent, rgba(var(--theme-glow-rgb),0.05), rgba(var(--theme-accent-violet-rgb),0.03), transparent)`,
         }}
         aria-hidden="true"
       />

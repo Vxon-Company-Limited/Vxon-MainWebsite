@@ -26,6 +26,7 @@ interface Firefly {
   glowPhase: number;
   glowSpeed: number;
   maxOpacity: number;
+  trail: { x: number; y: number; alpha: number }[];
 }
 
 interface LightRay {
@@ -47,11 +48,29 @@ interface Pollen {
   wobblePhase: number;
 }
 
+interface Butterfly {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  size: number;
+  wingPhase: number;
+  wingSpeed: number;
+  hue: number;
+  opacity: number;
+  targetX: number;
+  targetY: number;
+}
+
 let leaves: Leaf[] = [];
 let fireflies: Firefly[] = [];
 let rays: LightRay[] = [];
 let pollen: Pollen[] = [];
+let butterflies: Butterfly[] = [];
 let inited = false;
+let windGust = 0;
+let windTarget = 0;
+let windTimer = 0;
 
 function init(w: number, h: number) {
   const leafColors = [
@@ -90,6 +109,7 @@ function init(w: number, h: number) {
     glowPhase: Math.random() * Math.PI * 2,
     glowSpeed: 0.002 + Math.random() * 0.003,
     maxOpacity: 0.15 + Math.random() * 0.25,
+    trail: [],
   }));
 
   rays = Array.from({ length: 4 }, (_, i) => ({
@@ -109,6 +129,20 @@ function init(w: number, h: number) {
     size: 0.8 + Math.random() * 1.5,
     opacity: 0.04 + Math.random() * 0.08,
     wobblePhase: Math.random() * Math.PI * 2,
+  }));
+
+  butterflies = Array.from({ length: 4 }, () => ({
+    x: Math.random() * w,
+    y: h * 0.3 + Math.random() * h * 0.4,
+    vx: (Math.random() - 0.5) * 0.4,
+    vy: (Math.random() - 0.5) * 0.3,
+    size: 5 + Math.random() * 6,
+    wingPhase: Math.random() * Math.PI * 2,
+    wingSpeed: 0.08 + Math.random() * 0.04,
+    hue: [40, 30, 320, 200][Math.floor(Math.random() * 4)],
+    opacity: 0.12 + Math.random() * 0.1,
+    targetX: Math.random() * w,
+    targetY: h * 0.2 + Math.random() * h * 0.5,
   }));
 
   inited = true;
@@ -142,11 +176,28 @@ function drawLeafShape(ctx: CanvasRenderingContext2D, size: number, type: number
   ctx.closePath();
 }
 
+function drawButterflyWing(ctx: CanvasRenderingContext2D, size: number, wingOpen: number) {
+  const wingW = size * wingOpen;
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.bezierCurveTo(wingW * 0.5, -size * 0.8, wingW, -size * 0.6, wingW * 0.8, 0);
+  ctx.bezierCurveTo(wingW, size * 0.4, wingW * 0.3, size * 0.5, 0, size * 0.2);
+  ctx.closePath();
+}
+
 export const drawNatureScene: DrawFunction = (ctx, canvas, time, mouse) => {
   const { width: w, height: h } = canvas;
   if (!inited || leaves.length === 0) init(w, h);
 
   ctx.clearRect(0, 0, w, h);
+
+  windTimer += 1;
+  if (windTimer > 300 + Math.random() * 600) {
+    windTarget = (Math.random() - 0.3) * 0.8;
+    windTimer = 0;
+  }
+  windGust += (windTarget - windGust) * 0.005;
+  if (Math.abs(windGust - windTarget) < 0.01) windTarget *= 0.5;
 
   for (const ray of rays) {
     const pulse = Math.sin(ray.phase + time * ray.speed) * 0.5 + 0.5;
@@ -173,9 +224,9 @@ export const drawNatureScene: DrawFunction = (ctx, canvas, time, mouse) => {
 
   for (const leaf of leaves) {
     const sway = Math.sin(leaf.swayPhase + time * leaf.swaySpeed) * 0.5;
-    leaf.x += leaf.driftX + sway;
+    leaf.x += leaf.driftX + sway + windGust;
     leaf.y += leaf.driftY;
-    leaf.rotation += leaf.rotationSpeed;
+    leaf.rotation += leaf.rotationSpeed + windGust * 0.01;
 
     if (leaf.y > h + 30) { leaf.y = -30; leaf.x = Math.random() * w; }
     if (leaf.x < -30) leaf.x = w + 30;
@@ -202,7 +253,7 @@ export const drawNatureScene: DrawFunction = (ctx, canvas, time, mouse) => {
 
   for (const p of pollen) {
     const wobble = Math.sin(p.wobblePhase + time * 0.002) * 0.3;
-    p.x += p.vx + wobble;
+    p.x += p.vx + wobble + windGust * 0.3;
     p.y += p.vy;
 
     if (p.x < 0) p.x = w;
@@ -214,6 +265,60 @@ export const drawNatureScene: DrawFunction = (ctx, canvas, time, mouse) => {
     ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
     ctx.fillStyle = `rgba(255, 240, 200, ${p.opacity})`;
     ctx.fill();
+  }
+
+  for (const b of butterflies) {
+    const dx = b.targetX - b.x;
+    const dy = b.targetY - b.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+
+    if (dist < 30) {
+      b.targetX = Math.random() * w;
+      b.targetY = h * 0.15 + Math.random() * h * 0.5;
+    }
+
+    b.vx += (dx / dist) * 0.01 + windGust * 0.02;
+    b.vy += (dy / dist) * 0.01;
+    b.vx += (Math.random() - 0.5) * 0.03;
+    b.vy += (Math.random() - 0.5) * 0.02;
+    b.vx *= 0.98;
+    b.vy *= 0.98;
+    b.x += b.vx;
+    b.y += b.vy;
+
+    if (b.x < 0) b.x = w;
+    if (b.x > w) b.x = 0;
+    if (b.y < 0) b.y = h * 0.3;
+    if (b.y > h) b.y = h * 0.3;
+
+    b.wingPhase += b.wingSpeed;
+    const wingOpen = 0.4 + Math.sin(b.wingPhase) * 0.6;
+    const angle = Math.atan2(b.vy, b.vx);
+
+    ctx.save();
+    ctx.translate(b.x, b.y);
+    ctx.rotate(angle);
+    ctx.globalAlpha = b.opacity;
+
+    ctx.fillStyle = `hsla(${b.hue}, 50%, 55%, 0.8)`;
+    ctx.save();
+    ctx.scale(1, wingOpen);
+    drawButterflyWing(ctx, b.size, 1);
+    ctx.fill();
+    ctx.restore();
+
+    ctx.save();
+    ctx.scale(1, -wingOpen);
+    drawButterflyWing(ctx, b.size, 1);
+    ctx.fill();
+    ctx.restore();
+
+    ctx.beginPath();
+    ctx.ellipse(0, 0, b.size * 0.15, b.size * 0.5, 0, 0, Math.PI * 2);
+    ctx.fillStyle = `hsla(${b.hue}, 30%, 30%, ${b.opacity})`;
+    ctx.fill();
+
+    ctx.restore();
   }
 
   for (const ff of fireflies) {
@@ -232,6 +337,20 @@ export const drawNatureScene: DrawFunction = (ctx, canvas, time, mouse) => {
     const glow = (Math.sin(ff.glowPhase + time * ff.glowSpeed) + 1) * 0.5;
     const alpha = glow * ff.maxOpacity;
 
+    ff.trail.push({ x: ff.x, y: ff.y, alpha: alpha * 0.5 });
+    if (ff.trail.length > 8) ff.trail.shift();
+
+    for (let i = 0; i < ff.trail.length; i++) {
+      const t = ff.trail[i];
+      const trailAlpha = t.alpha * (i / ff.trail.length) * 0.3;
+      if (trailAlpha > 0.005) {
+        ctx.beginPath();
+        ctx.arc(t.x, t.y, ff.size * 0.4, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(200, 230, 150, ${trailAlpha})`;
+        ctx.fill();
+      }
+    }
+
     if (alpha > 0.02) {
       const grad = ctx.createRadialGradient(ff.x, ff.y, 0, ff.x, ff.y, ff.size * 6);
       grad.addColorStop(0, `rgba(200, 230, 150, ${alpha})`);
@@ -248,10 +367,11 @@ export const drawNatureScene: DrawFunction = (ctx, canvas, time, mouse) => {
   }
 
   if (mouse.x > 0 && mouse.y > 0) {
-    const grad = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 80);
-    grad.addColorStop(0, "rgba(255, 240, 200, 0.02)");
+    const grad = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 100);
+    grad.addColorStop(0, "rgba(255, 240, 200, 0.03)");
+    grad.addColorStop(0.5, "rgba(200, 230, 150, 0.015)");
     grad.addColorStop(1, "transparent");
     ctx.fillStyle = grad;
-    ctx.fillRect(mouse.x - 80, mouse.y - 80, 160, 160);
+    ctx.fillRect(mouse.x - 100, mouse.y - 100, 200, 200);
   }
 };

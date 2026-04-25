@@ -34,7 +34,7 @@ export function Products({ locale }: { locale: string }) {
               transition={{ duration: 0.5, delay: idx * 0.08 }}
               whileHover={{ y: -6 }}
               className={clsx(
-                "group relative bg-surface-elevated border rounded-2xl p-6 overflow-hidden transition-all flex flex-col h-full",
+                "group relative bg-surface-elevated border rounded-2xl p-6 overflow-hidden transition-all flex flex-col h-full card-shimmer",
                 product.soon
                   ? "border-violet-500/10 hover:border-violet-500/25"
                   : "border-white/10 hover:border-white/20"

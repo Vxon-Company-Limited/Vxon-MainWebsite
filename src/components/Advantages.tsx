@@ -35,7 +35,7 @@ export function Advantages({ locale }: { locale: string }) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.5, delay: idx * 0.08 }}
-              className="group relative bg-surface-elevated border border-white/10 rounded-2xl p-8 hover:border-white/20 transition-all overflow-hidden"
+              className="group relative bg-surface-elevated border border-white/10 rounded-2xl p-8 hover:border-white/20 transition-all overflow-hidden card-shimmer"
             >
               <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
 
